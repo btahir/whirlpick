@@ -200,6 +200,17 @@ export function createController(store: Store, opts: { surface: Surface }): Cont
 
   store.subscribe(() => {
     const st = s();
+    if (st.meta !== lastMeta && storage && !embed) {
+      // A wheel that just became saved: persist its draw session and history too.
+      for (const [id, m] of Object.entries(st.meta)) {
+        if (m.saved && lastMeta[id] && !lastMeta[id]!.saved) {
+          const ses = st.sessions[id];
+          if (ses) void storage.setMeta(`session:${id}`, ses).catch(() => {});
+          const hist = st.history[id];
+          if (hist?.length) void storage.putHistory(hist).catch(() => {});
+        }
+      }
+    }
     if (st.wheels !== lastWheels || st.meta !== lastMeta) {
       for (const w of st.wheels) {
         const prev = lastWheels.find((x) => x.id === w.id);
@@ -1209,7 +1220,8 @@ export function createController(store: Store, opts: { surface: Surface }): Cont
     const st = s();
     let firstId = "";
     for (const w0 of p.wheels) {
-      const clash = st.wheels.some((x) => x.id === w0.id);
+      // Only a saved wheel with the same id forces a new id; an unsaved sample is replaced.
+      const clash = st.wheels.some((x) => x.id === w0.id && st.meta[x.id]?.saved);
       const w: Wheel = { ...w0, id: clash ? newId("w") : w0.id, settings: normaliseTheme(w0.settings) };
       if (!firstId || w0.id === p.activeWheelId) firstId = w.id;
       d({ type: "wheels/add", wheel: w, meta: { createdAt: p.createdAt, updatedAt: p.updatedAt, saved: !embed }, activate: false });
@@ -1224,6 +1236,7 @@ export function createController(store: Store, opts: { surface: Surface }): Cont
       if (storage?.supportsImages) void storage.putImage({ id, ...img, createdAt: iso() }).catch(() => {});
     }
     if (firstId) d({ type: "wheels/open", id: firstId });
+    if (s().ui.dialog?.kind === "wheels") d({ type: "ui/dialog", dialog: null });
     toast(p.wheels.length === 1 ? `Opened ${p.wheels[0]!.name}.` : `Imported ${p.wheels.length} wheels.`);
   }
   let importError = "";

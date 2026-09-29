@@ -16,5 +16,6 @@ export function start(route: Route): void {
   if (root.hasChildNodes()) hydrateRoot(root, tree);
   else createRoot(root).render(tree);
   void controller.bootPrefs();
+  requestAnimationFrame(() => (document.documentElement.dataset.hydrated = "1"));
   registerServiceWorker(controller);
 }

@@ -25,8 +25,10 @@ export function VerifyWidget() {
   const [drag, setDrag] = useState(false);
   const out = useRef<HTMLDivElement>(null);
 
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const run = async (input = text) => {
-    const src = input.trim();
+    // Text typed before the page finished loading lives only in the DOM; use it too.
+    const src = (input || inputRef.current?.value || "").trim();
     if (!src) return;
     let raw: unknown;
     try {
@@ -92,7 +94,7 @@ export function VerifyWidget() {
       >
         <label className="field">
           <span>Paste a receipt or a replay link</span>
-          <textarea className="mono receipt-input" rows={7} value={text} onChange={(e) => setText(e.target.value)} placeholder='{"format":"whirlpick-receipt", …}  or  …/#spin=1.…' data-testid="verify-input" spellCheck={false} />
+          <textarea ref={inputRef} className="mono receipt-input" rows={7} value={text} onChange={(e) => setText(e.target.value)} placeholder='{"format":"whirlpick-receipt", …}  or  …/#spin=1.…' data-testid="verify-input" spellCheck={false} />
         </label>
         <details className="expect">
           <summary>Compare with what you saw before the draw (optional)</summary>

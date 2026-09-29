@@ -28,6 +28,7 @@ export function start(route: Route): void {
     });
   } else void controller.bootPrefs();
   if (!embed) registerServiceWorker(controller);
+  requestAnimationFrame(() => (document.documentElement.dataset.hydrated = "1"));
   // Automation hooks for tests and agents driving the page.
   Object.assign(window, { __whirlpick: { controller, store, renderVoiceOffline } });
 }
