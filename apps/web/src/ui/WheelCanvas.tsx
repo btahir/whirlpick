@@ -18,15 +18,17 @@ export function useScheme(): "light" | "dark" {
 }
 
 let fontsReady: Promise<void> | null = null;
+/**
+ * Wait for the label font before the first cached render (SPEC §4). FontFaceSet.load() would
+ * also fetch every other face whose unicode-range overlaps the test text (the full Latin file),
+ * so load just the preloaded core subset face directly.
+ */
 function waitFonts(): Promise<void> {
   if (fontsReady) return fontsReady;
-  const f = (document as Document & { fonts?: FontFaceSet }).fonts;
-  if (!f) return (fontsReady = Promise.resolve());
-  fontsReady = Promise.all([
-    f.load('760 32px "Bricolage Grotesque Variable"'),
-    f.load('800 32px "Bricolage Grotesque Variable"'),
-    f.load('760 condensed 32px "Bricolage Grotesque Variable"'),
-  ])
+  const set = (document as Document & { fonts?: FontFaceSet }).fonts;
+  if (!set) return (fontsReady = Promise.resolve());
+  const core = [...set].filter((f) => /Bricolage/.test(f.family) && /U\+20-7E/i.test(f.unicodeRange));
+  fontsReady = Promise.all(core.map((f) => f.load()))
     .then(() => undefined)
     .catch(() => undefined);
   return fontsReady;
@@ -131,6 +133,9 @@ export function WheelCanvas({ onSpin, big = false }: { onSpin: () => void; big?:
       return { x: box.left + p.x, y: box.top + p.y };
     });
     void waitFonts().then(() => setFontEpoch((n) => n + 1));
+    const fonts = (document as Document & { fonts?: FontFaceSet }).fonts;
+    const onFonts = () => setFontEpoch((n) => n + 1);
+    fonts?.addEventListener("loadingdone", onFonts);
     const onVis = () => {
       if (document.hidden) return;
       d.draw();
@@ -138,6 +143,7 @@ export function WheelCanvas({ onSpin, big = false }: { onSpin: () => void; big?:
     document.addEventListener("visibilitychange", onVis);
     return () => {
       document.removeEventListener("visibilitychange", onVis);
+      fonts?.removeEventListener("loadingdone", onFonts);
       c.attachDriver(null);
       c.attachPickTip(null);
       d.destroy();

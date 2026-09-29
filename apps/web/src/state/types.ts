@@ -22,6 +22,7 @@ export type DialogKind =
   | "fair"
   | "teamsFull"
   | "details"
+  | "numbers"
   | "import";
 
 export interface DialogState {

@@ -23,6 +23,8 @@ interface RowModel {
 export function EntriesEditor() {
   const c = useController();
   const scheme = useScheme();
+  // Row height comes from CSS (38 px, 44 px on touch) so the prerendered rows never move;
+  // JS only needs it to work out which rows are in view.
   const touch = useMedia("(pointer: coarse)");
   const lh = touch ? 44 : 38;
   const { entries, excluded, spinning, mode, palette, theme, lastIndex } = useSel(
@@ -139,7 +141,7 @@ export function EntriesEditor() {
   };
 
   return (
-    <div className={`editor${spinning ? " locked" : ""}`} style={{ ["--lh" as string]: `${lh}px` }}>
+    <div className={`editor${spinning ? " locked" : ""}`}>
       {spinning ? <p className="locked-note">{t.lockedWhileSpinning}</p> : null}
       <div className="editor-mirror" aria-hidden="true" style={{ transform: `translateY(${-scroll.top}px)` }}>
         {rows.slice(first, last).map((r) => {
@@ -147,7 +149,7 @@ export function EntriesEditor() {
           const off = !!e && (!e.enabled || ex.has(r.index));
           const chip = e ? (e.color ?? chipColour.get(r.index) ?? (PALETTES["enamel-day"]![0]!.fill)) : null;
           return (
-            <div key={r.line} className={`erow${off ? " off" : ""}${r.line === hover ? " hover" : ""}${e && r.index === lastIndex && mode !== "teams" ? " last" : ""}`} style={{ top: 8 + r.line * lh }}>
+            <div key={r.line} className={`erow${off ? " off" : ""}${r.line === hover ? " hover" : ""}${e && r.index === lastIndex && mode !== "teams" ? " last" : ""}`} style={{ top: `calc(8px + ${r.line} * var(--lh))` }}>
               <span className="g">
                 {e ? String(r.index + 1).padStart(2, "0") : ""}
                 {e ? <span className="chip" style={{ background: chip ?? undefined }} /> : <span className="chip empty" />}
@@ -167,7 +169,7 @@ export function EntriesEditor() {
               key={r.line}
               type="button"
               className="chip-hit"
-              style={{ top: 8 + r.line * lh, height: lh }}
+              style={{ top: `calc(8px + ${r.line} * var(--lh))`, height: "var(--lh)" }}
               aria-label={`Colour and options for ${r.entry.label}`}
               tabIndex={-1}
               onClick={() => setColourFor(r.entry!.id)}

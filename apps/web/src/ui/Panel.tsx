@@ -110,6 +110,7 @@ function EntriesTab() {
             { label: "Customise the wheel", icon: "palette", onSelect: () => c.openDialog("customise") },
             "sep",
             ...presets.map((p) => ({ label: p.title, onSelect: () => c.loadPreset(p.id) })),
+            { label: "Number range…", onSelect: () => c.openDialog("numbers") },
             "sep",
             { label: "Open a .whirl.json file", icon: "import", onSelect: proj.open },
             {

@@ -87,7 +87,7 @@ function SpinRow({ phone }: { phone: boolean }) {
     <div className="spinrow">
       <button type="button" className="spin" onClick={() => c.spin()} disabled={tooFew && !v.spinning} aria-describedby={elimDone ? "elim-done" : undefined} data-testid="spin">
         <span>{label}</span>
-        {!phone && !tooFew && !v.spinning ? <Keycap>Space</Keycap> : null}
+        {!tooFew && !v.spinning ? <Keycap>Space</Keycap> : null}
       </button>
       {elimDone ? (
         <span id="elim-done" className="spin-note">
@@ -96,7 +96,8 @@ function SpinRow({ phone }: { phone: boolean }) {
           </button>
         </span>
       ) : null}
-      {!phone ? <DurationChip value={v.duration} /> : null}
+      {/* Hidden on phones by CSS (not by JS), so the prerendered layout never jumps. */}
+      <DurationChip value={v.duration} />
     </div>
   );
 }

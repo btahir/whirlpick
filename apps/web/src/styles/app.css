@@ -2752,6 +2752,10 @@ html.chromeless body {
     height: 62px;
     min-height: 62px;
   }
+  .spin .key,
+  .spinrow .pop-wrap {
+    display: none;
+  }
   .tabs {
     padding: 8px 12px 0;
   }
@@ -3000,8 +3004,7 @@ html.chromeless body {
 }
 
 @media (pointer: coarse) {
-  .erow .nm,
-  .editor-input {
-    font-size: 17px;
+  .editor {
+    --lh: 44px;
   }
 }

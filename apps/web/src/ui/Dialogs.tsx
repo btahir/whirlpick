@@ -1,7 +1,7 @@
 // Plates (SPEC §10): winner, receipt, share with QR, saved wheels drawer, fair draw, customise,
 // entry details, shortcuts, import errors. All are <dialog>.showModal() plates (Modal).
 import { useEffect, useMemo, useRef, useState } from "react";
-import { verifyReceipt, type Receipt } from "@whirlpick/core";
+import { TRUTH_OR_DARE_PROMPTS, verifyReceipt, type Receipt } from "@whirlpick/core";
 import { SUPPORT_URL } from "../config/site";
 import { fmt, groupHash, shortHex, t } from "../copy/en";
 import { EMPTY, activeWheel, sessionOf } from "../state/reducer";
@@ -25,6 +25,7 @@ export function Dialogs() {
       <DetailsDialog />
       <ShortcutsDialog />
       <ImportErrorDialog />
+      <NumbersDialog />
       <TeamsFullDialog />
     </>
   );
@@ -53,7 +54,7 @@ function WinnerPlate() {
         askShown: s.supportShownThisSession,
         replay: s.replay,
         presenter: s.ui.presenter,
-        prompts: w.settings.title === "Truth or dare?",
+        prompts: w.entries.length === 2 && w.entries.some((e) => e.label === "Truth") && w.entries.some((e) => e.label === "Dare"),
       };
     },
     shallowEq,
@@ -196,13 +197,11 @@ function TruthOrDare({ label, show }: { label?: string; show: boolean }) {
       setPrompt(null);
       return;
     }
-    void import("@whirlpick/core").then(({ TRUTH_OR_DARE_PROMPTS }) => {
-      const list = TRUTH_OR_DARE_PROMPTS[label];
-      if (!list?.length) return;
-      const b = new Uint32Array(1);
-      crypto.getRandomValues(b);
-      setPrompt(list[b[0]! % list.length]!);
-    });
+    const list = TRUTH_OR_DARE_PROMPTS[label];
+    if (!list?.length) return;
+    const b = new Uint32Array(1);
+    crypto.getRandomValues(b);
+    setPrompt(list[b[0]! % list.length]!);
   }, [label, show]);
   if (!prompt) return null;
   return <p className="prompt">{prompt}</p>;
@@ -933,6 +932,50 @@ function ImportErrorDialog() {
           OK
         </button>
       </div>
+    </Modal>
+  );
+}
+
+function NumbersDialog() {
+  const c = useController();
+  const open = useSel((s) => s.ui.dialog?.kind === "numbers");
+  const [min, setMin] = useState("1");
+  const [max, setMax] = useState("20");
+  const lo = Number(min);
+  const hi = Number(max);
+  const count = Number.isInteger(lo) && Number.isInteger(hi) && hi >= lo ? hi - lo + 1 : 0;
+  const ok = count >= 2 && count <= 1000;
+  return (
+    <Modal open={open} onClose={() => c.closeDialog()} className="plate numbers" labelledBy="numbers-title">
+      <PlateHead id="numbers-title" title="Number range" onClose={() => c.closeDialog()} />
+      <form
+        className="form"
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (!ok) return;
+          c.closeDialog();
+          c.loadPreset("numbers", { min: String(lo), max: String(hi) });
+        }}
+      >
+        <div className="row-inline">
+          <label className="field">
+            <span>From</span>
+            <input data-autofocus type="number" inputMode="numeric" value={min} onChange={(e) => setMin(e.target.value)} />
+          </label>
+          <label className="field">
+            <span>To</span>
+            <input type="number" inputMode="numeric" value={max} onChange={(e) => setMax(e.target.value)} />
+          </label>
+        </div>
+        <p className="small muted" role="status">
+          {ok ? `${fmt(count)} numbers on a new wheel.` : "Pick 2 to 1,000 whole numbers."}
+        </p>
+        <div className="acts">
+          <button type="submit" className="btn primary" disabled={!ok}>
+            Make the wheel
+          </button>
+        </div>
+      </form>
     </Modal>
   );
 }
