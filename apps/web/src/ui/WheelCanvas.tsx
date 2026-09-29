@@ -204,9 +204,33 @@ export function WheelCanvas({ onSpin, big = false }: { onSpin: () => void; big?:
   }, [scene, width, n]);
   const showReadout = hiddenLabels || anyHidden;
 
+  // Desktop: the full name of the slice under the mouse as a tooltip (SPEC §6.4), so truncated
+  // or hidden labels can always be read.
+  const [tip, setTip] = useState("");
+  const onHover = (e: React.MouseEvent) => {
+    const d = driverRef.current;
+    const sc = d?.currentScene;
+    const box = canvas.current?.getBoundingClientRect();
+    if (!d || !sc || !box || sc.mystery) return;
+    const R = box.width / 2.24;
+    const x = e.clientX - box.left - 1.04 * R;
+    const y = e.clientY - box.top - 1.04 * R;
+    const dist = Math.hypot(x, y);
+    if (dist > R * 0.95 || dist < R * 0.17) {
+      if (tip) setTip("");
+      return;
+    }
+    // Canvas angle (0 = 3 o'clock, clockwise) → wheel-frame turn (renderer adds a 0.25 offset).
+    const turn = Math.atan2(y, x) / (2 * Math.PI) - d.angle;
+    const local = turn - Math.floor(turn);
+    const hit = sc.slices.find((sl) => local >= sl.start && local < sl.end);
+    const label = hit?.label ?? "";
+    if (label !== tip) setTip(label);
+  };
+
   return (
     <div className={`wheelwrap${big ? " big" : ""}`} ref={wrap}>
-      <button type="button" className="wheelbtn" onClick={onSpin} aria-label={n < 2 && view.entries.length < 2 ? t.addOneMore : t.spinLabel(n)} data-testid="wheel">
+      <button type="button" className="wheelbtn" onClick={onSpin} onMouseMove={onHover} onMouseLeave={() => setTip("")} title={tip || undefined} aria-label={n < 2 && view.entries.length < 2 ? t.addOneMore : t.spinLabel(n)} data-testid="wheel">
         <canvas ref={canvas} className="wheel-canvas" aria-hidden="true" />
         <span className="wheel-focus" aria-hidden="true" />
       </button>
