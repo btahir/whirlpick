@@ -1,0 +1,28 @@
+{
+  "format": "whirlpick-project",
+  "version": 1,
+  "activeWheelId": "w_second00",
+  "wheels": [
+    {
+      "id": "w_first000",
+      "entries": [
+        {
+          "label": "A"
+        }
+      ]
+    },
+    {
+      "id": "w_second00",
+      "name": "Second",
+      "entries": [
+        {
+          "label": "B"
+        },
+        {
+          "label": "C",
+          "color": "#00b140"
+        }
+      ]
+    }
+  ]
+}

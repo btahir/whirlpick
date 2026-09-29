@@ -214,9 +214,9 @@ export function splitTeams(o: SplitTeamsInput): TeamsResult {
 
   // Step 4: greedy tag-balanced snake assignment.
   const team = new Map<number, number>();
-  const size = new Array<number>(N).fill(0);
+  const size = Array.from({ length: N }, () => 0);
   groups.forEach((g, gi) => {
-    const inGroup = new Array<number>(N).fill(0);
+    const inGroup = Array.from({ length: N }, () => 0);
     for (const x of g) {
       let best = 0;
       for (let t = 1; t < N; t++) {
@@ -272,29 +272,95 @@ export function splitTeams(o: SplitTeamsInput): TeamsResult {
     .map((b, bi) => ({ b, bi }))
     .filter(({ b }) => b.length >= 2)
     .sort((p, q) => Math.min(...p.b.map((x) => rank.get(x)!)) - Math.min(...q.b.map((x) => rank.get(x)!)));
+  // Move every member of block B into `target` by admissible swaps; undo and return false if it can't be completed.
+  const moveBlockTo = (b: number[], bi: number, target: number): boolean => {
+    const inB = new Set(b);
+    const done: [number, number][] = [];
+    for (const x of [...b].sort(byRank)) {
+      if (team.get(x) === target) continue;
+      const y = choose(x, members(target).filter((c) => !inB.has(c)), bi);
+      if (y === undefined) {
+        for (const [p, q] of done.reverse()) swap(p, q);
+        return false;
+      }
+      swap(x, y);
+      done.push([x, y]);
+    }
+    return done.length > 0;
+  };
+  // Fallback when the swap repair gets stuck (PLAN §2.8 step 5 leaves violations): a deterministic
+  // depth-first search over the constrained units (keep-together blocks and keep-apart members),
+  // keeping team sizes, trying each unit's current team first, then filling the unconstrained
+  // members back in, staying in their own team where there is room. No randomness is read.
+  const solveExact = () => {
+    const constrained = new Set<number>([...apartOf.keys(), ...blockOf.keys()]);
+    const units: number[][] = [];
+    const seenBlock = new Set<number>();
+    for (const x of P) {
+      if (!constrained.has(x)) continue;
+      const bi = blockOf.get(x);
+      if (bi !== undefined) {
+        if (!seenBlock.has(bi)) {
+          seenBlock.add(bi);
+          units.push([...blocks[bi]!].sort(byRank));
+        }
+      } else units.push([x]);
+    }
+    units.sort((u, v) => v.length - u.length || rank.get(u[0]!)! - rank.get(v[0]!)!);
+    const cap = size.slice();
+    const where = new Map<number, number>();
+    let nodes = 0;
+    const clash = (u: number[], t: number) => u.some((x) => (apartOf.get(x) ?? []).some((A) => A.some((z) => z !== x && where.get(z) === t)));
+    const dfs = (k: number): boolean => {
+      if (k === units.length) return true;
+      if (++nodes > 200_000) return false;
+      const u = units[k]!;
+      const home = team.get(u[0]!)!;
+      const order = [home, ...[...Array(N).keys()].filter((t) => t !== home)];
+      for (const t of order) {
+        if (cap[t]! < u.length || clash(u, t)) continue;
+        cap[t]! -= u.length;
+        for (const x of u) where.set(x, t);
+        if (dfs(k + 1)) return true;
+        for (const x of u) where.delete(x);
+        cap[t]! += u.length;
+      }
+      return false;
+    };
+    if (!dfs(0)) return;
+    const free = P.filter((x) => !constrained.has(x));
+    const pending: number[] = [];
+    for (const x of free) {
+      const t = team.get(x)!;
+      if (cap[t]! > 0) {
+        cap[t]!--;
+        where.set(x, t);
+      } else pending.push(x);
+    }
+    for (const x of pending) {
+      const t = cap.findIndex((c) => c > 0);
+      cap[t]!--;
+      where.set(x, t);
+    }
+    for (const [x, t] of where) team.set(x, t);
+  };
   for (let pass = 0; pass < REPAIR_PASSES; pass++) {
     if (blockViolations().length === 0 && apartViolations().length === 0) break;
     let swapped = false;
     for (const { b, bi } of orderedBlocks) {
       const inB = new Set(b);
-      // Target: the team holding most members of B among teams with room for B once other
-      // blocks' members (which can't be swapped out) are counted; else any team (PLAN §2.8 step 5).
+      if (new Set(b.map((x) => team.get(x))).size === 1) continue;
+      // Target: the team holding most members of B (ties: lowest index), preferring teams with
+      // room for B once other blocks' members (which can't be swapped out) are counted
+      // (PLAN §2.8 step 5). If B can't be completed there, try the next team; a partial move is undone.
       const countIn = (t: number) => b.filter((x) => team.get(x) === t).length;
       const room = (t: number) => size[t]! - members(t).filter((x) => blockOf.has(x) && !inB.has(x)).length;
-      let target = -1;
-      for (const roomy of [true, false]) {
-        for (let t = 0; t < N; t++) {
-          if (roomy && room(t) < b.length) continue;
-          if (target === -1 || countIn(t) > countIn(target)) target = t;
-        }
-        if (target !== -1) break;
-      }
-      for (const x of [...b].sort(byRank)) {
-        if (team.get(x) === target) continue;
-        const y = choose(x, members(target).filter((y) => !inB.has(y)), bi);
-        if (y !== undefined) {
-          swap(x, y);
+      const fits = (t: number) => (room(t) >= b.length ? 1 : 0);
+      const targets = [...Array(N).keys()].sort((s2, t) => fits(t) - fits(s2) || countIn(t) - countIn(s2) || s2 - t);
+      for (const target of targets) {
+        if (moveBlockTo(b, bi, target)) {
           swapped = true;
+          break;
         }
       }
     }
@@ -306,7 +372,16 @@ export function splitTeams(o: SplitTeamsInput): TeamsResult {
         if (earlier.length === 0) continue;
         // Move x; if x is locked in a keep-together block, move the earlier clashing member instead.
         for (const mover of [x, ...earlier]) {
-          if (blockOf.has(mover)) continue;
+          if (blockOf.has(mover)) {
+            // A keep-together member moves with its whole block.
+            const bi = blockOf.get(mover)!;
+            const freeTeams = [...Array(N).keys()].filter((t) => !A.some((z) => z !== mover && team.get(z) === t) && t !== team.get(mover));
+            if (freeTeams.some((t) => moveBlockTo(blocks[bi]!, bi, t))) {
+              swapped = true;
+              break;
+            }
+            continue;
+          }
           const free = [...Array(N).keys()].filter((t) => !A.some((z) => team.get(z) === t));
           let y: number | undefined;
           if (balance) {
@@ -331,6 +406,7 @@ export function splitTeams(o: SplitTeamsInput): TeamsResult {
     }
     if (!swapped) break;
   }
+  if (blockViolations().length || apartViolations().length) solveExact();
   const leftBlocks = blockViolations();
   const leftApart = apartViolations();
   if (leftBlocks.length || leftApart.length) {

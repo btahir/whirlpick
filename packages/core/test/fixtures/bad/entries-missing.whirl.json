@@ -1,0 +1,9 @@
+{
+  "format": "whirlpick-project",
+  "version": 1,
+  "wheels": [
+    {
+      "name": "x"
+    }
+  ]
+}

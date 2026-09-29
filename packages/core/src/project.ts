@@ -75,6 +75,7 @@ const ENTRY_KEYS = ['id', 'label', 'weight', 'enabled', 'color', 'imageRef', 'ta
 const ISO_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,9})?(Z|[+-]\d{2}:\d{2})$/;
 const DATA_URL_RE = /^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+/]+={0,2}$/;
 const THEME_RE = /^[a-z0-9-]{1,32}$/;
+// oxlint-disable-next-line no-control-regex -- rejecting control characters is the point
 const TEXT_CHARS = /^[^\u0000-\u001F\u007F-\u009F\uD800-\uDFFF]*$/u;
 
 const isObj = (x: unknown): x is Record<string, unknown> => typeof x === 'object' && x !== null && !Array.isArray(x);
@@ -124,11 +125,15 @@ export function validateProject(json: unknown, opts: ValidateOptions = {}): Vali
           continue;
         }
         let ok = true;
-        for (const k of Object.keys(v)) if (!['dataUrl', 'width', 'height'].includes(k)) (err(`${p}/${esc(k)}`, 'UNKNOWN_KEY', `Unknown key "${k}".`), (ok = false));
-        if (typeof v.dataUrl !== 'string') (err(`${p}/dataUrl`, 'IMAGE_INVALID', 'dataUrl must be a string.'), (ok = false));
-        else if (v.dataUrl.length > MAX_IMAGE_DATA_URL) (err(`${p}/dataUrl`, 'IMAGE_TOO_LARGE', 'Images must be 200 KB or smaller.'), (ok = false));
-        else if (!DATA_URL_RE.test(v.dataUrl)) (err(`${p}/dataUrl`, 'IMAGE_INVALID', 'dataUrl must be a base64 PNG, JPEG, WebP or GIF data URL.'), (ok = false));
-        for (const k of ['width', 'height'] as const) if (!isInt(v[k], 1, MAX_IMAGE_PX)) (err(`${p}/${k}`, 'IMAGE_INVALID', `${k} must be 1–${MAX_IMAGE_PX} px.`), (ok = false));
+        const bad = (path: string, code: string, message: string) => {
+          err(path, code, message);
+          ok = false;
+        };
+        for (const k of Object.keys(v)) if (!['dataUrl', 'width', 'height'].includes(k)) bad(`${p}/${esc(k)}`, 'UNKNOWN_KEY', `Unknown key "${k}".`);
+        if (typeof v.dataUrl !== 'string') bad(`${p}/dataUrl`, 'IMAGE_INVALID', 'dataUrl must be a string.');
+        else if (v.dataUrl.length > MAX_IMAGE_DATA_URL) bad(`${p}/dataUrl`, 'IMAGE_TOO_LARGE', 'Images must be 200 KB or smaller.');
+        else if (!DATA_URL_RE.test(v.dataUrl)) bad(`${p}/dataUrl`, 'IMAGE_INVALID', 'dataUrl must be a base64 PNG, JPEG, WebP or GIF data URL.');
+        for (const k of ['width', 'height'] as const) if (!isInt(v[k], 1, MAX_IMAGE_PX)) bad(`${p}/${k}`, 'IMAGE_INVALID', `${k} must be 1–${MAX_IMAGE_PX} px.`);
         if (ok) images[id] = { dataUrl: v.dataUrl as string, width: v.width as number, height: v.height as number };
       }
     }

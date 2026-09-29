@@ -1,0 +1,17 @@
+{
+  "format": "whirlpick-project",
+  "version": 1,
+  "wheels": [
+    {
+      "entries": [
+        {
+          "label": "Ada"
+        },
+        {
+          "label": "Grace"
+        }
+      ]
+    }
+  ],
+  "owner": "me"
+}

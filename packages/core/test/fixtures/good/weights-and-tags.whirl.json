@@ -1,0 +1,30 @@
+{
+  "format": "whirlpick-project",
+  "version": 1,
+  "wheels": [
+    {
+      "name": "Teams",
+      "entries": [
+        {
+          "label": "Ada",
+          "weight": 0.001,
+          "tags": [
+            "1"
+          ]
+        },
+        {
+          "label": "Grace",
+          "weight": 1000000,
+          "tags": [
+            "2",
+            "3"
+          ]
+        },
+        {
+          "label": "Élodie 😀",
+          "enabled": false
+        }
+      ]
+    }
+  ]
+}

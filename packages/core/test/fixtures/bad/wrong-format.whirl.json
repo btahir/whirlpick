@@ -1,0 +1,16 @@
+{
+  "format": "wheelofnames",
+  "version": 1,
+  "wheels": [
+    {
+      "entries": [
+        {
+          "label": "Ada"
+        },
+        {
+          "label": "Grace"
+        }
+      ]
+    }
+  ]
+}

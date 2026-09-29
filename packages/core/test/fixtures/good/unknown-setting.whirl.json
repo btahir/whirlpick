@@ -1,0 +1,20 @@
+{
+  "format": "whirlpick-project",
+  "version": 1,
+  "wheels": [
+    {
+      "entries": [
+        {
+          "label": "Ada"
+        }
+      ],
+      "settings": {
+        "futureFlag": true,
+        "mode": "multi",
+        "multi": {
+          "count": "all"
+        }
+      }
+    }
+  ]
+}

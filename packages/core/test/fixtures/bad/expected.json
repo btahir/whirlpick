@@ -1,0 +1,126 @@
+{
+  "wrong-format.whirl.json": {
+    "path": "/format",
+    "code": "FORMAT_INVALID"
+  },
+  "version-2.whirl.json": {
+    "path": "/version",
+    "code": "UNSUPPORTED_VERSION"
+  },
+  "missing-label.whirl.json": {
+    "path": "/wheels/0/entries/1/label",
+    "code": "REQUIRED"
+  },
+  "weight-zero.whirl.json": {
+    "path": "/wheels/0/entries/0/weight",
+    "code": "WEIGHT_INVALID"
+  },
+  "weight-4-decimals.whirl.json": {
+    "path": "/wheels/0/entries/0/weight",
+    "code": "WEIGHT_INVALID"
+  },
+  "weight-string.whirl.json": {
+    "path": "/wheels/0/entries/0/weight",
+    "code": "WEIGHT_INVALID"
+  },
+  "weight-too-big.whirl.json": {
+    "path": "/wheels/0/entries/0/weight",
+    "code": "WEIGHT_INVALID"
+  },
+  "label-too-long.whirl.json": {
+    "path": "/wheels/0/entries/0/label",
+    "code": "LABEL_INVALID"
+  },
+  "label-control-char.whirl.json": {
+    "path": "/wheels/0/entries/0/label",
+    "code": "LABEL_INVALID"
+  },
+  "label-blank.whirl.json": {
+    "path": "/wheels/0/entries/0/label",
+    "code": "LABEL_INVALID"
+  },
+  "1001-entries.whirl.json": {
+    "path": "/wheels/0/entries",
+    "code": "ENTRY_LIMIT"
+  },
+  "bad-colour.whirl.json": {
+    "path": "/wheels/0/entries/0/color",
+    "code": "COLOR_INVALID"
+  },
+  "unknown-top-level-key.whirl.json": {
+    "path": "/owner",
+    "code": "UNKNOWN_KEY"
+  },
+  "unknown-entry-key.whirl.json": {
+    "path": "/wheels/0/entries/0/score",
+    "code": "UNKNOWN_KEY"
+  },
+  "dangling-image-ref.whirl.json": {
+    "path": "/wheels/0/entries/0/imageRef",
+    "code": "IMAGE_REF_MISSING"
+  },
+  "image-over-200kb.whirl.json": {
+    "path": "/images/img_4f1c0a9b2d3e4f50/dataUrl",
+    "code": "IMAGE_TOO_LARGE"
+  },
+  "image-too-wide.whirl.json": {
+    "path": "/images/img_4f1c0a9b2d3e4f50/width",
+    "code": "IMAGE_INVALID"
+  },
+  "image-not-data-url.whirl.json": {
+    "path": "/images/img_4f1c0a9b2d3e4f50/dataUrl",
+    "code": "IMAGE_INVALID"
+  },
+  "layout-not-null.whirl.json": {
+    "path": "/layout",
+    "code": "LAYOUT_RESERVED"
+  },
+  "no-wheels.whirl.json": {
+    "path": "/wheels",
+    "code": "WHEELS_EMPTY"
+  },
+  "wheels-missing.whirl.json": {
+    "path": "/wheels",
+    "code": "REQUIRED"
+  },
+  "entries-missing.whirl.json": {
+    "path": "/wheels/0/entries",
+    "code": "REQUIRED"
+  },
+  "bad-wheel-id.whirl.json": {
+    "path": "/wheels/0/id",
+    "code": "ID_INVALID"
+  },
+  "bad-mode.whirl.json": {
+    "path": "/wheels/0/settings/mode",
+    "code": "SETTING_INVALID"
+  },
+  "bad-duration.whirl.json": {
+    "path": "/wheels/0/settings/spinDuration",
+    "code": "SETTING_INVALID"
+  },
+  "bad-palette.whirl.json": {
+    "path": "/wheels/0/settings/palette",
+    "code": "SETTING_INVALID"
+  },
+  "too-many-tags.whirl.json": {
+    "path": "/wheels/0/entries/0/tags",
+    "code": "TAG_INVALID"
+  },
+  "bad-date.whirl.json": {
+    "path": "/createdAt",
+    "code": "DATE_INVALID"
+  },
+  "history-bad-receipt.whirl.json": {
+    "path": "/history/0/receipt/wheelHash",
+    "code": "HISTORY_INVALID"
+  },
+  "history-beacon.whirl.json": {
+    "path": "/history/0/receipt/beacon",
+    "code": "HISTORY_INVALID"
+  },
+  "not-an-object.whirl.json": {
+    "path": "",
+    "code": "TYPE_INVALID"
+  }
+}

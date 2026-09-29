@@ -13,6 +13,7 @@ export const MAX_WEIGHT = 1_000_000;
 export const MAX_PUBLIC_INPUT = 64;
 
 // C0/C1 controls and lone surrogates (they would collapse to U+FFFD in UTF-8).
+// oxlint-disable-next-line no-control-regex -- rejecting control characters is the point
 const CONTROL = /[\u0000-\u001F\u007F-\u009F]/;
 const LONE_SURROGATE = /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/;
 
