@@ -3,7 +3,9 @@ import { LIFETIME, makeParticles, MAX_PARTICLES, particleAt } from "../../src/co
 
 describe("confetti (SPEC §7.5, ACCEPTANCE K4)", () => {
   const o = { x: 800, y: 400, colors: ["#C2361F", "#17735D"], winnerColor: "#2A55A8", seed: 42, count: 999 };
-  it("never makes more than 180 particles", () => {
+  it("never makes more than 180 particles (K4 as amended: ≤ 180, nothing drawn after 2.8 s)", () => {
+    expect(MAX_PARTICLES).toBeLessThanOrEqual(180);
+    expect(LIFETIME).toBeLessThanOrEqual(2.8);
     expect(makeParticles(o)).toHaveLength(MAX_PARTICLES);
     expect(makeParticles({ ...o, count: 70 })).toHaveLength(70);
   });
@@ -17,6 +19,7 @@ describe("confetti (SPEC §7.5, ACCEPTANCE K4)", () => {
   it("draws nothing after its lifetime and fades at the end", () => {
     const ps = makeParticles(o);
     expect(ps.every((p) => particleAt(p, LIFETIME + 0.01, o.x, o.y) === null)).toBe(true);
+    expect(ps.every((p) => particleAt(p, 2.8, o.x, o.y) === null)).toBe(true);
     expect(ps.every((p) => particleAt(p, 0.1, o.x, o.y)!.alpha === 1)).toBe(true);
     expect(ps.every((p) => particleAt(p, LIFETIME - 0.1, o.x, o.y)!.alpha < 0.5)).toBe(true);
   });

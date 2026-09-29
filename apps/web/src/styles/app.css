@@ -3312,3 +3312,38 @@ main.app.presenter .spin .key {
 main.app.presenter .wheelbtn:focus-visible .wheel-focus {
   outline: none;
 }
+
+/* P2-12: the 404 wheel (pre-rendered by scripts/make-og.ts), left of the heading. */
+.nf-head {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.nf-head h1 {
+  margin: 0;
+}
+.nf-art {
+  flex: none;
+  width: 179px;
+  height: 179px;
+  background: url(/brand/404-wheel-day.png) center / contain no-repeat;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .nf-art {
+    background-image: url(/brand/404-wheel-night.png);
+  }
+}
+:root[data-theme="dark"] .nf-art {
+  background-image: url(/brand/404-wheel-night.png);
+}
+@media (max-width: 759px) {
+  .nf-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .nf-art {
+    width: 120px;
+    height: 120px;
+  }
+}

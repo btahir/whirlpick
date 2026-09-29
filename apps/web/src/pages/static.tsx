@@ -215,7 +215,11 @@ function NotFoundBody() {
       <PageHeader />
       <main id="main" className="page nf-page">
         <div className="page-in">
-          <h1 className="display">This page isn't here</h1>
+          <div className="nf-head">
+            {/* REVIEW P2-12: our own renderer's wheel, the pick resting on an empty slice. */}
+            <span className="nf-art" aria-hidden="true" />
+            <h1 className="display">This page isn't here</h1>
+          </div>
           <p className="lede">The link may be old or mistyped. Nothing you entered left your device.</p>
           <div className="acts">
             <a className="btn primary" href="/">
