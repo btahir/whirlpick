@@ -43,6 +43,9 @@ const receiptZ = z
   })
   .loose()
   .describe('A receipt-v1 object (see `whirlpick schema receipt`).');
+// Receipts coming *in* are checked by verifyReceipt itself (so a malformed or tampered receipt gets a
+// verify report or a stable error code such as UNSUPPORTED_VERSION, not an SDK input-validation error).
+const receiptInZ = z.record(z.string(), z.unknown()).describe('A receipt-v1 object (see `whirlpick schema receipt`).');
 const winnerZ = z.object({ index: z.number(), label: z.string() });
 const checkZ = z.object({ id: z.string(), ok: z.boolean(), code: z.string().optional(), detail: z.string() });
 const issueZ = z.object({ path: z.string(), code: z.string(), message: z.string() });
@@ -162,7 +165,7 @@ export async function createServer(opts: ServerOptions): Promise<McpServer> {
         keepApart: z.array(z.array(z.string())).optional().describe('Rules: each a list of labels (or "#<index>") to keep in different teams.'),
         keepTogether: z.array(z.array(z.string())).optional().describe('Rules: each a list of labels (or "#<index>") to keep in one team.'),
         previousRounds: z.array(z.array(z.array(z.string()))).optional().describe('Earlier splits as lists of teams of labels; the new split minimises repeat pairs.'),
-        history: z.array(receiptZ).optional().describe('Earlier team receipts (alternative to previousRounds).'),
+        history: z.array(receiptInZ).optional().describe('Earlier team receipts (alternative to previousRounds).'),
         title: z.string().optional(),
       },
       outputSchema: out({
@@ -208,7 +211,7 @@ export async function createServer(opts: ServerOptions): Promise<McpServer> {
       title: 'Verify a receipt',
       description: 'Check a Whirlpick receipt (object, receipt code, or /verify/#r= or /#spin= URL): the list fingerprint, the seed commitment and a full re-run of the draw; pass the commitment and fingerprint you saw before the draw to confirm nothing changed.',
       inputSchema: {
-        receipt: z.union([receiptZ, z.string()]).optional(),
+        receipt: z.union([receiptInZ, z.string()]).optional().describe('A receipt object, a receipt code (1.…), or a /verify/#r= or /#spin= URL.'),
         file: z.string().optional().describe('A receipt .json file inside the allowed roots.'),
         expectedCommitment: z.string().optional(),
         expectedWheelHash: z.string().optional(),
@@ -260,7 +263,7 @@ export async function createServer(opts: ServerOptions): Promise<McpServer> {
         ...source,
         title: z.string().optional(),
         settings: z.record(z.string(), z.unknown()).optional().describe('Partial wheel settings (mode, spinDuration, theme, fairDraw, …) as in .whirl.json.'),
-        replayReceipt: receiptZ.optional().describe('Make a #spin= replay link for this receipt instead.'),
+        replayReceipt: receiptInZ.optional().describe('Make a #spin= replay link for this receipt instead.'),
         base: z.string().optional(),
         qrSvg: z.boolean().optional().describe('Include an SVG QR code (links ≤ 1800 characters).'),
       },

@@ -1,5 +1,6 @@
 // `whirlpick` CLI (PLAN §5). main() never throws: it returns the exit code and writes through `io`.
-import { extname } from 'node:path';
+import { existsSync } from 'node:fs';
+import { extname, resolve } from 'node:path';
 import { APP_VERSION, CHECK_TEXT, RECEIPT_SCHEMA_V1, WHIRL_SCHEMA_V1, wheelHash, WhirlError, type EntryIn, type VerifyReport } from '@whirlpick/core';
 import { bool, helpText, int, list, parseArgs, str, type FlagSpec, type Parsed } from './args.js';
 import { errorDoc, EXIT, UsageError } from './errors.js';
@@ -291,7 +292,8 @@ COMMANDS.verify = {
     const arg = p.positionals[0];
     if (arg === undefined) throw new UsageError('Give a receipt: a file, - for stdin, a receipt code or a /verify/#r= link.');
     if (p.positionals.length > 1) throw new UsageError(`Unexpected argument "${p.positionals[1]}".`);
-    const input = arg === '-' ? await io.stdin() : looksLikeCode(arg) ? arg : await readInputFile(arg, io.cwd);
+    // A receipt code or URL, unless a file of that name exists (e.g. a receipt saved as 1.json).
+    const input = arg === '-' ? await io.stdin() : looksLikeCode(arg) && !existsSync(resolve(io.cwd, arg)) ? arg : await readInputFile(arg, io.cwd);
     const report = await opVerify(input, { commitment: str(p, 'commitment'), wheelHash: str(p, 'wheel-hash') });
     if (json) printJson(io, report);
     else if (quiet) io.stdout(report.status + '\n');

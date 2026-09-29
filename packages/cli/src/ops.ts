@@ -111,6 +111,7 @@ export async function opSpin(src: Resolved, o: SpinInput, surface: Surface, now:
   const spins = o.spins ?? 1;
   if (!Number.isInteger(spins) || spins < 1 || spins > 1000) throw new WhirlError('SPINS_INVALID', 'spins must be a whole number from 1 to 1000.');
   if (spins > 1 && mode !== 'elimination') throw new UsageError('spins > 1 needs mode elimination.');
+  const base = o.includeLink ? checkBase(o.base) : undefined;
   const seed = resolveSeed(o);
   const start = checkSpinIndex(o.spinIndex);
   const title = o.title ?? (src.wheel.settings.title || null);
@@ -135,7 +136,7 @@ export async function opSpin(src: Resolved, o: SpinInput, surface: Surface, now:
     for (const p of r.result.picks!) excluded.push(p.index);
   }
   const out: SpinOutput = { ok: true, mode, winners: receipts.flatMap((r) => r.result.picks!.map((p) => ({ index: p.index, label: p.label }))), receipts, warnings: [...src.warnings, ...seed.warnings] };
-  if (o.includeLink) out.link = shareUrl('spin', await encodeReceiptCode(receipts[receipts.length - 1]!), o.base ?? SITE_URL);
+  if (base !== undefined) out.link = shareUrl('spin', await encodeReceiptCode(receipts[receipts.length - 1]!), base);
   return out;
 }
 
