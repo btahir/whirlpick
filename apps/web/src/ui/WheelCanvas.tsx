@@ -51,6 +51,10 @@ export function WheelCanvas({ onSpin, big = false }: { onSpin: () => void; big?:
       const w = activeWheel(s);
       const ses = sessionOf(s);
       let excluded: number[] = w.settings.mode === "elimination" ? ses.excluded : (EMPTY as never[]);
+      // REVIEW P0-1: while the winner plate is open, the wheel holds still on the winner even
+      // though the automatic removal is already in state; it collapses when the plate closes.
+      const held = s.last && !s.last.replay && s.ui.dialog?.kind === "winner" ? s.last.picks[0]?.index : undefined;
+      if (held !== undefined && excluded.includes(held)) excluded = excluded.filter((i) => i !== held);
       if (s.spin.phase !== "idle") {
         const seg = s.spin.plan.segments[s.spin.phase === "paused" ? s.spin.segment + 0 : s.spin.segment];
         if (seg) excluded = seg.excluded;
@@ -185,6 +189,9 @@ export function WheelCanvas({ onSpin, big = false }: { onSpin: () => void; big?:
     const removal = !!prev && !view.spinning && prev.slices.length - scene.slices.length === 1 && prev.slices.length <= 200 && !c.reducedMotion();
     d.setScene(scene, removal ? 420 : 0);
     prevScene.current = scene;
+    // At rest before the first spin, centre slice 0 on the pick rather than a boundary.
+    const s0 = scene.slices[0];
+    if (!d.hasSpun && !d.spinning && s0) d.setRotation(scene.pointerTurn - (s0.start + s0.end) / 2);
     d.setMysteryAlpha(1);
   }, [scene, c, view.spinning]);
 

@@ -210,6 +210,8 @@ export function fitLabel(i: FitInput): Omit<LabelReport, "pos"> {
   let w = i.measure(text, fs, wdth);
   const rin = () => Math.max(rhoOut - w, rhoInMin);
   const fits = () => w <= room && fs <= 0.9 * chord(rin() + fs * 0.5, A);
+  // Condense → shrink, but never below 0.62 × the wheel's size (REVIEW P1-5) → then truncate.
+  const floor = Math.max(i.fsMin, 0.62 * i.globalFs);
   for (let k = 0; k < 4 && !fits(); k++) {
     if (wdth > 75) {
       wdth = 75;
@@ -218,7 +220,7 @@ export function fitLabel(i: FitInput): Omit<LabelReport, "pos"> {
     }
     const byChord = 0.9 * chord(rin() + fs * 0.5, A);
     const byLen = (fs * room) / Math.max(w, 1e-6);
-    fs = Math.max(i.fsMin, Math.min(fs, byChord, byLen) * 0.98);
+    fs = Math.max(floor, Math.min(fs, byChord, byLen) * 0.98);
     w = i.measure(text, fs, wdth);
   }
   if (!fits()) {
@@ -253,14 +255,26 @@ export function pegStrideFor(scene: Pick<WheelScene, "slices">, R: number): numb
 
 /* ------------------------------------------------------------ layer caches */
 
+interface UprightLabel {
+  pos: number;
+  text: string;
+  fontPx: number;
+  fill: string;
+  halo: string | null;
+}
+
 interface Layers {
   key: string;
   base: CanvasLike;
   face: CanvasLike;
   top: CanvasLike;
   labels: LabelReport[];
+  upright: UprightLabel[];
   pegStride: number;
 }
+
+/** Wheels of this many entries or fewer get upright, centred labels (REVIEW P1-4). */
+export const UPRIGHT_MAX = 4;
 
 const cache = new WeakMap<object, Layers>();
 
@@ -316,7 +330,7 @@ function measureWith(ctx: Ctx, family: string, weight = 760) {
   };
 }
 
-function drawFace(ctx: Ctx, scene: WheelScene, g: Geometry, deps: RenderDeps): { labels: LabelReport[]; pegStride: number } {
+function drawFace(ctx: Ctx, scene: WheelScene, g: Geometry, deps: RenderDeps): { labels: LabelReport[]; upright: UprightLabel[]; pegStride: number } {
   const t = scene.theme;
   const graphemes = deps.graphemes ?? defaultGraphemes;
   const n = scene.slices.length;
@@ -325,8 +339,11 @@ function drawFace(ctx: Ctx, scene: WheelScene, g: Geometry, deps: RenderDeps): {
   // Fills.
   if (scene.empty) {
     circle(ctx, 0, 0, g.face);
-    ctx.fillStyle = t.sunk;
+    ctx.fillStyle = t.emptyFace;
     ctx.fill();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = t.rule;
+    ctx.stroke();
     ctx.save();
     ctx.strokeStyle = t.rule;
     ctx.lineWidth = Math.max(1, 0.008 * g.R);
@@ -367,7 +384,31 @@ function drawFace(ctx: Ctx, scene: WheelScene, g: Geometry, deps: RenderDeps): {
   }
   // Labels (after all fills so halos are never covered).
   const labels: LabelReport[] = [];
-  if (scene.labels && n > 0) {
+  const upright: UprightLabel[] = [];
+  if (scene.labels && n > 0 && n <= UPRIGHT_MAX) {
+    // Few entries: upright labels centred in each slice, drawn per frame (they counter-rotate).
+    const graph = deps.graphemes ?? defaultGraphemes;
+    const chord = (rho: number, A: number) => 2 * rho * Math.sin(Math.min(A, Math.PI) / 2);
+    const fsMin = Math.max(GEO.FS_MIN_PX * scene.fontScale, GEO.FS_MIN * g.R);
+    const maxW = 0.7 * g.face;
+    for (const s of scene.slices) {
+      const A = n === 1 ? Math.PI : (s.end - s.start) * TAU;
+      ctx.font = labelFont(100, 90, t.labelFamily, t.labelWeight ?? 800);
+      const w1 = ctx.measureText(s.label).width / 100;
+      let fs = Math.min(0.22 * g.R * scene.fontScale, 0.9 * chord(0.55 * g.face, A), maxW / Math.max(w1, 1e-6));
+      let text = s.label;
+      if (fs < fsMin) {
+        fs = fsMin;
+        const gs = graph(text);
+        while (gs.length > 1 && (ctx.measureText(gs.join("") + "…").width / 100) * fs > maxW) gs.pop();
+        text = gs.length < graph(s.label).length ? gs.join("").trimEnd() + "…" : text;
+      }
+      ctx.font = labelFont(fs, 90, t.labelFamily, t.labelWeight ?? 800);
+      const width = ctx.measureText(text).width;
+      labels.push({ pos: s.pos, text, fontPx: fs, stretch: 90, width, room: maxW, chordAtInner: chord(0.55 * g.face, A), hidden: false });
+      upright.push({ pos: s.pos, text, fontPx: fs, fill: s.textFill, halo: s.halo });
+    }
+  } else if (scene.labels && n > 0) {
     const measure = measureWith(ctx, t.labelFamily, t.labelWeight ?? 760);
     const { globalFs, fsMin } = globalFontSize(g, n, scene.fontScale);
     const rhoOut = g.face - GEO.LABEL_OUT * g.R;
@@ -431,7 +472,7 @@ function drawFace(ctx: Ctx, scene: WheelScene, g: Geometry, deps: RenderDeps): {
     }
   }
   ctx.restore();
-  return { labels, pegStride: stride };
+  return { labels, upright, pegStride: stride };
 }
 
 function drawTop(ctx: Ctx, scene: WheelScene, g: Geometry, deps: RenderDeps) {
@@ -517,10 +558,10 @@ function layersFor(scene: WheelScene, width: number, dpr: number, deps: RenderDe
   const base = layer(deps, g.width, g.height, scale);
   drawBase(base.ctx, scene, g);
   const face = layer(deps, 2 * g.R, 2 * g.R, scale);
-  const { labels, pegStride } = drawFace(face.ctx, scene, g, deps);
+  const { labels, upright, pegStride } = drawFace(face.ctx, scene, g, deps);
   const top = layer(deps, g.width, g.height, scale);
   drawTop(top.ctx, scene, g, deps);
-  const layers: Layers = { key, base: base.c, face: face.c, top: top.c, labels, pegStride };
+  const layers: Layers = { key, base: base.c, face: face.c, top: top.c, labels, upright, pegStride };
   cache.set(scene, layers);
   return { layers, hit: false };
 }
@@ -580,6 +621,32 @@ function drawMystery(ctx: Ctx, scene: WheelScene, g: Geometry, rotation: number,
     ctx.fillText("?", Math.cos(a) * 0.72 * g.face, Math.sin(a) * 0.72 * g.face);
   }
   ctx.restore();
+}
+
+function drawUpright(ctx: Ctx, scene: WheelScene, g: Geometry, labels: UprightLabel[], rotation: number) {
+  const t = scene.theme;
+  const n = scene.slices.length;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  for (const l of labels) {
+    const s = scene.slices[l.pos];
+    if (!s) continue;
+    const mid = n === 1 ? 0 : (s.start + s.end) / 2;
+    const a = canvasAngle(mid + rotation);
+    const x = Math.cos(a) * 0.55 * g.face;
+    const y = Math.sin(a) * 0.55 * g.face;
+    ctx.font = labelFont(l.fontPx, 90, t.labelFamily, t.labelWeight ?? 800);
+    if (RTL.test(l.text)) ctx.direction = "rtl";
+    if (l.halo) {
+      ctx.lineJoin = "round";
+      ctx.lineWidth = l.fontPx * 0.18;
+      ctx.strokeStyle = l.halo;
+      ctx.strokeText(l.text, x, y);
+    }
+    ctx.fillStyle = l.fill;
+    ctx.fillText(l.text, x, y);
+    ctx.direction = "ltr";
+  }
 }
 
 export function drawPick(ctx: Ctx, scene: WheelScene, g: Geometry, deflectionDeg: number) {
@@ -650,9 +717,21 @@ export function renderWheel(ctx: Ctx, scene: WheelScene, rotationTurns: number, 
   ctx.translate(g.cx, g.cy);
   ctx.rotate(rotationTurns * TAU);
   ctx.drawImage(layers.face as unknown as CanvasImageSource, -g.R, -g.R, 2 * g.R, 2 * g.R);
-  const vp = frame.veilPos;
-  if (vp != null && scene.slices[vp]) drawVeil(ctx, scene, g, scene.slices[vp]!, frame.veil ?? 0, frame.outline ?? 0);
   ctx.restore();
+  if (layers.upright.length) {
+    ctx.save();
+    ctx.translate(g.cx, g.cy);
+    drawUpright(ctx, scene, g, layers.upright, rotationTurns);
+    ctx.restore();
+  }
+  const vp = frame.veilPos;
+  if (vp != null && scene.slices[vp]) {
+    ctx.save();
+    ctx.translate(g.cx, g.cy);
+    ctx.rotate(rotationTurns * TAU);
+    drawVeil(ctx, scene, g, scene.slices[vp]!, frame.veil ?? 0, frame.outline ?? 0);
+    ctx.restore();
+  }
   if (scene.mystery) {
     ctx.save();
     ctx.translate(g.cx, g.cy);

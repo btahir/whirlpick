@@ -36,7 +36,7 @@
   --wp-brass: #B8913F;
   --wp-brass-hi: #EED79A;
   --wp-brass-lo: #6E5220;
-  --wp-lights-down: 0.5;     /* opacity of the #0B0807 veil over losing slices */
+  --wp-lights-down: 0.55;    /* day: a #F4ECDF (ground) wash over losing slices; night: #0B0807 at 0.46 (REVIEW P1-1) */
   --wp-scrim: rgba(244, 236, 223, 0.62);
 
   /* type */
@@ -89,7 +89,7 @@
     --wp-ok: #5FC2A2; --wp-bad: #F08A70; --wp-focus: #8CB4F0;
     --wp-rim: #0A0706; --wp-sep: #1F1814; --wp-hub: #F4EADB;
     --wp-brass: #C9A24A; --wp-brass-hi: #F3DDA0; --wp-brass-lo: #6E5220;
-    --wp-lights-down: 0.62; --wp-scrim: rgba(22, 17, 14, .66);
+    --wp-lights-down: 0.46; --wp-scrim: rgba(22, 17, 14, .66);
     --wp-e2: 0 5px 0 var(--wp-rule-strong), 0 18px 40px -12px rgba(0, 0, 0, .7);
     --wp-e-btn: 0 4px 0 var(--wp-accent-lip), 0 10px 24px -8px rgba(0, 0, 0, .6);
   }
@@ -103,7 +103,7 @@
   --wp-ok: #5FC2A2; --wp-bad: #F08A70; --wp-focus: #8CB4F0;
   --wp-rim: #0A0706; --wp-sep: #1F1814; --wp-hub: #F4EADB;
   --wp-brass: #C9A24A; --wp-brass-hi: #F3DDA0; --wp-brass-lo: #6E5220;
-  --wp-lights-down: 0.62; --wp-scrim: rgba(22, 17, 14, .66);
+  --wp-lights-down: 0.46; --wp-scrim: rgba(22, 17, 14, .66);
   --wp-e2: 0 5px 0 var(--wp-rule-strong), 0 18px 40px -12px rgba(0, 0, 0, .7);
   --wp-e-btn: 0 4px 0 var(--wp-accent-lip), 0 10px 24px -8px rgba(0, 0, 0, .6);
 }

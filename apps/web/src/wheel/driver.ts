@@ -79,6 +79,9 @@ export class WheelDriver {
     return this.phase !== null;
   }
 
+  /** False until the first spin: the idle wheel then rests with slice 0 centred on the pick. */
+  hasSpun = false;
+
   get currentScene(): WheelScene | null {
     return this.scene;
   }
@@ -152,6 +155,7 @@ export class WheelDriver {
     if (this.phase) return Promise.resolve();
     this.transition = null;
     this.setVeil(null);
+    this.hasSpun = true;
     return new Promise((resolve) => {
       const t = this.now();
       this.resolveSpin = resolve;

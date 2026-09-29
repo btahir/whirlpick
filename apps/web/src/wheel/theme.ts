@@ -25,6 +25,8 @@ export interface WheelTheme {
   /** Empty-wheel face and ghost spokes. */
   sunk: string;
   rule: string;
+  /** Face of an empty wheel (night uses surface so it doesn't read as a black hole). */
+  emptyFace: string;
   /** Page ground (readout text). */
   ground: string;
   /** Veil over losing slices. */
@@ -81,8 +83,10 @@ const DAY = {
   accent: "#C2361F",
   sunk: "#EDE3D3",
   rule: "#DCCFBC",
+  emptyFace: "#EDE3D3",
   ground: "#F4ECDF",
-  veilOpacity: 0.5,
+  veil: "#F4ECDF",
+  veilOpacity: 0.55,
   vignette: 0.14,
   shadowOpacity: 0.16,
 };
@@ -99,8 +103,10 @@ const NIGHT = {
   accent: "#E4553A",
   sunk: "#110D0A",
   rule: "#352A23",
+  emptyFace: "#1F1814",
   ground: "#16110E",
-  veilOpacity: 0.62,
+  veil: "#0B0807",
+  veilOpacity: 0.46,
   vignette: 0.28,
   shadowOpacity: 0.45,
 };
@@ -115,7 +121,8 @@ export function wheelTheme(id: string, scheme: "light" | "dark", opts: { flat?: 
     scheme,
     palette,
     ...hw,
-    veil: "#0B0807",
+    // REVIEW P1-1: day washes losers out in the ground colour; night (and stream) dims in ink.
+    ...(opts.flat ? { veil: NIGHT.veil, veilOpacity: NIGHT.veilOpacity } : {}),
     flat: !!opts.flat,
     labelFamily: LABEL_FAMILY,
   };
