@@ -1,0 +1,353 @@
+{
+ "version": 1,
+ "note": "Wheel slice palettes. label = text colour on that fill; every pair >= 4.5:1 (see SPEC.md 3.3).",
+ "palettes": {
+  "enamel-day": [
+   {
+    "name": "Tomato",
+    "fill": "#C2361F",
+    "label": "#FFF8EC"
+   },
+   {
+    "name": "Sky",
+    "fill": "#8CC7E0",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Jade",
+    "fill": "#17735D",
+    "label": "#FFF8EC"
+   },
+   {
+    "name": "Marigold",
+    "fill": "#F2A93B",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Cobalt",
+    "fill": "#2A55A8",
+    "label": "#FFF8EC"
+   },
+   {
+    "name": "Blush",
+    "fill": "#F2B8A6",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Clay",
+    "fill": "#9A5222",
+    "label": "#FFF8EC"
+   },
+   {
+    "name": "Pistachio",
+    "fill": "#BFD37F",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Plum",
+    "fill": "#5B2A4E",
+    "label": "#FFF8EC"
+   },
+   {
+    "name": "Butter",
+    "fill": "#F0D27A",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Lagoon",
+    "fill": "#0F5E63",
+    "label": "#FFF8EC"
+   },
+   {
+    "name": "Coral",
+    "fill": "#EE8F6E",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Moss",
+    "fill": "#4E6B2E",
+    "label": "#FFF8EC"
+   },
+   {
+    "name": "Oat",
+    "fill": "#E6D8BE",
+    "label": "#1F1915"
+   }
+  ],
+  "enamel-night": [
+   {
+    "name": "Tomato",
+    "fill": "#B8321E",
+    "label": "#FFF3E2"
+   },
+   {
+    "name": "Sky",
+    "fill": "#7FBEDA",
+    "label": "#140F0C"
+   },
+   {
+    "name": "Jade",
+    "fill": "#146B56",
+    "label": "#FFF3E2"
+   },
+   {
+    "name": "Marigold",
+    "fill": "#EFA232",
+    "label": "#140F0C"
+   },
+   {
+    "name": "Cobalt",
+    "fill": "#2F5BB0",
+    "label": "#FFF3E2"
+   },
+   {
+    "name": "Blush",
+    "fill": "#EFB09C",
+    "label": "#140F0C"
+   },
+   {
+    "name": "Clay",
+    "fill": "#914C1F",
+    "label": "#FFF3E2"
+   },
+   {
+    "name": "Pistachio",
+    "fill": "#B5CC6E",
+    "label": "#140F0C"
+   },
+   {
+    "name": "Plum",
+    "fill": "#62305A",
+    "label": "#FFF3E2"
+   },
+   {
+    "name": "Butter",
+    "fill": "#EDCB66",
+    "label": "#140F0C"
+   },
+   {
+    "name": "Lagoon",
+    "fill": "#0E5A60",
+    "label": "#FFF3E2"
+   },
+   {
+    "name": "Coral",
+    "fill": "#EC8663",
+    "label": "#140F0C"
+   },
+   {
+    "name": "Moss",
+    "fill": "#4A662B",
+    "label": "#FFF3E2"
+   },
+   {
+    "name": "Oat",
+    "fill": "#DCCBAE",
+    "label": "#140F0C"
+   }
+  ],
+  "sherbet": [
+   {
+    "name": "Peach",
+    "fill": "#F6C1A8",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Mint",
+    "fill": "#BFE0D2",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Lemon",
+    "fill": "#F3DD8E",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Periwinkle",
+    "fill": "#C9D7F0",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Rose",
+    "fill": "#F4B6C2",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Lime",
+    "fill": "#D6E6A3",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Apricot",
+    "fill": "#F2CFA0",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Ice",
+    "fill": "#B9DDE8",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Orchid",
+    "fill": "#E8C6E0",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Linen",
+    "fill": "#E4E0CF",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Melon",
+    "fill": "#F0B99A",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Sage",
+    "fill": "#C8E3B8",
+    "label": "#1F1915"
+   }
+  ],
+  "harbour": [
+   {
+    "name": "Navy",
+    "fill": "#1D4E89",
+    "label": "#FFF8EC"
+   },
+   {
+    "name": "Ice",
+    "fill": "#9ED0E6",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Teal",
+    "fill": "#0F6B6B",
+    "label": "#FFF8EC"
+   },
+   {
+    "name": "Sand",
+    "fill": "#F2D38A",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Pine",
+    "fill": "#2B7555",
+    "label": "#FFF8EC"
+   },
+   {
+    "name": "Sea glass",
+    "fill": "#BFD9C9",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Slate",
+    "fill": "#37476B",
+    "label": "#FFF8EC"
+   },
+   {
+    "name": "Shell",
+    "fill": "#F1B79A",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Deep",
+    "fill": "#135E78",
+    "label": "#FFF8EC"
+   },
+   {
+    "name": "Mist",
+    "fill": "#D9E7EF",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Kelp",
+    "fill": "#566A2C",
+    "label": "#FFF8EC"
+   },
+   {
+    "name": "Dune",
+    "fill": "#F6E3B4",
+    "label": "#1F1915"
+   }
+  ],
+  "broadcast": [
+   {
+    "name": "Tomato",
+    "fill": "#C2361F",
+    "label": "#FFF8EC"
+   },
+   {
+    "name": "Marigold",
+    "fill": "#F2A93B",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Cobalt",
+    "fill": "#2A55A8",
+    "label": "#FFF8EC"
+   },
+   {
+    "name": "Blush",
+    "fill": "#F2B8A6",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Plum",
+    "fill": "#5B2A4E",
+    "label": "#FFF8EC"
+   },
+   {
+    "name": "Butter",
+    "fill": "#F0D27A",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Clay",
+    "fill": "#9A5222",
+    "label": "#FFF8EC"
+   },
+   {
+    "name": "Coral",
+    "fill": "#EE8F6E",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Ink",
+    "fill": "#2B2521",
+    "label": "#FFF8EC"
+   },
+   {
+    "name": "Rose",
+    "fill": "#F4B6C2",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Berry",
+    "fill": "#8E2350",
+    "label": "#FFF8EC"
+   },
+   {
+    "name": "Oat",
+    "fill": "#E6D8BE",
+    "label": "#1F1915"
+   }
+  ],
+  "mono-ink": [
+   {
+    "name": "Ink",
+    "fill": "#1F1915",
+    "label": "#FFF8EC"
+   },
+   {
+    "name": "Paper",
+    "fill": "#F3E6CC",
+    "label": "#1F1915"
+   },
+   {
+    "name": "Tomato",
+    "fill": "#C2361F",
+    "label": "#FFF8EC"
+   }
+  ]
+ }
+}

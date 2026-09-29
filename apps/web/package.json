@@ -1,0 +1,37 @@
+{
+  "name": "@whirlpick/web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Whirlpick web app: a local-first spin wheel, name picker and team splitter with checkable fair-draw receipts. Static site, offline PWA.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 4323 --strictPort",
+    "build": "tsc --noEmit && vite build && tsx scripts/prerender.ts && tsx scripts/build-sw.ts",
+    "preview": "node scripts/serve-static.mjs dist 4324",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --root ../.. --project web-unit"
+  },
+  "dependencies": {
+    "@fontsource-variable/bricolage-grotesque": "5.3.0",
+    "@fontsource-variable/martian-mono": "5.3.0",
+    "@whirlpick/core": "workspace:*",
+    "qr": "0.7.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@napi-rs/canvas": "1.0.9",
+    "@playwright/test": "1.63.0",
+    "@types/pngjs": "6.0.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.1.1",
+    "lighthouse": "13.5.0",
+    "pixelmatch": "7.2.0",
+    "pngjs": "7.0.0",
+    "typescript": "7.0.2",
+    "vite": "8.3.1"
+  }
+}

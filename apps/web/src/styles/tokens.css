@@ -1,0 +1,118 @@
+/* Whirlpick design tokens: Direction A, "Enamel & Brass".
+   Copy to apps/web/src/styles/tokens.css. Source of truth: docs/design/SPEC.md.
+   Fonts: import "@fontsource-variable/bricolage-grotesque/standard.css" (wght + wdth + opsz)
+   and "@fontsource-variable/martian-mono" (wght). Both OFL-1.1. */
+
+:root {
+  color-scheme: light;
+
+  /* ground and surfaces (day) */
+  --wp-ground: #F4ECDF;      /* page: enamel cream */
+  --wp-surface: #FBF7F0;     /* side panel, dialogs, ticket */
+  --wp-sunk: #EDE3D3;        /* wells: inputs, segmented control track, hover rows */
+  --wp-rule: #DCCFBC;        /* hairlines, 1px */
+  --wp-rule-strong: #1F1915; /* dialog/ticket outlines and hard lips */
+
+  /* text */
+  --wp-ink: #1F1915;         /* 14.8:1 on ground */
+  --wp-ink-2: #5E5249;       /* secondary, 6.4:1 */
+  --wp-ink-3: #6F6155;       /* tertiary/meta, 5.1:1 on ground, 4.7:1 on sunk */
+
+  /* the one UI accent: tomato. Spin, primary buttons, Support link, the pick */
+  --wp-accent: #C2361F;
+  --wp-accent-ink: #FFF8EC;  /* text on accent, 5.18:1 */
+  --wp-accent-lip: #7E1F10;  /* 3-4px hard shadow under accent buttons */
+  --wp-accent-text: #AE2F1A; /* accent used AS text on sunk (5.13:1) */
+
+  /* status */
+  --wp-ok: #17735D;          /* fair-draw seal, verify pass, switches on */
+  --wp-bad: #B8321E;         /* verify fail, destructive */
+  --wp-focus: #2A55A8;       /* focus ring */
+
+  /* wheel hardware */
+  --wp-rim: #1F1915;
+  --wp-sep: #FBF7F0;         /* spokes between slices */
+  --wp-hub: #FBF7F0;
+  --wp-brass: #B8913F;
+  --wp-brass-hi: #EED79A;
+  --wp-brass-lo: #6E5220;
+  --wp-lights-down: 0.5;     /* opacity of the #0B0807 veil over losing slices */
+  --wp-scrim: rgba(244, 236, 223, 0.62);
+
+  /* type */
+  --wp-font: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, "Noto Sans", sans-serif;
+  --wp-mono: "Martian Mono Variable", ui-monospace, "SF Mono", Menlo, monospace;
+  --wp-text-xs: 12px;   /* mono meta */
+  --wp-text-sm: 13px;   /* captions, help */
+  --wp-text-md: 15px;   /* body, controls */
+  --wp-text-lg: 17px;   /* entry rows */
+  --wp-text-xl: 23px;   /* wordmark, drawer titles */
+  --wp-text-2xl: 26px;  /* Spin button */
+  --wp-text-hero: 96px; /* winner name, desktop; 72px phone; 160px presenter */
+
+  /* spacing: 4px base */
+  --wp-s1: 4px; --wp-s2: 8px; --wp-s3: 12px; --wp-s4: 16px; --wp-s5: 20px;
+  --wp-s6: 24px; --wp-s7: 28px; --wp-s8: 32px; --wp-s10: 40px; --wp-s12: 48px;
+
+  /* radii: small. Panels are not cards. */
+  --wp-r-xs: 5px;   /* keycaps */
+  --wp-r-sm: 6px;   /* ticket, inputs */
+  --wp-r-md: 8px;   /* icon buttons, fields */
+  --wp-r-lg: 10px;  /* dialogs, toasts */
+  --wp-r-sheet: 16px; /* phone bottom sheet top corners only */
+  --wp-r-pill: 999px; /* buttons */
+
+  /* elevation: hard lips (tactile, printed) + one soft ambient for floating layers */
+  --wp-e1: 0 2px 0 var(--wp-rule-strong);                                   /* ticket */
+  --wp-e2: 0 5px 0 var(--wp-rule-strong), 0 12px 32px -12px rgba(31, 25, 21, .28); /* dialog */
+  --wp-e-btn: 0 4px 0 var(--wp-accent-lip), 0 10px 24px -8px rgba(126, 31, 16, .55);
+  --wp-e-toast: 0 10px 24px -10px rgba(0, 0, 0, .5);
+
+  /* motion */
+  --wp-ease-out: cubic-bezier(.2, .8, .2, 1);
+  --wp-ease-pop: cubic-bezier(.2, .9, .25, 1.15);   /* plate entrance, slight overshoot */
+  --wp-ease-inout: cubic-bezier(.65, 0, .35, 1);
+  --wp-t-fast: 120ms; --wp-t-base: 200ms; --wp-t-slow: 320ms;
+
+  /* layers */
+  --wp-z-panel: 1; --wp-z-drawer: 20; --wp-z-scrim: 30; --wp-z-confetti: 35; --wp-z-dialog: 40; --wp-z-toast: 50;
+}
+
+/* night: warm near-black, not blue-black */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --wp-ground: #16110E; --wp-surface: #1F1814; --wp-sunk: #110D0A;
+    --wp-rule: #352A23; --wp-rule-strong: #F4EADB;
+    --wp-ink: #F4EADB; --wp-ink-2: #BDAE9E; --wp-ink-3: #9A8B7D;
+    --wp-accent: #E4553A; --wp-accent-ink: #1A0D08; --wp-accent-lip: #8F2A17; --wp-accent-text: #E4553A;
+    --wp-ok: #5FC2A2; --wp-bad: #F08A70; --wp-focus: #8CB4F0;
+    --wp-rim: #0A0706; --wp-sep: #1F1814; --wp-hub: #F4EADB;
+    --wp-brass: #C9A24A; --wp-brass-hi: #F3DDA0; --wp-brass-lo: #6E5220;
+    --wp-lights-down: 0.62; --wp-scrim: rgba(22, 17, 14, .66);
+    --wp-e2: 0 5px 0 var(--wp-rule-strong), 0 18px 40px -12px rgba(0, 0, 0, .7);
+    --wp-e-btn: 0 4px 0 var(--wp-accent-lip), 0 10px 24px -8px rgba(0, 0, 0, .6);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --wp-ground: #16110E; --wp-surface: #1F1814; --wp-sunk: #110D0A;
+  --wp-rule: #352A23; --wp-rule-strong: #F4EADB;
+  --wp-ink: #F4EADB; --wp-ink-2: #BDAE9E; --wp-ink-3: #9A8B7D;
+  --wp-accent: #E4553A; --wp-accent-ink: #1A0D08; --wp-accent-lip: #8F2A17; --wp-accent-text: #E4553A;
+  --wp-ok: #5FC2A2; --wp-bad: #F08A70; --wp-focus: #8CB4F0;
+  --wp-rim: #0A0706; --wp-sep: #1F1814; --wp-hub: #F4EADB;
+  --wp-brass: #C9A24A; --wp-brass-hi: #F3DDA0; --wp-brass-lo: #6E5220;
+  --wp-lights-down: 0.62; --wp-scrim: rgba(22, 17, 14, .66);
+  --wp-e2: 0 5px 0 var(--wp-rule-strong), 0 18px 40px -12px rgba(0, 0, 0, .7);
+  --wp-e-btn: 0 4px 0 var(--wp-accent-lip), 0 10px 24px -8px rgba(0, 0, 0, .6);
+}
+
+/* stream mode: no page chrome, background chosen by the user */
+:root[data-stream] { --wp-ground: transparent; }
+:root[data-stream="green"] { --wp-ground: #00B140; }
+:root[data-stream="magenta"] { --wp-ground: #FF00FF; }
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --wp-t-fast: 0ms; --wp-t-base: 120ms; --wp-t-slow: 160ms; }
+}
