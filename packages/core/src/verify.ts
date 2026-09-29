@@ -30,6 +30,9 @@ export const CHECK_TEXT: Record<string, { ok: string; fail: string }> = {
   committedWheelHash: { ok: 'The list is the one shown with the commitment.', fail: 'The list changed after the commitment was shown.' },
 };
 
+/** A receipt value for a check detail; a missing field reads "missing", never "undefined". */
+const show = (v: unknown): string => (v === undefined ? 'missing' : JSON.stringify(v) ?? String(v));
+
 export function verifyReceipt(input: unknown, expect: VerifyExpect = {}): VerifyReport {
   const checks: VerifyCheck[] = [];
   const warnings: string[] = [];
@@ -53,10 +56,10 @@ export function verifyReceipt(input: unknown, expect: VerifyExpect = {}): Verify
   pass('json');
   const o = r as Record<string, unknown>;
   // 2. format + version
-  if (o.format !== 'whirlpick-receipt' || o.version !== 1) return fail('version', 'UNSUPPORTED_VERSION', `Unsupported receipt: format ${JSON.stringify(o.format)}, version ${JSON.stringify(o.version)} (expected "whirlpick-receipt", 1).`);
+  if (o.format !== 'whirlpick-receipt' || o.version !== 1) return fail('version', 'UNSUPPORTED_VERSION', `Unsupported receipt: format ${show(o.format)}, version ${show(o.version)} (expected "whirlpick-receipt", 1).`);
   pass('version');
   // 3. algorithm
-  if (o.algorithm !== 'whirlpick-draw-v1') return fail('algorithm', 'UNKNOWN_ALGORITHM', `Unknown algorithm ${JSON.stringify(o.algorithm)} (expected "whirlpick-draw-v1").`);
+  if (o.algorithm !== 'whirlpick-draw-v1') return fail('algorithm', 'UNKNOWN_ALGORITHM', o.algorithm === undefined ? `The receipt doesn't name an algorithm (expected "whirlpick-draw-v1").` : `Unknown algorithm ${show(o.algorithm)} (expected "whirlpick-draw-v1").`);
   pass('algorithm');
   // 4. schema (beacon checked separately in 5)
   const problem = receiptShapeProblem(o);
@@ -122,7 +125,7 @@ export function verifyReceipt(input: unknown, expect: VerifyExpect = {}): Verify
     recomputed.teams = draw.result.teams!;
     recomputed.repeatPairs = draw.result.repeatPairs!;
     const same = JSON.stringify(claimed.teams) === JSON.stringify(draw.result.teams) && claimed.repeatPairs === draw.result.repeatPairs;
-    if (!same) return fail('result', 'RESULT_MISMATCH', `${CHECK_TEXT.result!.fail} Expected teams ${JSON.stringify(draw.result.teams)} (repeat pairs ${draw.result.repeatPairs}), receipt claims ${JSON.stringify(claimed.teams)} (repeat pairs ${String(claimed.repeatPairs)}).`);
+    if (!same) return fail('result', 'RESULT_MISMATCH', `${CHECK_TEXT.result!.fail} Expected teams ${JSON.stringify(draw.result.teams)} (repeat pairs ${draw.result.repeatPairs}), receipt claims ${show(claimed.teams)} (repeat pairs ${show(claimed.repeatPairs)}).`);
     pass('result');
   } else {
     const exp = draw.result.picks!;
