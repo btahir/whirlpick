@@ -35,6 +35,9 @@ export interface WheelTheme {
   /** Stream mode: no shadow, no vignette. */
   flat: boolean;
   labelFamily: string;
+  /** Label weight (760 per SPEC §4). Node pixel tests use the font's default instance because
+   * @napi-rs/canvas can't set variation axes. */
+  labelWeight?: number;
 }
 
 export const LABEL_FAMILY = `"Bricolage Grotesque Variable", ui-sans-serif, system-ui, "Noto Sans", sans-serif`;

@@ -186,6 +186,7 @@ export const AGENTS_DOC: DocPage = {
               ["`whirlpick validate <file>`", "`{ ok, valid, errors: [{path, code, message}], warnings, summary: {wheels, entries, images, history} }`. Exit 0 if valid, 3 if not. `path` is a JSON pointer."],
               ["`whirlpick presets`", "`{ presets: [{id, title, slug, entries, mode}] }`."],
               ["`whirlpick presets <id>`", "That preset as a one-wheel `whirl-v1` project."],
+              ["`whirlpick presets numbers --min 5 --max 15`", "The number wheel for any range, with `--min` and `--max` (at most 1,000 values). `--preset numbers` on `spin` takes the same two flags."],
               ["`whirlpick schema whirl`", "The JSON Schema for `.whirl.json` files."],
               ["`whirlpick schema receipt`", "The JSON Schema for receipts."],
             ],

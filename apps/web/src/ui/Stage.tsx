@@ -45,7 +45,8 @@ export function Stage() {
           <EntryList />
         </ul>
       </div>
-      {v.surface !== "embed" && !showBoard ? <SpinRow phone={phone} /> : null}
+      {v.surface !== "embed" && !showBoard && v.mode !== "teams" ? <SpinRow phone={phone} /> : null}
+      {v.mode === "teams" && !showBoard && v.surface === "app" ? <p className="teams-hint">Choose the teams in the Teams tab, then press Split.</p> : null}
       {v.surface === "embed" ? <EmbedSpin /> : null}
       {v.caption && v.surface !== "app" ? (
         <div className="stream-caption" role="status">

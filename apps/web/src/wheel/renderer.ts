@@ -302,13 +302,13 @@ function drawBase(ctx: Ctx, scene: WheelScene, g: Geometry) {
   ctx.restore();
 }
 
-function measureWith(ctx: Ctx, family: string) {
+function measureWith(ctx: Ctx, family: string, weight = 760) {
   const cache = new Map<string, number>();
   return (text: string, px: number, wdth: number) => {
     const k = `${px.toFixed(2)}|${wdth}|${text}`;
     let w = cache.get(k);
     if (w === undefined) {
-      ctx.font = labelFont(px, wdth, family);
+      ctx.font = labelFont(px, wdth, family, weight);
       w = ctx.measureText(text).width;
       cache.set(k, w);
     }
@@ -368,7 +368,7 @@ function drawFace(ctx: Ctx, scene: WheelScene, g: Geometry, deps: RenderDeps): {
   // Labels (after all fills so halos are never covered).
   const labels: LabelReport[] = [];
   if (scene.labels && n > 0) {
-    const measure = measureWith(ctx, t.labelFamily);
+    const measure = measureWith(ctx, t.labelFamily, t.labelWeight ?? 760);
     const { globalFs, fsMin } = globalFontSize(g, n, scene.fontScale);
     const rhoOut = g.face - GEO.LABEL_OUT * g.R;
     ctx.textBaseline = "middle";
@@ -380,7 +380,7 @@ function drawFace(ctx: Ctx, scene: WheelScene, g: Geometry, deps: RenderDeps): {
       if (fit.hidden) continue;
       ctx.save();
       ctx.rotate(n === 1 ? 0 : canvasAngle((s.start + s.end) / 2));
-      ctx.font = labelFont(fit.fontPx, fit.stretch, t.labelFamily);
+      ctx.font = labelFont(fit.fontPx, fit.stretch, t.labelFamily, t.labelWeight ?? 760);
       if (RTL.test(fit.text)) ctx.direction = "rtl";
       if (s.halo) {
         ctx.lineJoin = "round";
@@ -470,7 +470,7 @@ function drawTop(ctx: Ctx, scene: WheelScene, g: Geometry, deps: RenderDeps) {
     const box = 0.26 * g.R;
     let text = scene.centre.text;
     let px = box * 0.42;
-    const font = () => labelFont(px, 88, t.labelFamily, 780);
+    const font = () => labelFont(px, 88, t.labelFamily, t.labelWeight ?? 780);
     ctx.font = font();
     let w = ctx.measureText(text).width;
     if (w > box) {
@@ -575,7 +575,7 @@ function drawMystery(ctx: Ctx, scene: WheelScene, g: Geometry, rotation: number,
     const fs = Math.min(fsMax, 0.9 * chord(0.72 * g.face, A));
     if (fs < fsMin) continue;
     const a = canvasAngle((s.start + s.end) / 2 + rotation);
-    ctx.font = labelFont(fs, 100, scene.theme.labelFamily, 800);
+    ctx.font = labelFont(fs, 100, scene.theme.labelFamily, scene.theme.labelWeight ?? 800);
     ctx.fillStyle = s.textFill;
     ctx.fillText("?", Math.cos(a) * 0.72 * g.face, Math.sin(a) * 0.72 * g.face);
   }

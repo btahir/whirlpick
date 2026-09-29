@@ -391,8 +391,15 @@ main.app.presenter .workspace {
   border-bottom: 1px solid var(--wp-rule);
   display: grid;
   gap: 6px;
-  max-width: 1100px;
+  align-content: center;
   min-height: 104px;
+}
+.landing-head > * {
+  max-width: 1040px;
+}
+.teams-hint {
+  color: var(--wp-ink-3);
+  font-size: 14px;
 }
 .landing-head h1 {
   font-size: 28px;
@@ -1037,6 +1044,7 @@ main.app.presenter .workspace {
 .stepper {
   display: grid;
   gap: 4px;
+  justify-items: start;
 }
 .stepper-label {
   font-size: 13px;

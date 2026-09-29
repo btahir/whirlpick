@@ -532,7 +532,10 @@ export function createController(store: Store, opts: { surface: Surface }): Cont
     const reduced = reducedMotion();
     if (driver && pos >= 0) {
       const lt = landingTurn(slices, pos, seg.pick.landingU32);
-      const p = planSpin({ from: driver.angle, landingTurn: lt, durationSec: w.settings.spinDuration, reducedMotion: reduced, slices, pointerTurn: POINTER_TURN, windUp: true });
+      // Keep the rotation small so float precision holds on tiny slices (core's note).
+      const from = driver.angle - Math.floor(driver.angle);
+      if (from !== driver.angle) driver.setRotation(from);
+      const p = planSpin({ from, landingTurn: lt, durationSec: w.settings.spinDuration, reducedMotion: reduced, slices, pointerTurn: POINTER_TURN, windUp: true });
       await driver.run(p, reduced);
     } else {
       await sleep(reduced ? 300 : 600);
