@@ -131,9 +131,9 @@ CLI paths resolve against the current directory. Inputs must be regular files (d
 { "mcpServers": { "whirlpick": { "command": "node", "args": ["/abs/path/whirlpick/packages/cli/bin/whirlpick-mcp.js", "--root", "/abs/project"] } } }
 ```
 
-File access is limited to the allowed roots: `--root <dir>` (repeatable), else `WHIRLPICK_MCP_ROOT` (path-delimiter-separated), else the directory it was started in. Every path is resolved with `realpath` and must stay inside a root, so `..` and symlinks can't escape (`PATH_OUTSIDE_ROOT`). Reads: `.txt .csv .tsv .json` only; writes: `.json .svg` only (`PATH_EXTENSION`), and an existing file is replaced only with `overwrite: true` (`OUTPUT_EXISTS`). Inline data is always an option; paths are optional in every tool.
+File access is limited to the allowed roots: `--root <dir>` (repeatable), else `WHIRLPICK_MCP_ROOT` (path-delimiter-separated), else the directory it was started in (some MCP clients start servers in `/`, so pass `--root`). Every path is resolved with `realpath` and must stay inside a root, so `..` and symlinks can't escape (`PATH_OUTSIDE_ROOT`). Reads: `.txt .csv .tsv .json` only; writes: `.json .svg` only (`PATH_EXTENSION`), and an existing file is replaced only with `overwrite: true` (`OUTPUT_EXISTS`). Inline data is always an option; paths are optional in every tool.
 
-Every tool returns `structuredContent` plus one `text` item with the same JSON. Failures return `isError: true` with `structuredContent: { error: { code, message, details } }` (so output schemas mark fields optional; on success every listed field is present).
+Every tool returns `structuredContent` plus one `text` item with the same JSON. Failures return `isError: true` with `structuredContent: { error: { code, message, details } }` (so output schemas mark fields optional; on success every listed field is present). Arguments of the wrong JSON type (for example `count: "ALL"` or a weight given as a string) are rejected by the MCP SDK before the tool runs, as an `isError` result with the text `MCP error -32602: Input validation error …` and no `structuredContent`.
 
 | Tool | Use it to | Input | Output |
 |---|---|---|---|
