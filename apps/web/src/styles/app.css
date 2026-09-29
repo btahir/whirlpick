@@ -2246,11 +2246,14 @@ dialog.plate.drawer[open] {
   background: var(--wp-sunk);
   padding: 2px 5px;
   border-radius: 4px;
+  /* Long codes and one-liners wrap instead of pushing the page sideways at 320 px (L4). */
+  overflow-wrap: anywhere;
 }
 .prose pre code {
   background: none;
   padding: 0;
   font-size: 12.5px;
+  overflow-wrap: normal;
 }
 .prose table {
   border-collapse: collapse;

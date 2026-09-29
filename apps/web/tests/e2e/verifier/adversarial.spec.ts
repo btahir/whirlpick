@@ -181,11 +181,15 @@ test("malformed .whirl.json imports fail cleanly and change nothing", async ({ p
     await page.getByTestId("saved").click();
     const [chooser] = await Promise.all([page.waitForEvent("filechooser"), page.getByRole("button", { name: "Open a file" }).click()]);
     await chooser.setFiles(f);
-    await expect(page.getByTestId("import-errors").or(page.getByTestId("toast")), name).toBeVisible();
+    await expect(page.getByTestId("import-errors").or(page.getByTestId("toast")).first(), name).toBeVisible();
     expect((await snap(page)).entries, name).toEqual(before.entries);
     expect(await page.evaluate(() => (Object.prototype as Record<string, unknown>).polluted), name).toBeUndefined();
-    await page.keyboard.press("Escape");
-    await page.keyboard.press("Escape");
+    // The error plate may open a moment after a toast; close whatever is open before the next file.
+    await page.waitForTimeout(300);
+    await expect(async () => {
+      if (await page.locator("dialog[open]").count()) await page.keyboard.press("Escape");
+      expect(await page.locator("dialog[open]").count()).toBe(0);
+    }).toPass({ timeout: 5000 });
   }
   expect(errors).toEqual([]);
 });
