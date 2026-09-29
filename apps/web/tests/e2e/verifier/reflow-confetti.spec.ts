@@ -1,5 +1,6 @@
 // Verifier-owned (pass 2): ACCEPTANCE L4 (zoom and reflow) and the K4 parts the builder suite
-// doesn't cover in the browser (confetti off by setting, nothing drawn after 2.4 s).
+// doesn't cover in the browser (confetti off by setting, nothing drawn after 2.8 s; K4 as amended:
+// 2.6 s lifetime, <= 180 particles, the count bound is held by confetti.test.ts).
 import { expect, test, type Page } from "@playwright/test";
 import { openApp, spinAndWait } from "../helpers";
 
@@ -70,17 +71,18 @@ const painted = (page: Page) =>
     return n;
   });
 
-test("K4 in Chrome: confetti draws, stops by 2.4 s, and stays off when the setting is off", async ({ page }) => {
+test("K4 in Chrome: confetti draws, is gone by 2.8 s, and stays off when the setting is off", async ({ page }) => {
   test.setTimeout(60_000);
   await openApp(page, "/?duration=1");
   await page.getByTestId("spin").click();
   await expect(page.getByTestId("live")).toContainText(/Winner/, { timeout: 8000 });
   await page.waitForTimeout(250);
   const during = await painted(page);
-  await page.waitForTimeout(2600);
+  // 250 + 2650 ms = 2.9 s after the win is announced (confetti starts no later than that).
+  await page.waitForTimeout(2650);
   const after = await painted(page);
   expect(during, "confetti visible just after the win").toBeGreaterThan(0);
-  expect(after, "nothing left after 2.4 s").toBe(0);
+  expect(after, "nothing drawn after 2.8 s").toBe(0);
   await page.keyboard.press("Escape");
   await page.evaluate(() => (window as unknown as { __whirlpick: { controller: { setSettings(p: unknown): void } } }).__whirlpick.controller.setSettings({ confetti: false }));
   await spinAndWait(page);
