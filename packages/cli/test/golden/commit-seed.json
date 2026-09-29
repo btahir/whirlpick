@@ -1,0 +1,16 @@
+{
+  "args": [
+    "commit",
+    "--seed",
+    "abababababababababababababababababababababababababababababababab",
+    "--json"
+  ],
+  "exit": 0,
+  "stdout": {
+    "ok": true,
+    "seed": "abababababababababababababababababababababababababababababababab",
+    "commitment": "a0b2f602f3f14bd31795dc0bb39b816a5f7545230e4123f0255e4950b8cfaca6",
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "note": "Publish the commitment to your audience now and keep the seed secret. After the entries are final, spin with this seed (whirlpick spin --seed-file <file>, or spin_wheel with seed); anyone can then check that the receipt matches this commitment."
+  }
+}

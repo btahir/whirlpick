@@ -1,0 +1,36 @@
+{
+  "tool": "validate_wheel",
+  "args": {
+    "project": {
+      "format": "whirlpick-project",
+      "version": 1,
+      "wheels": [
+        {
+          "entries": [
+            {
+              "label": "Ada",
+              "weight": 0
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "structuredContent": {
+    "valid": false,
+    "errors": [
+      {
+        "path": "/wheels/0/entries/0/weight",
+        "code": "WEIGHT_INVALID",
+        "message": "Entry 1: weight must be 0.001–1,000,000 with at most 3 decimals."
+      }
+    ],
+    "warnings": [],
+    "summary": {
+      "wheels": 1,
+      "entries": 1,
+      "images": 0,
+      "history": 0
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "args": [
+    "validate",
+    "bad.whirl.json",
+    "--json"
+  ],
+  "exit": 3,
+  "stdout": {
+    "ok": false,
+    "valid": false,
+    "errors": [
+      {
+        "path": "/wheels/0/entries/0/weight",
+        "code": "WEIGHT_INVALID",
+        "message": "Entry 1: weight must be 0.001–1,000,000 with at most 3 decimals."
+      },
+      {
+        "path": "/wheels/0/entries/1/color",
+        "code": "COLOR_INVALID",
+        "message": "Entry 2: colour must be #RRGGBB."
+      },
+      {
+        "path": "/wheels/0/entries/2/label",
+        "code": "REQUIRED",
+        "message": "Entry 3 has no label."
+      }
+    ],
+    "warnings": [],
+    "summary": {
+      "wheels": 1,
+      "entries": 3,
+      "images": 0,
+      "history": 0
+    }
+  }
+}

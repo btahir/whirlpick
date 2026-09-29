@@ -1,0 +1,32 @@
+{
+  "tool": "make_share_link",
+  "args": {
+    "entries": [
+      "Ada",
+      "Grace",
+      {
+        "label": "Linus",
+        "weight": 2
+      },
+      {
+        "label": "Margaret",
+        "tags": [
+          "B"
+        ]
+      },
+      "Priya",
+      "Tomas"
+    ],
+    "title": "Pick one",
+    "settings": {
+      "spinDuration": 4,
+      "fairDraw": true
+    }
+  },
+  "structuredContent": {
+    "url": "https://whirlpick.vercel.app/#w=1.jZLbitswEIZfpcy1kso5OInv0m4phS4s3UChS1gm8thWI0uuNE6aLn73Rc56cbc3Bd1o-P45_DNPUDhfI0MG50p702h1nDTe_STFIOBEPmhnIUsElGTJIzv_F1ur5r2cJlMJApQnZMq3MdtMztKJTCYy2UmZ9W8qpfwBAtom_x8MFesTfa-IzJc81nxM1WquDmoJAgxeXMuQ2dYYAecIBcgenkD_g1qsCTK40-r4zlkCAWTZaxrx9CgpV5gUaZ_6QAYy2OYInXgllnhIl7NVPiI-e1Q0ZjYk87RYz0bMV23bAALOpMuKIZuN8HRdqMVqjiP8Fn2JnqL3jGVsET7AfqRJVsvNcp0sR5o7ry9vWl1v5ikuRszO1Rig2wsIxKxtTP0ErNm88aZ2eYzYeBUGBIRG25vWI_dnsBBQt4Z1FCvXWoZsLsDTiTBWCfSrJcsaDXQCmLDuyxwukL3gYpDNBAT9h_qUBzRoFUHGviUBR6Jm26BnyB721-_OlcQV-RjpBATX2nzAT860ccNyuhbAFfXbVuitPvUTNGiImYZbUc4W0YJBXl8Ck7_c9nMXaAIJUPFCqHeIfr9ema6xpG9UXP-dgMJZvlcYLUziFOpY-mtnV0GB2t94PA-llKtrzZ9O5C_3jbZDOFTu_LGKDoSXDrpu3z0D",
+    "length": 702,
+    "qrAvailable": true,
+    "warnings": []
+  }
+}

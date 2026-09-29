@@ -1,0 +1,13 @@
+{
+  "args": [
+    "open",
+    "--entries",
+    "Ada,Grace,Linus",
+    "--json"
+  ],
+  "exit": 0,
+  "stdout": {
+    "ok": true,
+    "url": "https://whirlpick.vercel.app/#w=1.jZFBbxMxEIX_yzs7wUnbtPgWUYSQ4EIrIVFF1cQ7mzXx2os9mxCi_e_Im6YEcUHywWN98zzz3hF1TC0JDPaNS75zdjvpUvzOVqCw45RdDDAzhQ0HTiQx_cVa797o6WyqoWATk3C1LGpzPV9M9GyiZ49am_FMtdbfoNB31f9gZMXt-GvD7D9W5c_n66uabytmKHg6xF5gQu-9wr5AGebpCPcPGqhlGIxCUOAgyfEFzM-aK0uzejHqrtnDYFkRBvVK3NB6cTO_rS6ID4ksXzJvWVeL-m5-wXxyoc8YVgqZRVzYZJgjxIkvE0GhjVW5hZJBGS53Ltz3iWQ0faHQ9l5cabKxDwJzpZB4x1TUM__oOYgjj0FBmNpRfn2AecHVuW2ukN0vhrlWWJOnYBlGUs8KW-Zu2VESmKfVqXyMG5aGU3kZFHLsQ3XGd9H3xU89vVOQhkdvLaXgduMGHXkW4XMyNoa6rH5ubw9ZOB0-j3vX5DMr2BIJj87wz9dMXUsb_sL1qR4U6hjkwVKxbla2sNtNOk12aqjJpftE-z-6sW2dvN9xOjx0LpxHyE3cv2uKBfkFHYbV8Bs"
+  }
+}

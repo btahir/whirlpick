@@ -1,0 +1,30 @@
+{
+  "args": [
+    "teams",
+    "--entries",
+    "Ada,Ada,Grace,Linus",
+    "--teams",
+    "2",
+    "--apart",
+    "Ada,Grace",
+    "--seed",
+    "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "--json"
+  ],
+  "exit": 3,
+  "stdout": {
+    "ok": false,
+    "error": {
+      "code": "LABEL_AMBIGUOUS",
+      "message": "Keep apart: \"Ada\" matches 2 entries (#0, #1); use #index instead.",
+      "details": {
+        "label": "Ada",
+        "indices": [
+          0,
+          1
+        ]
+      }
+    },
+    "exitCode": 3
+  }
+}

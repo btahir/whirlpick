@@ -1,0 +1,16 @@
+{
+  "args": [
+    "link",
+    "--replay",
+    "receipt.json",
+    "--json"
+  ],
+  "exit": 0,
+  "stdout": {
+    "ok": true,
+    "url": "https://whirlpick.vercel.app/#spin=1.jZJPi9swEMW_y9Cjk8zYsfznllO70EIPLYUuexhLo1itLBtZThaWfPfizZLtUigLOv7mjd689wQfZt3LwNBCn9I0t7vduXfRT07_3p4kavFbnqbdldpF0eKmtDnR9tc8BsjAjnHgBC3cxjYvEGRwkji7MUBLGbA_jtGlfnjDmsjnzYkgg-SSF2jD4n0GElJ0MkN7_wSeO_HQwsEwZHAWd-zTs6IE7rwYaFNc5JK9kh8ja3kn-9mFZX4n-4XjkaOk_-EPGZx7Ef-J5x5aUI3em64omkJroq60uSWucq0qrSyVpemKjuq9sqozTWFYSZOrkuqqUVRXpoYM9DgMLiUxP151r1eaZV0LiEiYY4F7LFFhhTU2yNihRoOClpCIcipoTyUpqqimhpg60mRIyMJV6Wsfeb4lcN06SFizrWtrm0aRYcvEoqizZc6iqrzoytoWXBMW1jYKFTdkdF41xb60-z2yNUW3ZjEtnXf6LkxLun1_cuEuGHmEFjMYRiPQwuzC0T8PcORhhvYJ9LiEl1M_ar-Y1fT9wyWDKPPi04qsXbq2xV0F8-yfhD0H48Lxe5FDm1dUN6quqvKyCnXCeq3pi_UonMQcVuc55mqDtEH6htg-vy0i_vw7l8PNEU_Tm3Zr73a4pS3C5Q8",
+    "length": 688,
+    "qrAvailable": true,
+    "warnings": []
+  }
+}

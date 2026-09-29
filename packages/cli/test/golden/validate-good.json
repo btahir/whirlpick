@@ -1,0 +1,20 @@
+{
+  "args": [
+    "validate",
+    "class.whirl.json",
+    "--json"
+  ],
+  "exit": 0,
+  "stdout": {
+    "ok": true,
+    "valid": true,
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "wheels": 2,
+      "entries": 8,
+      "images": 0,
+      "history": 0
+    }
+  }
+}

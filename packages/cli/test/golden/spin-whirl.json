@@ -1,0 +1,82 @@
+{
+  "args": [
+    "spin",
+    "class.whirl.json",
+    "--seed",
+    "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "--json"
+  ],
+  "exit": 0,
+  "stdout": {
+    "ok": true,
+    "mode": "single",
+    "winners": [
+      {
+        "index": 0,
+        "label": "Ada"
+      }
+    ],
+    "receipts": [
+      {
+        "$schema": "https://whirlpick.vercel.app/schema/receipt-v1.json",
+        "format": "whirlpick-receipt",
+        "version": 1,
+        "algorithm": "whirlpick-draw-v1",
+        "title": "Who's next?",
+        "entries": [
+          {
+            "label": "Ada",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Grace",
+            "weight": 2,
+            "enabled": true
+          },
+          {
+            "label": "Linus",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Margaret",
+            "weight": 1,
+            "enabled": false
+          },
+          {
+            "label": "Priya",
+            "weight": 1,
+            "enabled": true
+          }
+        ],
+        "wheelHash": "bd168b091419f4c668c3693e9e2ad50b77c9782bb706ed9cc3925a197a19310d",
+        "committedWheelHash": null,
+        "seed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "seedPhrase": null,
+        "commitment": "88ff9961dafa1ae61bf52ae6723b58f3a8103ff9606a91dc279345f440afd3be",
+        "publicInput": null,
+        "spinIndex": 0,
+        "mode": "single",
+        "params": {
+          "count": 1,
+          "excluded": []
+        },
+        "result": {
+          "picks": [
+            {
+              "index": 0,
+              "label": "Ada",
+              "landingU32": 474107615
+            }
+          ]
+        },
+        "beacon": null,
+        "createdAt": "2026-01-01T00:00:00.000Z",
+        "committedAt": null,
+        "app": "whirlpick-cli/0.1.0"
+      }
+    ],
+    "warnings": []
+  }
+}

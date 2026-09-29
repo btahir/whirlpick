@@ -2,7 +2,8 @@
 export * from './site.js';
 export * from './errors.js';
 export type * from './types.js';
-export { base64urlDecode, base64urlEncode, fromHex, isHex64, toHex, utf8 } from './bytes.js';
+export { base64urlDecode, base64urlEncode, concatBytes, fromHex, isHex64, toHex, u32be, utf8 } from './bytes.js';
+export { H, tag } from './hash.js';
 export {
   codePointLength,
   isValidWeight,

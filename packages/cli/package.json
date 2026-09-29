@@ -1,0 +1,53 @@
+{
+  "name": "whirlpick",
+  "version": "0.1.0",
+  "description": "Whirlpick CLI and local MCP server: fair, reproducible spins, picks and team splits with checkable receipts. No network, no keys.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "whirlpick": "./bin/whirlpick.js",
+    "whirlpick-mcp": "./bin/whirlpick-mcp.js"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --root ../.. --project cli"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.30.1",
+    "@whirlpick/core": "workspace:*",
+    "qr": "0.7.0",
+    "zod": "4.6.5"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "keywords": [
+    "spin-wheel",
+    "random",
+    "name-picker",
+    "raffle",
+    "teams",
+    "fair-draw",
+    "cli",
+    "mcp"
+  ],
+  "devDependencies": {
+    "@types/node": "24.19.0"
+  }
+}

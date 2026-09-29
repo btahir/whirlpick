@@ -1,0 +1,69 @@
+{
+  "args": [
+    "spin",
+    "-",
+    "--format",
+    "csv",
+    "--seed",
+    "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "--json"
+  ],
+  "exit": 0,
+  "stdout": {
+    "ok": true,
+    "mode": "single",
+    "winners": [
+      {
+        "index": 1,
+        "label": "Grace"
+      }
+    ],
+    "receipts": [
+      {
+        "$schema": "https://whirlpick.vercel.app/schema/receipt-v1.json",
+        "format": "whirlpick-receipt",
+        "version": 1,
+        "algorithm": "whirlpick-draw-v1",
+        "title": null,
+        "entries": [
+          {
+            "label": "Ada",
+            "weight": 3,
+            "enabled": true
+          },
+          {
+            "label": "Grace",
+            "weight": 1,
+            "enabled": true
+          }
+        ],
+        "wheelHash": "dd8e35eac45a2e7671032c89dea9d344db43e7adf10f97713c55765f4aa95ec8",
+        "committedWheelHash": null,
+        "seed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "seedPhrase": null,
+        "commitment": "88ff9961dafa1ae61bf52ae6723b58f3a8103ff9606a91dc279345f440afd3be",
+        "publicInput": null,
+        "spinIndex": 0,
+        "mode": "single",
+        "params": {
+          "count": 1,
+          "excluded": []
+        },
+        "result": {
+          "picks": [
+            {
+              "index": 1,
+              "label": "Grace",
+              "landingU32": 2075746764
+            }
+          ]
+        },
+        "beacon": null,
+        "createdAt": "2026-01-01T00:00:00.000Z",
+        "committedAt": null,
+        "app": "whirlpick-cli/0.1.0"
+      }
+    ],
+    "warnings": []
+  }
+}

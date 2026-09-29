@@ -1,0 +1,25 @@
+{
+  "args": [
+    "spin",
+    "--entries",
+    "Ada,Grace",
+    "--count",
+    "3",
+    "--seed",
+    "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "--json"
+  ],
+  "exit": 6,
+  "stdout": {
+    "ok": false,
+    "error": {
+      "code": "COUNT_TOO_LARGE",
+      "message": "Can't pick 3 from 2 eligible entries.",
+      "details": {
+        "count": 3,
+        "eligible": 2
+      }
+    },
+    "exitCode": 6
+  }
+}

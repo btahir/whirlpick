@@ -1,0 +1,91 @@
+{
+  "args": [
+    "spin",
+    "names.txt",
+    "--seed",
+    "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "--title",
+    "Friday raffle",
+    "--link",
+    "--json"
+  ],
+  "exit": 0,
+  "stdout": {
+    "ok": true,
+    "mode": "single",
+    "winners": [
+      {
+        "index": 3,
+        "label": "Margaret"
+      }
+    ],
+    "receipts": [
+      {
+        "$schema": "https://whirlpick.vercel.app/schema/receipt-v1.json",
+        "format": "whirlpick-receipt",
+        "version": 1,
+        "algorithm": "whirlpick-draw-v1",
+        "title": "Friday raffle",
+        "entries": [
+          {
+            "label": "Ada",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Grace",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Linus",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Margaret",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Priya",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Tomas",
+            "weight": 1,
+            "enabled": true
+          }
+        ],
+        "wheelHash": "c1cb0f82ab96a6e28be030e3ae95b61b2797dcf291be37a2165ef20ca30496ef",
+        "committedWheelHash": null,
+        "seed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "seedPhrase": null,
+        "commitment": "88ff9961dafa1ae61bf52ae6723b58f3a8103ff9606a91dc279345f440afd3be",
+        "publicInput": null,
+        "spinIndex": 0,
+        "mode": "single",
+        "params": {
+          "count": 1,
+          "excluded": []
+        },
+        "result": {
+          "picks": [
+            {
+              "index": 3,
+              "label": "Margaret",
+              "landingU32": 3811747625
+            }
+          ]
+        },
+        "beacon": null,
+        "createdAt": "2026-01-01T00:00:00.000Z",
+        "committedAt": null,
+        "app": "whirlpick-cli/0.1.0"
+      }
+    ],
+    "warnings": [],
+    "link": "https://whirlpick.vercel.app/#spin=1.jZNNaxwxDIb_ShE9zu5Knu-55dI20EIOKYWWHDS2vOPW84HHs5sQ9r-XyaZJA6Us-Pj4lV7p1SO8n3UnPUMDXYzT3Ox2x84FPzn9a3uQoMVveZp2Z2oXRIub4uZA25_zOEACdgw9R2jg5dvmGYIEDhJmNw7QUALs92NwsevfsCbwcXMgSCC66AUa-BCc4Yd3ga31AgnIEIOTGZofj-C5FQ8NXBmGBI7i9l18EpeBWy8GmhgWOSWv5MfAWi5kP7thmS9kv3DYc5B4IX4T3MOlLd-OPf-3jbsEjp2I_8RzBw1o0i3aSnFbF1yIqlrBFCVlqfO2oFaVdWm0VTW1kpasqMjFKtScYlYXYiEBPfa9i1HMt1fdYfE-gVnWsoCIhApTzDDHAkussEbGFjUaFLSERKQopYxyKqikimpiakmTIaG1xqp00wWe5Y_2uWovwxqfqrK2rgsybJlYCmptrliKUqVtXtmUK8LU2rrAgmsyWpV1muU2y5CtSdt1x9PSeqevh2mJL-1PbrgejNxDgwn0o1kTNrth_xStiQP3MzSPoMdleB71vfaLWU3_uDslEGRefFyRNa7nFLqzYJr8Kw2eB-OG_ddUQZNWRGVWFio_rVqtsF6P4dl9EI5irlbzClWxQdog3SI2T2-LiN__Xs3Viymepjc3pL3b4Za2CKff"
+  }
+}

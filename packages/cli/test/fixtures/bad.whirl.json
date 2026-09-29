@@ -1,0 +1,5 @@
+{
+  "format": "whirlpick-project",
+  "version": 1,
+  "wheels": [{ "entries": [{ "label": "Ada", "weight": 0 }, { "label": "Grace", "color": "red" }, { "weight": 2 }] }]
+}

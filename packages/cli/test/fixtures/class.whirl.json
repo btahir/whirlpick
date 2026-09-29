@@ -1,0 +1,20 @@
+{
+  "format": "whirlpick-project",
+  "version": 1,
+  "activeWheelId": "w_class4bb",
+  "wheels": [
+    { "id": "w_class4aa", "name": "Class 4A", "entries": [{ "label": "Imani" }, { "label": "Hugo" }, { "label": "Mei" }] },
+    {
+      "id": "w_class4bb",
+      "name": "Class 4B",
+      "entries": [
+        { "id": "e_00000001", "label": "Ada" },
+        { "id": "e_00000002", "label": "Grace", "weight": 2 },
+        { "id": "e_00000003", "label": "Linus" },
+        { "id": "e_00000004", "label": "Margaret", "enabled": false },
+        { "id": "e_00000005", "label": "Priya" }
+      ],
+      "settings": { "title": "Who's next?", "mode": "elimination" }
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "args": [
+    "spin",
+    "names.csv",
+    "--seed",
+    "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "--json"
+  ],
+  "exit": 0,
+  "stdout": {
+    "ok": true,
+    "mode": "single",
+    "winners": [
+      {
+        "index": 4,
+        "label": "Priya"
+      }
+    ],
+    "receipts": [
+      {
+        "$schema": "https://whirlpick.vercel.app/schema/receipt-v1.json",
+        "format": "whirlpick-receipt",
+        "version": 1,
+        "algorithm": "whirlpick-draw-v1",
+        "title": null,
+        "entries": [
+          {
+            "label": "Ada",
+            "weight": 2,
+            "enabled": true,
+            "tags": [
+              "A"
+            ]
+          },
+          {
+            "label": "Grace",
+            "weight": 1,
+            "enabled": true,
+            "tags": [
+              "A"
+            ]
+          },
+          {
+            "label": "Linus",
+            "weight": 0.5,
+            "enabled": true,
+            "tags": [
+              "B"
+            ]
+          },
+          {
+            "label": "Margaret",
+            "weight": 1,
+            "enabled": true,
+            "tags": [
+              "B"
+            ]
+          },
+          {
+            "label": "Priya",
+            "weight": 3,
+            "enabled": true
+          },
+          {
+            "label": "Tomas",
+            "weight": 1,
+            "enabled": true,
+            "tags": [
+              "C"
+            ]
+          }
+        ],
+        "wheelHash": "51391760c43aae8817a2da9e5ccf90dc4d2823d7265d0954de7dab5222e8a21d",
+        "committedWheelHash": null,
+        "seed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "seedPhrase": null,
+        "commitment": "88ff9961dafa1ae61bf52ae6723b58f3a8103ff9606a91dc279345f440afd3be",
+        "publicInput": null,
+        "spinIndex": 0,
+        "mode": "single",
+        "params": {
+          "count": 1,
+          "excluded": []
+        },
+        "result": {
+          "picks": [
+            {
+              "index": 4,
+              "label": "Priya",
+              "landingU32": 752403274
+            }
+          ]
+        },
+        "beacon": null,
+        "createdAt": "2026-01-01T00:00:00.000Z",
+        "committedAt": null,
+        "app": "whirlpick-cli/0.1.0"
+      }
+    ],
+    "warnings": []
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "tool": "spin_wheel",
+  "args": {
+    "entries": [
+      "Ada",
+      "Grace",
+      {
+        "label": "Linus",
+        "weight": 2
+      },
+      {
+        "label": "Margaret",
+        "tags": [
+          "B"
+        ]
+      },
+      "Priya",
+      "Tomas"
+    ],
+    "seed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "count": 3,
+    "includeLink": true,
+    "title": "Friday raffle"
+  },
+  "structuredContent": {
+    "mode": "multi",
+    "winners": [
+      {
+        "index": 0,
+        "label": "Ada"
+      },
+      {
+        "index": 4,
+        "label": "Priya"
+      },
+      {
+        "index": 5,
+        "label": "Tomas"
+      }
+    ],
+    "receipts": [
+      {
+        "$schema": "https://whirlpick.vercel.app/schema/receipt-v1.json",
+        "format": "whirlpick-receipt",
+        "version": 1,
+        "algorithm": "whirlpick-draw-v1",
+        "title": "Friday raffle",
+        "entries": [
+          {
+            "label": "Ada",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Grace",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Linus",
+            "weight": 2,
+            "enabled": true
+          },
+          {
+            "label": "Margaret",
+            "weight": 1,
+            "enabled": true,
+            "tags": [
+              "B"
+            ]
+          },
+          {
+            "label": "Priya",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Tomas",
+            "weight": 1,
+            "enabled": true
+          }
+        ],
+        "wheelHash": "45310d2430e74df8f857c20095ce7b02072ddee7a8be2747e2442d32c5aa9132",
+        "committedWheelHash": null,
+        "seed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "seedPhrase": null,
+        "commitment": "88ff9961dafa1ae61bf52ae6723b58f3a8103ff9606a91dc279345f440afd3be",
+        "publicInput": null,
+        "spinIndex": 0,
+        "mode": "multi",
+        "params": {
+          "count": 3,
+          "excluded": []
+        },
+        "result": {
+          "picks": [
+            {
+              "index": 0,
+              "label": "Ada",
+              "landingU32": 3497836251
+            },
+            {
+              "index": 4,
+              "label": "Priya",
+              "landingU32": 4239075352
+            },
+            {
+              "index": 5,
+              "label": "Tomas",
+              "landingU32": 3645615246
+            }
+          ]
+        },
+        "beacon": null,
+        "createdAt": "2026-01-01T00:00:00.000Z",
+        "committedAt": null,
+        "app": "whirlpick-mcp/0.1.0"
+      }
+    ],
+    "warnings": [],
+    "link": "https://whirlpick.vercel.app/#spin=1.jZPNa9tAEMX_lTL0KNszu_q-pYe2gRZySCk05DDaHVnb6ovVyk4I_t-L6tSxCYSAjr_35mnm7RN8nEwjHUMJTQjjVG42-8b5dnTmz3on3ki75nHcHKmNFyNuDKsdrX9PQw8R1IPvOEAJJ9nqGYIIduInN_RQUgTcbgfvQtNdsNbzfrUjiCC40AqU8Nk7y48fPNd1KxCB9ME7maC8e4KWK2mhhCvLEMFe3LYJ_8yl56oVC2XwsxyiF_KLZyPvZL-5fp7OWPUG-539lr2EN6wjCLxdcsMnuD_X3nj3-N78t0PH01vsfQT7RqT9ylMDJcSJJrQq1ihZbOu8zpPMKMQiMZJVqDBT1opknFeisjgTFcfKamUS5oK0ggjM0HUuBLE_X3z7uW0jmGQZC4hIqFBjjAmmmGGOBTJWaNCiYE1IRIo0xZRQShnlVBBTRYYsCdVwdLppPE_y3_s4tZN-6VKe13VRpGS5ZmJJqaoTxZJmSldJXmvOCXVdFymmXJA1Kit0nNRxjFxbXS0HH-eqdea6H-dwij-6_rq38gAlRtANdqlbN7fBLTx77iYon8AM8xJCRyAPpp3t8s9394cIvExzGxZkqe6xke7kd9nNlnvr-u0PraDUcZHlOlUJLZd9VsTRqz6ca2KlC8wSnagzTRK96sXFnDROUkpUnB6WuJWwWd7e8369cBB7taxXoUpXSCukW8Ty37dGxF_nx786rY3H8eLJdmbc4JrWCIe_"
+  }
+}

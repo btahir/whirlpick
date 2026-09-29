@@ -1,0 +1,295 @@
+{
+  "args": [
+    "teams",
+    "squad.tsv",
+    "--size",
+    "4",
+    "--seed",
+    "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "--format",
+    "json"
+  ],
+  "exit": 0,
+  "stdout": {
+    "ok": true,
+    "teams": [
+      {
+        "name": "Team 1",
+        "members": [
+          {
+            "index": 0,
+            "label": "Ada",
+            "tags": [
+              "1"
+            ]
+          },
+          {
+            "index": 7,
+            "label": "Kenji",
+            "tags": [
+              "2"
+            ]
+          },
+          {
+            "index": 8,
+            "label": "Sofia",
+            "tags": [
+              "3"
+            ]
+          },
+          {
+            "index": 11,
+            "label": "Oskar",
+            "tags": [
+              "3"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Team 2",
+        "members": [
+          {
+            "index": 1,
+            "label": "Grace",
+            "tags": [
+              "1"
+            ]
+          },
+          {
+            "index": 5,
+            "label": "Tomas",
+            "tags": [
+              "3"
+            ]
+          },
+          {
+            "index": 9,
+            "label": "Mateo",
+            "tags": [
+              "1"
+            ]
+          },
+          {
+            "index": 10,
+            "label": "Zara",
+            "tags": [
+              "2"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Team 3",
+        "members": [
+          {
+            "index": 2,
+            "label": "Linus",
+            "tags": [
+              "2"
+            ]
+          },
+          {
+            "index": 3,
+            "label": "Margaret",
+            "tags": [
+              "2"
+            ]
+          },
+          {
+            "index": 4,
+            "label": "Priya",
+            "tags": [
+              "3"
+            ]
+          },
+          {
+            "index": 6,
+            "label": "Amara",
+            "tags": [
+              "1"
+            ]
+          }
+        ]
+      }
+    ],
+    "sizes": [
+      4,
+      4,
+      4
+    ],
+    "balance": {
+      "byTag": {
+        "1": [
+          1,
+          2,
+          1
+        ],
+        "2": [
+          1,
+          1,
+          2
+        ],
+        "3": [
+          2,
+          1,
+          1
+        ]
+      },
+      "withinOne": true
+    },
+    "repeatPairs": 0,
+    "receipt": {
+      "$schema": "https://whirlpick.vercel.app/schema/receipt-v1.json",
+      "format": "whirlpick-receipt",
+      "version": 1,
+      "algorithm": "whirlpick-draw-v1",
+      "title": null,
+      "entries": [
+        {
+          "label": "Ada",
+          "weight": 1,
+          "enabled": true,
+          "tags": [
+            "1"
+          ]
+        },
+        {
+          "label": "Grace",
+          "weight": 1,
+          "enabled": true,
+          "tags": [
+            "1"
+          ]
+        },
+        {
+          "label": "Linus",
+          "weight": 1,
+          "enabled": true,
+          "tags": [
+            "2"
+          ]
+        },
+        {
+          "label": "Margaret",
+          "weight": 1,
+          "enabled": true,
+          "tags": [
+            "2"
+          ]
+        },
+        {
+          "label": "Priya",
+          "weight": 1,
+          "enabled": true,
+          "tags": [
+            "3"
+          ]
+        },
+        {
+          "label": "Tomas",
+          "weight": 1,
+          "enabled": true,
+          "tags": [
+            "3"
+          ]
+        },
+        {
+          "label": "Amara",
+          "weight": 1,
+          "enabled": true,
+          "tags": [
+            "1"
+          ]
+        },
+        {
+          "label": "Kenji",
+          "weight": 1,
+          "enabled": true,
+          "tags": [
+            "2"
+          ]
+        },
+        {
+          "label": "Sofia",
+          "weight": 1,
+          "enabled": true,
+          "tags": [
+            "3"
+          ]
+        },
+        {
+          "label": "Mateo",
+          "weight": 1,
+          "enabled": true,
+          "tags": [
+            "1"
+          ]
+        },
+        {
+          "label": "Zara",
+          "weight": 1,
+          "enabled": true,
+          "tags": [
+            "2"
+          ]
+        },
+        {
+          "label": "Oskar",
+          "weight": 1,
+          "enabled": true,
+          "tags": [
+            "3"
+          ]
+        }
+      ],
+      "wheelHash": "f8d70606be4dd1ff94d3e90bb9f3706bc99641c857bb810ebc4dd7a43d9679f5",
+      "committedWheelHash": null,
+      "seed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "seedPhrase": null,
+      "commitment": "88ff9961dafa1ae61bf52ae6723b58f3a8103ff9606a91dc279345f440afd3be",
+      "publicInput": null,
+      "spinIndex": 0,
+      "mode": "teams",
+      "params": {
+        "teamCount": null,
+        "teamSize": 4,
+        "balance": true,
+        "keepApart": [],
+        "keepTogether": [],
+        "previousRounds": [],
+        "iterations": 5000
+      },
+      "result": {
+        "teams": [
+          [
+            0,
+            7,
+            8,
+            11
+          ],
+          [
+            1,
+            5,
+            9,
+            10
+          ],
+          [
+            2,
+            3,
+            4,
+            6
+          ]
+        ],
+        "repeatPairs": 0
+      },
+      "beacon": null,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "committedAt": null,
+      "app": "whirlpick-cli/0.1.0"
+    },
+    "text": "Team 1: Ada, Kenji, Sofia, Oskar\nTeam 2: Grace, Tomas, Mateo, Zara\nTeam 3: Linus, Margaret, Priya, Amara\n",
+    "csv": "team,name,tags\nTeam 1,Ada,1\nTeam 1,Kenji,2\nTeam 1,Sofia,3\nTeam 1,Oskar,3\nTeam 2,Grace,1\nTeam 2,Tomas,3\nTeam 2,Mateo,1\nTeam 2,Zara,2\nTeam 3,Linus,2\nTeam 3,Margaret,2\nTeam 3,Priya,3\nTeam 3,Amara,1\n",
+    "warnings": []
+  }
+}

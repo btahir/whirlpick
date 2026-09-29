@@ -1,0 +1,67 @@
+{
+  "tool": "spin_wheel",
+  "args": {
+    "preset": "yes-no",
+    "seedPhrase": "demo",
+    "publicInput": "blue",
+    "spinIndex": 4
+  },
+  "structuredContent": {
+    "mode": "single",
+    "winners": [
+      {
+        "index": 1,
+        "label": "No"
+      }
+    ],
+    "receipts": [
+      {
+        "$schema": "https://whirlpick.vercel.app/schema/receipt-v1.json",
+        "format": "whirlpick-receipt",
+        "version": 1,
+        "algorithm": "whirlpick-draw-v1",
+        "title": "Yes or no?",
+        "entries": [
+          {
+            "label": "Yes",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "No",
+            "weight": 1,
+            "enabled": true
+          }
+        ],
+        "wheelHash": "c95cea27db5e36855cc95797b17218353c12976bd0c9ea9123e30f3868a3cfb0",
+        "committedWheelHash": null,
+        "seed": "dc213393be04bb6329926da0dc163d9a9754c51dabbde7d82cb42e8d4e68935f",
+        "seedPhrase": "demo",
+        "commitment": "cb2c1c98eeda9ac4ed9669c9bd1902c9bed2faa9b7a881f65f6d1af38bff2b38",
+        "publicInput": "blue",
+        "spinIndex": 4,
+        "mode": "single",
+        "params": {
+          "count": 1,
+          "excluded": []
+        },
+        "result": {
+          "picks": [
+            {
+              "index": 1,
+              "label": "No",
+              "landingU32": 583703905
+            }
+          ]
+        },
+        "beacon": null,
+        "createdAt": "2026-01-01T00:00:00.000Z",
+        "committedAt": null,
+        "app": "whirlpick-mcp/0.1.0"
+      }
+    ],
+    "warnings": [
+      "SEED_PHRASE_GUESSABLE: Seed phrases can be guessed; use a random seed (the default) for anything that matters."
+    ]
+  }
+}

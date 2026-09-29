@@ -1,0 +1,72 @@
+{
+  "args": [
+    "presets",
+    "yes-no",
+    "--json"
+  ],
+  "exit": 0,
+  "stdout": {
+    "$schema": "https://whirlpick.vercel.app/schema/whirl-v1.json",
+    "format": "whirlpick-project",
+    "version": 1,
+    "generator": "whirlpick-cli/0.1.0",
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "updatedAt": "2026-01-01T00:00:00.000Z",
+    "activeWheelId": "w_1087f05d",
+    "layout": null,
+    "wheels": [
+      {
+        "id": "w_1087f05d",
+        "name": "Yes or no",
+        "entries": [
+          {
+            "id": "e_b702ad98",
+            "label": "Yes",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "id": "e_cefa34bb",
+            "label": "No",
+            "weight": 1,
+            "enabled": true
+          }
+        ],
+        "settings": {
+          "title": "Yes or no?",
+          "mode": "normal",
+          "spinDuration": 6,
+          "multi": {
+            "count": 3,
+            "reveal": "sequential"
+          },
+          "teams": {
+            "by": "count",
+            "count": 2,
+            "size": 4,
+            "balance": true,
+            "keepApart": [],
+            "keepTogether": []
+          },
+          "sound": true,
+          "volume": 0.8,
+          "theme": "carnival",
+          "palette": null,
+          "confetti": true,
+          "mysteryMode": false,
+          "centre": {
+            "text": null,
+            "imageRef": null
+          },
+          "fontScale": 1,
+          "background": null,
+          "fairDraw": false,
+          "commitEverySpin": true,
+          "showChances": false
+        }
+      }
+    ],
+    "images": {},
+    "history": []
+  }
+}

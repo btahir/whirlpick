@@ -1,0 +1,232 @@
+{
+  "args": [
+    "spin",
+    "names.txt",
+    "--mode",
+    "elimination",
+    "--spins",
+    "3",
+    "--seed",
+    "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "--json"
+  ],
+  "exit": 0,
+  "stdout": {
+    "ok": true,
+    "mode": "elimination",
+    "winners": [
+      {
+        "index": 3,
+        "label": "Margaret"
+      },
+      {
+        "index": 5,
+        "label": "Tomas"
+      },
+      {
+        "index": 4,
+        "label": "Priya"
+      }
+    ],
+    "receipts": [
+      {
+        "$schema": "https://whirlpick.vercel.app/schema/receipt-v1.json",
+        "format": "whirlpick-receipt",
+        "version": 1,
+        "algorithm": "whirlpick-draw-v1",
+        "title": null,
+        "entries": [
+          {
+            "label": "Ada",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Grace",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Linus",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Margaret",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Priya",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Tomas",
+            "weight": 1,
+            "enabled": true
+          }
+        ],
+        "wheelHash": "c1cb0f82ab96a6e28be030e3ae95b61b2797dcf291be37a2165ef20ca30496ef",
+        "committedWheelHash": null,
+        "seed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "seedPhrase": null,
+        "commitment": "88ff9961dafa1ae61bf52ae6723b58f3a8103ff9606a91dc279345f440afd3be",
+        "publicInput": null,
+        "spinIndex": 0,
+        "mode": "elimination",
+        "params": {
+          "count": 1,
+          "excluded": []
+        },
+        "result": {
+          "picks": [
+            {
+              "index": 3,
+              "label": "Margaret",
+              "landingU32": 3811747625
+            }
+          ]
+        },
+        "beacon": null,
+        "createdAt": "2026-01-01T00:00:00.000Z",
+        "committedAt": null,
+        "app": "whirlpick-cli/0.1.0"
+      },
+      {
+        "$schema": "https://whirlpick.vercel.app/schema/receipt-v1.json",
+        "format": "whirlpick-receipt",
+        "version": 1,
+        "algorithm": "whirlpick-draw-v1",
+        "title": null,
+        "entries": [
+          {
+            "label": "Ada",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Grace",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Linus",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Margaret",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Priya",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Tomas",
+            "weight": 1,
+            "enabled": true
+          }
+        ],
+        "wheelHash": "c1cb0f82ab96a6e28be030e3ae95b61b2797dcf291be37a2165ef20ca30496ef",
+        "committedWheelHash": null,
+        "seed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "seedPhrase": null,
+        "commitment": "88ff9961dafa1ae61bf52ae6723b58f3a8103ff9606a91dc279345f440afd3be",
+        "publicInput": null,
+        "spinIndex": 1,
+        "mode": "elimination",
+        "params": {
+          "count": 1,
+          "excluded": [
+            3
+          ]
+        },
+        "result": {
+          "picks": [
+            {
+              "index": 5,
+              "label": "Tomas",
+              "landingU32": 1533135316
+            }
+          ]
+        },
+        "beacon": null,
+        "createdAt": "2026-01-01T00:00:00.000Z",
+        "committedAt": null,
+        "app": "whirlpick-cli/0.1.0"
+      },
+      {
+        "$schema": "https://whirlpick.vercel.app/schema/receipt-v1.json",
+        "format": "whirlpick-receipt",
+        "version": 1,
+        "algorithm": "whirlpick-draw-v1",
+        "title": null,
+        "entries": [
+          {
+            "label": "Ada",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Grace",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Linus",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Margaret",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Priya",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Tomas",
+            "weight": 1,
+            "enabled": true
+          }
+        ],
+        "wheelHash": "c1cb0f82ab96a6e28be030e3ae95b61b2797dcf291be37a2165ef20ca30496ef",
+        "committedWheelHash": null,
+        "seed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "seedPhrase": null,
+        "commitment": "88ff9961dafa1ae61bf52ae6723b58f3a8103ff9606a91dc279345f440afd3be",
+        "publicInput": null,
+        "spinIndex": 2,
+        "mode": "elimination",
+        "params": {
+          "count": 1,
+          "excluded": [
+            3,
+            5
+          ]
+        },
+        "result": {
+          "picks": [
+            {
+              "index": 4,
+              "label": "Priya",
+              "landingU32": 860825041
+            }
+          ]
+        },
+        "beacon": null,
+        "createdAt": "2026-01-01T00:00:00.000Z",
+        "committedAt": null,
+        "app": "whirlpick-cli/0.1.0"
+      }
+    ],
+    "warnings": []
+  }
+}

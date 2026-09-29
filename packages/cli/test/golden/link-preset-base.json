@@ -1,0 +1,18 @@
+{
+  "args": [
+    "link",
+    "--preset",
+    "coin",
+    "--base",
+    "http://127.0.0.1:4324",
+    "--json"
+  ],
+  "exit": 0,
+  "stdout": {
+    "ok": true,
+    "url": "http://127.0.0.1:4324/#w=1.jZFNbxMxEIb_SvSeneB8EIgvqGqR4MCFRkKiiqqJM5uYeO3Fnk0I0f535E3TFnFB8sX2M-94Hp9RxVSTwOC4c8k3zu6HTYo_2AoUDpyyiwFmrLDlwIkkpr9Y690bPRqPNBRsYhLe3JS0iZ7Mh3o81OOl1qZfI631dyi0zeZ_MLLiDvxtx-w_b0rPxwUvZm-rOUPB0ym2AhNa7xWOBcowD2e4f9BANcPgNrowqLxroMBBkuNXBfxYTd_RlOa6z16zh8Enpk1Gp56ZmV5bsvPFK2ZJzmd0K4XMIi5sM8wZ4sTzNWEQ00AK9gEKddyUi1CkeyjkxoW7NpH0lucKdevFlQwb2yAwU4XEB6bSLPPPloM48ugUhKnuu61PME-4upZNFLL7zTAzhTV5CpZhJLWssGdubhpKAvOwumyXccuy41ROOoUc27C54ofo2yJQj94ryI57mZZScId-goY8i_D1K2wMVTFxLa9PWTidvvRzV-QzK9jin3tR_Ov5E11NW_7K1WXfKVQxyL2lYnJcprD7bbq87FJQkUt3iY4vubGunXw8cDrdNy5cn5B38Xi7KwryE9p1q-4P",
+    "length": 611,
+    "qrAvailable": true,
+    "warnings": []
+  }
+}

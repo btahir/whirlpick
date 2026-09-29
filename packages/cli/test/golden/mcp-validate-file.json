@@ -1,0 +1,17 @@
+{
+  "tool": "validate_wheel",
+  "args": {
+    "file": "class.whirl.json"
+  },
+  "structuredContent": {
+    "valid": true,
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "wheels": 2,
+      "entries": 8,
+      "images": 0,
+      "history": 0
+    }
+  }
+}

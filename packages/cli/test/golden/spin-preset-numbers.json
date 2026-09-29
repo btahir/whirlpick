@@ -1,0 +1,117 @@
+{
+  "args": [
+    "spin",
+    "--preset",
+    "numbers",
+    "--min",
+    "5",
+    "--max",
+    "15",
+    "--seed",
+    "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "--json"
+  ],
+  "exit": 0,
+  "stdout": {
+    "ok": true,
+    "mode": "single",
+    "winners": [
+      {
+        "index": 10,
+        "label": "15"
+      }
+    ],
+    "receipts": [
+      {
+        "$schema": "https://whirlpick.vercel.app/schema/receipt-v1.json",
+        "format": "whirlpick-receipt",
+        "version": 1,
+        "algorithm": "whirlpick-draw-v1",
+        "title": "Pick a number",
+        "entries": [
+          {
+            "label": "5",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "6",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "7",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "8",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "9",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "10",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "11",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "12",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "13",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "14",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "15",
+            "weight": 1,
+            "enabled": true
+          }
+        ],
+        "wheelHash": "2743c683e4130a6621e88c556f124bf2d5a07d65d7e1f5e334cbf2c4c9c0f320",
+        "committedWheelHash": null,
+        "seed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "seedPhrase": null,
+        "commitment": "88ff9961dafa1ae61bf52ae6723b58f3a8103ff9606a91dc279345f440afd3be",
+        "publicInput": null,
+        "spinIndex": 0,
+        "mode": "single",
+        "params": {
+          "count": 1,
+          "excluded": []
+        },
+        "result": {
+          "picks": [
+            {
+              "index": 10,
+              "label": "15",
+              "landingU32": 3774129776
+            }
+          ]
+        },
+        "beacon": null,
+        "createdAt": "2026-01-01T00:00:00.000Z",
+        "committedAt": null,
+        "app": "whirlpick-cli/0.1.0"
+      }
+    ],
+    "warnings": []
+  }
+}

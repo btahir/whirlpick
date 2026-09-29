@@ -1,0 +1,87 @@
+{
+  "args": [
+    "spin",
+    "names.txt",
+    "--seed-file",
+    "seed.json",
+    "--json"
+  ],
+  "exit": 0,
+  "stdout": {
+    "ok": true,
+    "mode": "single",
+    "winners": [
+      {
+        "index": 5,
+        "label": "Tomas"
+      }
+    ],
+    "receipts": [
+      {
+        "$schema": "https://whirlpick.vercel.app/schema/receipt-v1.json",
+        "format": "whirlpick-receipt",
+        "version": 1,
+        "algorithm": "whirlpick-draw-v1",
+        "title": null,
+        "entries": [
+          {
+            "label": "Ada",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Grace",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Linus",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Margaret",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Priya",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Tomas",
+            "weight": 1,
+            "enabled": true
+          }
+        ],
+        "wheelHash": "c1cb0f82ab96a6e28be030e3ae95b61b2797dcf291be37a2165ef20ca30496ef",
+        "committedWheelHash": null,
+        "seed": "abababababababababababababababababababababababababababababababab",
+        "seedPhrase": null,
+        "commitment": "a0b2f602f3f14bd31795dc0bb39b816a5f7545230e4123f0255e4950b8cfaca6",
+        "publicInput": null,
+        "spinIndex": 0,
+        "mode": "single",
+        "params": {
+          "count": 1,
+          "excluded": []
+        },
+        "result": {
+          "picks": [
+            {
+              "index": 5,
+              "label": "Tomas",
+              "landingU32": 928975411
+            }
+          ]
+        },
+        "beacon": null,
+        "createdAt": "2026-01-01T00:00:00.000Z",
+        "committedAt": "2026-01-01T00:00:00.000Z",
+        "app": "whirlpick-cli/0.1.0"
+      }
+    ],
+    "warnings": []
+  }
+}

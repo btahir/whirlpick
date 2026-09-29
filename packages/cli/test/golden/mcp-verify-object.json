@@ -1,0 +1,132 @@
+{
+  "tool": "verify_receipt",
+  "args": {
+    "receipt": {
+      "$schema": "https://whirlpick.vercel.app/schema/receipt-v1.json",
+      "format": "whirlpick-receipt",
+      "version": 1,
+      "algorithm": "whirlpick-draw-v1",
+      "title": null,
+      "entries": [
+        {
+          "label": "Ada",
+          "weight": 1,
+          "enabled": true
+        },
+        {
+          "label": "Grace",
+          "weight": 1,
+          "enabled": true
+        },
+        {
+          "label": "Linus",
+          "weight": 1,
+          "enabled": true
+        },
+        {
+          "label": "Margaret",
+          "weight": 1,
+          "enabled": true
+        }
+      ],
+      "wheelHash": "69c4db3393cc11b5f2f1a72c67c6f155db3b1846f6bd93da6e926518796187d8",
+      "committedWheelHash": null,
+      "seed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "seedPhrase": null,
+      "commitment": "88ff9961dafa1ae61bf52ae6723b58f3a8103ff9606a91dc279345f440afd3be",
+      "publicInput": null,
+      "spinIndex": 0,
+      "mode": "single",
+      "params": {
+        "count": 1,
+        "excluded": []
+      },
+      "result": {
+        "picks": [
+          {
+            "index": 2,
+            "label": "Linus",
+            "landingU32": 2718968775
+          }
+        ]
+      },
+      "beacon": null,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "committedAt": null,
+      "app": "whirlpick-cli/0.1.0"
+    }
+  },
+  "structuredContent": {
+    "ok": true,
+    "status": "valid",
+    "checks": [
+      {
+        "id": "json",
+        "ok": true,
+        "detail": "The receipt is readable JSON."
+      },
+      {
+        "id": "version",
+        "ok": true,
+        "detail": "Receipt format version 1."
+      },
+      {
+        "id": "algorithm",
+        "ok": true,
+        "detail": "Algorithm whirlpick-draw-v1."
+      },
+      {
+        "id": "schema",
+        "ok": true,
+        "detail": "Every field is well formed."
+      },
+      {
+        "id": "beacon",
+        "ok": true,
+        "detail": "No external beacon (v1)."
+      },
+      {
+        "id": "wheelHash",
+        "ok": true,
+        "detail": "The list wasn't changed: fingerprint matches. (69c4db3393cc11b5f2f1a72c67c6f155db3b1846f6bd93da6e926518796187d8)"
+      },
+      {
+        "id": "seedRevealed",
+        "ok": true,
+        "detail": "The seed has been revealed."
+      },
+      {
+        "id": "commitment",
+        "ok": true,
+        "detail": "The seed matches the commitment shown before the spin. (88ff9961dafa1ae61bf52ae6723b58f3a8103ff9606a91dc279345f440afd3be)"
+      },
+      {
+        "id": "params",
+        "ok": true,
+        "detail": "The draw settings are valid for this list."
+      },
+      {
+        "id": "result",
+        "ok": true,
+        "detail": "Re-running the draw gives the same result."
+      },
+      {
+        "id": "labels",
+        "ok": true,
+        "detail": "Winner names match the list."
+      }
+    ],
+    "warnings": [],
+    "recomputed": {
+      "wheelHash": "69c4db3393cc11b5f2f1a72c67c6f155db3b1846f6bd93da6e926518796187d8",
+      "commitment": "88ff9961dafa1ae61bf52ae6723b58f3a8103ff9606a91dc279345f440afd3be",
+      "picks": [
+        {
+          "index": 2,
+          "label": "Linus",
+          "landingU32": 2718968775
+        }
+      ]
+    }
+  }
+}

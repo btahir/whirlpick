@@ -1,0 +1,89 @@
+{
+  "args": [
+    "spin",
+    "names.txt",
+    "--seed-phrase",
+    "friday raffle",
+    "--json"
+  ],
+  "exit": 0,
+  "stdout": {
+    "ok": true,
+    "mode": "single",
+    "winners": [
+      {
+        "index": 3,
+        "label": "Margaret"
+      }
+    ],
+    "receipts": [
+      {
+        "$schema": "https://whirlpick.vercel.app/schema/receipt-v1.json",
+        "format": "whirlpick-receipt",
+        "version": 1,
+        "algorithm": "whirlpick-draw-v1",
+        "title": null,
+        "entries": [
+          {
+            "label": "Ada",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Grace",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Linus",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Margaret",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Priya",
+            "weight": 1,
+            "enabled": true
+          },
+          {
+            "label": "Tomas",
+            "weight": 1,
+            "enabled": true
+          }
+        ],
+        "wheelHash": "c1cb0f82ab96a6e28be030e3ae95b61b2797dcf291be37a2165ef20ca30496ef",
+        "committedWheelHash": null,
+        "seed": "3db936583d1696d7074ca5de44e4a009d983e7fc3e25e3fabca922d5658ca7ef",
+        "seedPhrase": "friday raffle",
+        "commitment": "16e7fa0abd680372505228a7ce25813f8a883fb90b8cedaca5cfa4d76a483d3c",
+        "publicInput": null,
+        "spinIndex": 0,
+        "mode": "single",
+        "params": {
+          "count": 1,
+          "excluded": []
+        },
+        "result": {
+          "picks": [
+            {
+              "index": 3,
+              "label": "Margaret",
+              "landingU32": 318019924
+            }
+          ]
+        },
+        "beacon": null,
+        "createdAt": "2026-01-01T00:00:00.000Z",
+        "committedAt": null,
+        "app": "whirlpick-cli/0.1.0"
+      }
+    ],
+    "warnings": [
+      "SEED_PHRASE_GUESSABLE: Seed phrases can be guessed; use a random seed (the default) for anything that matters."
+    ]
+  }
+}

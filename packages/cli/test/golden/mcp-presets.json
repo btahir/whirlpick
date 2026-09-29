@@ -1,0 +1,134 @@
+{
+  "tool": "list_presets",
+  "args": {},
+  "structuredContent": {
+    "presets": [
+      {
+        "id": "blank",
+        "title": "Blank wheel",
+        "slug": null,
+        "entries": 0,
+        "mode": "normal"
+      },
+      {
+        "id": "names-sample",
+        "title": "Name picker",
+        "slug": "random-name-picker",
+        "entries": 12,
+        "mode": "normal"
+      },
+      {
+        "id": "yes-no",
+        "title": "Yes or no",
+        "slug": "yes-or-no-wheel",
+        "entries": 2,
+        "mode": "normal"
+      },
+      {
+        "id": "yes-no-maybe",
+        "title": "Yes, no or maybe",
+        "slug": null,
+        "entries": 3,
+        "mode": "normal"
+      },
+      {
+        "id": "coin",
+        "title": "Coin flip",
+        "slug": null,
+        "entries": 2,
+        "mode": "normal"
+      },
+      {
+        "id": "numbers-1-10",
+        "title": "Numbers 1–10",
+        "slug": "random-number-wheel",
+        "entries": 10,
+        "mode": "normal"
+      },
+      {
+        "id": "numbers-1-100",
+        "title": "Numbers 1–100",
+        "slug": null,
+        "entries": 100,
+        "mode": "normal"
+      },
+      {
+        "id": "numbers",
+        "title": "Number range",
+        "slug": null,
+        "entries": 10,
+        "mode": "normal"
+      },
+      {
+        "id": "letters",
+        "title": "Letters A–Z",
+        "slug": "letter-wheel",
+        "entries": 26,
+        "mode": "normal"
+      },
+      {
+        "id": "food",
+        "title": "What should I eat?",
+        "slug": "what-should-i-eat-wheel",
+        "entries": 20,
+        "mode": "normal"
+      },
+      {
+        "id": "truth-or-dare",
+        "title": "Truth or dare",
+        "slug": "truth-or-dare-wheel",
+        "entries": 2,
+        "mode": "normal"
+      },
+      {
+        "id": "decision",
+        "title": "Decision wheel",
+        "slug": "decision-wheel",
+        "entries": 4,
+        "mode": "normal"
+      },
+      {
+        "id": "chores",
+        "title": "Chore wheel",
+        "slug": "chore-wheel",
+        "entries": 10,
+        "mode": "elimination"
+      },
+      {
+        "id": "countries",
+        "title": "Country wheel",
+        "slug": "country-wheel",
+        "entries": 195,
+        "mode": "normal"
+      },
+      {
+        "id": "raffle-sample",
+        "title": "Raffle draw",
+        "slug": "raffle-winner-picker",
+        "entries": 30,
+        "mode": "multi"
+      },
+      {
+        "id": "class-sample",
+        "title": "Class list",
+        "slug": "classroom-name-picker",
+        "entries": 24,
+        "mode": "elimination"
+      },
+      {
+        "id": "teams-sample",
+        "title": "Team generator",
+        "slug": "random-team-generator",
+        "entries": 16,
+        "mode": "teams"
+      },
+      {
+        "id": "order-sample",
+        "title": "Presentation order",
+        "slug": "list-randomizer",
+        "entries": 8,
+        "mode": "multi"
+      }
+    ]
+  }
+}

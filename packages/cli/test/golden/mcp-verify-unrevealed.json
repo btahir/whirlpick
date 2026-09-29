@@ -1,0 +1,53 @@
+{
+  "tool": "verify_receipt",
+  "args": {
+    "file": "receipt-unrevealed.json"
+  },
+  "structuredContent": {
+    "ok": false,
+    "status": "unrevealed",
+    "checks": [
+      {
+        "id": "json",
+        "ok": true,
+        "detail": "The receipt is readable JSON."
+      },
+      {
+        "id": "version",
+        "ok": true,
+        "detail": "Receipt format version 1."
+      },
+      {
+        "id": "algorithm",
+        "ok": true,
+        "detail": "Algorithm whirlpick-draw-v1."
+      },
+      {
+        "id": "schema",
+        "ok": true,
+        "detail": "Every field is well formed."
+      },
+      {
+        "id": "beacon",
+        "ok": true,
+        "detail": "No external beacon (v1)."
+      },
+      {
+        "id": "wheelHash",
+        "ok": true,
+        "detail": "The list wasn't changed: fingerprint matches. (69c4db3393cc11b5f2f1a72c67c6f155db3b1846f6bd93da6e926518796187d8)"
+      },
+      {
+        "id": "seedRevealed",
+        "ok": false,
+        "code": "UNREVEALED",
+        "detail": "The seed has not been revealed yet. Commitment: 88ff9961dafa1ae61bf52ae6723b58f3a8103ff9606a91dc279345f440afd3be."
+      }
+    ],
+    "warnings": [],
+    "recomputed": {
+      "wheelHash": "69c4db3393cc11b5f2f1a72c67c6f155db3b1846f6bd93da6e926518796187d8",
+      "commitment": "88ff9961dafa1ae61bf52ae6723b58f3a8103ff9606a91dc279345f440afd3be"
+    }
+  }
+}

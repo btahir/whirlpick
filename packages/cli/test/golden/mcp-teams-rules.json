@@ -1,0 +1,226 @@
+{
+  "tool": "split_teams",
+  "args": {
+    "entries": [
+      "Ada",
+      "Grace",
+      {
+        "label": "Linus",
+        "weight": 2
+      },
+      {
+        "label": "Margaret",
+        "tags": [
+          "B"
+        ]
+      },
+      "Priya",
+      "Tomas"
+    ],
+    "teamSize": 2,
+    "seed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "keepApart": [
+      [
+        "Ada",
+        "Grace"
+      ]
+    ],
+    "keepTogether": [
+      [
+        "Linus",
+        "#5"
+      ]
+    ],
+    "previousRounds": [
+      [
+        [
+          "Ada",
+          "Priya"
+        ],
+        [
+          "Grace",
+          "Tomas"
+        ],
+        [
+          "Linus",
+          "Margaret"
+        ]
+      ]
+    ]
+  },
+  "structuredContent": {
+    "teams": [
+      {
+        "name": "Team 1",
+        "members": [
+          {
+            "index": 0,
+            "label": "Ada",
+            "tags": []
+          },
+          {
+            "index": 3,
+            "label": "Margaret",
+            "tags": [
+              "B"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Team 2",
+        "members": [
+          {
+            "index": 2,
+            "label": "Linus",
+            "tags": []
+          },
+          {
+            "index": 5,
+            "label": "Tomas",
+            "tags": []
+          }
+        ]
+      },
+      {
+        "name": "Team 3",
+        "members": [
+          {
+            "index": 1,
+            "label": "Grace",
+            "tags": []
+          },
+          {
+            "index": 4,
+            "label": "Priya",
+            "tags": []
+          }
+        ]
+      }
+    ],
+    "sizes": [
+      2,
+      2,
+      2
+    ],
+    "balance": {
+      "byTag": {
+        "B": [
+          1,
+          0,
+          0
+        ]
+      },
+      "withinOne": true
+    },
+    "repeatPairs": 0,
+    "receipt": {
+      "$schema": "https://whirlpick.vercel.app/schema/receipt-v1.json",
+      "format": "whirlpick-receipt",
+      "version": 1,
+      "algorithm": "whirlpick-draw-v1",
+      "title": null,
+      "entries": [
+        {
+          "label": "Ada",
+          "weight": 1,
+          "enabled": true
+        },
+        {
+          "label": "Grace",
+          "weight": 1,
+          "enabled": true
+        },
+        {
+          "label": "Linus",
+          "weight": 2,
+          "enabled": true
+        },
+        {
+          "label": "Margaret",
+          "weight": 1,
+          "enabled": true,
+          "tags": [
+            "B"
+          ]
+        },
+        {
+          "label": "Priya",
+          "weight": 1,
+          "enabled": true
+        },
+        {
+          "label": "Tomas",
+          "weight": 1,
+          "enabled": true
+        }
+      ],
+      "wheelHash": "45310d2430e74df8f857c20095ce7b02072ddee7a8be2747e2442d32c5aa9132",
+      "committedWheelHash": null,
+      "seed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "seedPhrase": null,
+      "commitment": "88ff9961dafa1ae61bf52ae6723b58f3a8103ff9606a91dc279345f440afd3be",
+      "publicInput": null,
+      "spinIndex": 0,
+      "mode": "teams",
+      "params": {
+        "teamCount": null,
+        "teamSize": 2,
+        "balance": true,
+        "keepApart": [
+          [
+            0,
+            1
+          ]
+        ],
+        "keepTogether": [
+          [
+            2,
+            5
+          ]
+        ],
+        "previousRounds": [
+          [
+            [
+              0,
+              4
+            ],
+            [
+              1,
+              5
+            ],
+            [
+              2,
+              3
+            ]
+          ]
+        ],
+        "iterations": 5000
+      },
+      "result": {
+        "teams": [
+          [
+            0,
+            3
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            1,
+            4
+          ]
+        ],
+        "repeatPairs": 0
+      },
+      "beacon": null,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "committedAt": null,
+      "app": "whirlpick-mcp/0.1.0"
+    },
+    "text": "Team 1: Ada, Margaret\nTeam 2: Linus, Tomas\nTeam 3: Grace, Priya\n",
+    "csv": "team,name,tags\nTeam 1,Ada,\nTeam 1,Margaret,B\nTeam 2,Linus,\nTeam 2,Tomas,\nTeam 3,Grace,\nTeam 3,Priya,\n",
+    "warnings": []
+  }
+}
