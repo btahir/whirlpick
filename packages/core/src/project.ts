@@ -40,7 +40,7 @@ export const DEFAULT_SETTINGS: Settings = Object.freeze({
 
 /** A fresh deep copy of the default settings, optionally overridden (nested objects merge). */
 export function defaultSettings(over: Partial<Omit<Settings, 'multi' | 'teams' | 'centre'>> & { multi?: Partial<Settings['multi']>; teams?: Partial<Settings['teams']>; centre?: Partial<Settings['centre']> } = {}): Settings {
-  const d = structuredClone(DEFAULT_SETTINGS) as Settings;
+  const d = JSON.parse(JSON.stringify(DEFAULT_SETTINGS)) as Settings;
   const { multi, teams, centre, ...rest } = over;
   return { ...d, ...rest, multi: { ...d.multi, ...multi }, teams: { ...d.teams, ...teams }, centre: { ...d.centre, ...centre } } as Settings;
 }

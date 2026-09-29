@@ -6,7 +6,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const dir = new URL('../packages/core/src/', import.meta.url).pathname;
-const BANNED = /node:|from ["'](fs|path|os|zlib|crypto|child_process)["']|\bwindow\b|\bdocument\b|\bprocess\.|\bBuffer\b|\brequire\(|\batob\b|\bbtoa\b|\blocalStorage\b|\bnavigator\b|\bfetch\(|\bXMLHttpRequest\b|\bindexedDB\b|\bsetTimeout\b|\bsetInterval\b|\bBlob\b/;
+const BANNED = /node:|from ["'](fs|path|os|zlib|crypto|child_process)["']|\bwindow\b|\bdocument\b|\bprocess\.|\bBuffer\b|\brequire\(|\batob\b|\bbtoa\b|\blocalStorage\b|\bnavigator\b|\bfetch\(|\bXMLHttpRequest\b|\bindexedDB\b|\bsetTimeout\b|\bsetInterval\b|\bBlob\b|\bstructuredClone\b/;
 const bad = [];
 for (const f of readdirSync(dir).filter((x) => x.endsWith('.ts'))) {
   const lines = readFileSync(join(dir, f), 'utf8').split('\n');
