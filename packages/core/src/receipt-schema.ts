@@ -96,8 +96,8 @@ export const RECEIPT_SCHEMA_V1 = {
     {
       if: { type: 'object', properties: { mode: { const: 'teams' } }, required: ['mode'] },
       // oxlint-disable-next-line unicorn/no-thenable -- JSON Schema keyword, not a promise
-      then: { type: 'object', properties: { result: { type: 'object', required: ['teams', 'repeatPairs'] } } },
-      else: { type: 'object', properties: { result: { type: 'object', required: ['picks'] } } },
+      then: { type: 'object', properties: { result: { type: 'object', required: ['teams', 'repeatPairs'], not: { required: ['picks'] } } } },
+      else: { type: 'object', properties: { result: { type: 'object', required: ['picks'], not: { anyOf: [{ required: ['teams'] }, { required: ['repeatPairs'] }] } } } },
     },
   ],
 } as const;

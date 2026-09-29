@@ -245,7 +245,13 @@ export function receiptShapeProblem(r: unknown, base = ''): ValidationIssue | nu
   if (r.mode === 'teams') {
     if (res.teams === undefined) return bad('/result/teams', 'A teams receipt needs result.teams.');
     if (res.repeatPairs === undefined) return bad('/result/repeatPairs', 'A teams receipt needs result.repeatPairs.');
-  } else if (res.picks === undefined) return bad('/result/picks', 'A pick receipt needs result.picks.');
+    // Nothing unverified may ride along: verify only re-checks the result keys of the receipt's mode.
+    if (res.picks !== undefined) return bad('/result/picks', 'A teams receipt has no result.picks.');
+  } else {
+    if (res.picks === undefined) return bad('/result/picks', 'A pick receipt needs result.picks.');
+    if (res.teams !== undefined) return bad('/result/teams', 'A pick receipt has no result.teams.');
+    if (res.repeatPairs !== undefined) return bad('/result/repeatPairs', 'A pick receipt has no result.repeatPairs.');
+  }
   for (const k of ['createdAt', 'committedAt'] as const) {
     const v = r[k];
     if (v !== undefined && v !== null && !(typeof v === 'string' && ISO_RE.test(v))) return bad(`/${k}`, `${k} must be an ISO date-time or null.`);

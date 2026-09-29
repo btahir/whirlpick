@@ -101,7 +101,18 @@ export function detectFormat(text: string): TextFormat {
   const lines = t.split(/\r?\n/).filter((l) => l.trim() !== '').slice(0, 20);
   const withD = lines.filter((l) => unquotedCount(l, d) > 0).length;
   if (lines.length === 0 || withD / lines.length < 0.8) return 'txt';
+  if (d === ',' && looksLikeCommaNames(t)) return 'txt';
   return d === '\t' ? 'tsv' : 'csv';
+}
+
+/**
+ * "Lovelace, Ada" style lists: no header, and every record has exactly two cells whose second cell is
+ * non-empty and not a weight. Read as CSV they would silently lose everything after the comma.
+ */
+function looksLikeCommaNames(text: string): boolean {
+  const records = parseCsvRecords(text, ',').filter((r) => r.cells.some((c) => c.trim() !== '')).slice(0, 20);
+  if (records.length === 0 || HEADER_FIRST.test(records[0]!.cells[0]!.trim())) return false;
+  return records.every((r) => r.cells.length === 2 && r.cells[1]!.trim() !== '' && parseWeight(r.cells[1]!, false) === null);
 }
 
 function parseWeight(s: string, allowComma: boolean): number | null {

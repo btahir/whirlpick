@@ -336,7 +336,12 @@
               "required": [
                 "teams",
                 "repeatPairs"
-              ]
+              ],
+              "not": {
+                "required": [
+                  "picks"
+                ]
+              }
             }
           }
         },
@@ -347,7 +352,21 @@
               "type": "object",
               "required": [
                 "picks"
-              ]
+              ],
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "teams"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "repeatPairs"
+                    ]
+                  }
+                ]
+              }
             }
           }
         }
