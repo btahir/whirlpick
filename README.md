@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/media/hero-dark.webp">
-    <img src="docs/media/hero-light.webp" width="1000" alt="Twelve names on an enamel wheel with a brass rim. A fair-draw ticket shows the commitment hash before the spin. The wheel spins, the tomato pick clacks over the pegs and slows onto Priya, confetti bursts, and the receipt stamps Checks out.">
+    <img src="docs/media/hero-light.webp" width="1000" alt="Whirlpick with twelve made-up names and Fair draw on. The ticket shows the commitment hash before the spin, the wheel spins and the tomato pick slows onto Priya, the reveal plate names her with paper confetti, and the receipt opens with its Checks out stamp.">
   </picture>
 </p>
 
@@ -46,21 +46,21 @@
 
 ## A fair draw, start to finish
 
-Thirty raffle tickets, three winners. Before the spin, Whirlpick shows a commitment: a hash of the secret seed that will decide the draw. You post it in the chat. After the spin it reveals the seed, and anyone can paste the receipt into the verify page to see the same three winners come out again.
+Twelve names, one prize. Before the spin, Whirlpick shows a commitment: a hash of the secret seed that will decide the draw. You post it in the chat. After the spin it reveals the seed, and anyone can paste the receipt into the verify page and watch the same winner come out again.
 
 <table>
   <tr>
     <td width="33%">
       <picture>
         <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/fair-desktop-dark.webp">
-        <img src="docs/screenshots/fair-desktop-light.webp" alt="Before the spin: the fair-draw ticket shows the commitment hash above a wheel of thirty raffle tickets">
+        <img src="docs/screenshots/fair-desktop-light.webp" alt="Before the spin: the fair-draw ticket shows the commitment hash above a wheel of twelve names">
       </picture>
       <br><sub><b>1. Commit.</b> The ticket shows the hash before the wheel moves.</sub>
     </td>
     <td width="33%">
       <picture>
         <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/winner-desktop-dark.webp">
-        <img src="docs/screenshots/winner-desktop-light.webp" alt="The wheel has stopped on a winner and the reveal plate shows the name in large type">
+        <img src="docs/screenshots/winner-desktop-light.webp" alt="The wheel has stopped on Priya and the reveal plate shows her name in large type, with paper confetti">
       </picture>
       <br><sub><b>2. Spin.</b> The winner was decided first; the wheel lands on it.</sub>
     </td>
@@ -221,8 +221,8 @@ Then open http://127.0.0.1:4323.
 Whirlpick builds to plain static files. There are no environment variables, API routes or databases, so any static host works.
 
 ```bash
-pnpm i && pnpm --filter @whirlpick/web build    # writes apps/web/dist/
-pnpm serve                                      # optional: preview it at http://127.0.0.1:4324
+pnpm i && pnpm build    # writes apps/web/dist/
+pnpm serve              # optional: preview it at http://127.0.0.1:4324
 ```
 
 Upload `apps/web/dist/` as is. It includes the offline service worker, the sitemap, `llms.txt` and the JSON Schemas under `/schema/`.
@@ -234,6 +234,28 @@ Upload `apps/web/dist/` as is. It includes the offline service worker, the sitem
 - Geometry: 100,000 generated wheels, and the landing point is always inside the winner's slice, clear of its edges.
 - An independent Python reference reproduces the draw from the written spec: `pnpm test:ref`.
 - Playwright end-to-end tests in Chrome with axe accessibility checks, including a check that the browser and the CLI pick the same winners from the same seed and list.
+
+## Screenshots
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/fair-desktop-light.webp" alt="Fair draw on in the light theme: the ticket shows the commitment before the spin"></td>
+    <td width="50%"><img src="docs/screenshots/fair-desktop-dark.webp" alt="Fair draw on in the dark theme"></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/teams-desktop-light.webp" alt="Sixteen made-up players split into four balanced teams with skill levels"></td>
+    <td width="50%"><img src="docs/screenshots/stream-desktop-dark.webp" alt="Stream mode on a green background for OBS, with the winner caption"></td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td><img src="docs/screenshots/home-phone-light.webp" alt="The wheel on a phone, light theme"></td>
+    <td><img src="docs/screenshots/winner-phone-light.webp" alt="The winner sheet on a phone, light theme"></td>
+    <td><img src="docs/screenshots/home-phone-dark.webp" alt="The wheel on a phone, dark theme"></td>
+    <td><img src="docs/screenshots/winner-phone-dark.webp" alt="The winner sheet on a phone, dark theme"></td>
+  </tr>
+</table>
 
 ## Project layout
 
