@@ -17,6 +17,11 @@ step check:budget;     pnpm check:budget
 step seo:check;        pnpm seo:check
 
 step "static server on 4324"
+# Playwright reuses any server already on the port, which would test a different build.
+if curl -fsS -o /dev/null --max-time 1 http://127.0.0.1:4324/ 2>/dev/null; then
+  echo "Port 4324 is already in use; stop that server first so e2e tests this build." >&2
+  exit 1
+fi
 node apps/web/scripts/serve-static.mjs apps/web/dist 4324 &
 server=$!
 trap 'kill "$server" 2>/dev/null || true' EXIT
