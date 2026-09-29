@@ -203,6 +203,21 @@ Teams receipts carry `params: { teamCount, teamSize, balance, keepApart, keepTog
 - Replay: `https://whirlpick.vercel.app/#spin=<receipt code>`; verify: `https://whirlpick.vercel.app/verify/#r=<receipt code>`.
 - Query options: `?preset=<id>`, `?mode=`, `?count=`, `?teams=`, `?duration=`, `?fair=1` and more.
 
+## Embedding the wheel (web, postMessage API v1)
+
+`/embed/` is a chrome-less wheel for an iframe: no editor, no header, no support line, and nothing is stored (memory only). The wheel comes from the fragment (`#w=`, `#names=`) or `?preset=`.
+
+```html
+<iframe src="https://whirlpick.vercel.app/embed/#names=Ada%0AGrace%0ALinus&origin=https%3A%2F%2Fyour.site"
+        allow="autoplay; clipboard-write; fullscreen" style="border:0;width:100%;aspect-ratio:1"></iframe>
+```
+
+Every message is `{ source: "whirlpick", v: 1, type, …, requestId? }`.
+
+- Parent → embed: `spin` (replies `error` with code `BUSY` while spinning), `setEntries` (`entries`: strings or `{label, weight?, enabled?, tags?}`), `setOptions` (`options`: `spinDuration`, `sound`, `confetti`, `mode` normal/elimination/multi, `count`, `theme`, `background`, `mysteryMode`), `reset` (puts eliminated entries back), `getState`.
+- Embed → parent: `ready` (`version`, `entries`), `spinStart` (`requestId`, `spinIndex`), `result` (`requestId`, `winners: [{index, label}]`, `receipt`), `state` (`entries`, `settings`, `spinning`), `error` (`code`, `message`).
+- The embed accepts messages only from `window.parent`. With `origin=` in the fragment or query it also requires that origin and posts only to it; without it, it posts with `"*"` (results contain only what the embedder supplied). Sound needs a click inside the frame unless the parent grants `allow="autoplay"`.
+
 ## The algorithm (whirlpick-draw-v1)
 
 Full spec with test vectors: https://whirlpick.vercel.app/about/#algorithm. In short:
