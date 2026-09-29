@@ -26,7 +26,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run --root ../.. --project cli"
+    "test": "pnpm --filter @whirlpick/core build && tsc -p tsconfig.build.json && node ../../scripts/run-vitest.mjs --project cli"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.30.1",

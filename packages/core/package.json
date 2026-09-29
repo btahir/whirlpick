@@ -18,7 +18,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run --root ../.. --project core"
+    "test": "node ../../scripts/run-vitest.mjs --project core"
   },
   "dependencies": {
     "@noble/hashes": "2.4.0"
