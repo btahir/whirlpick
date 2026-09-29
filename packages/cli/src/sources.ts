@@ -77,7 +77,13 @@ export function fromText(text: string, hint: TextFormatHint | undefined, opts: {
       throw new WhirlError('PARSE_ERROR', `${opts.name ?? 'Input'} is not valid JSON: ${(e as Error).message}`);
     }
     if (Array.isArray(json)) return fromEntries(json as EntryIn[], opts);
-    const { project, warnings } = parseProject(json, { now: opts.now });
+    // Ids missing from the file are derived from its content, so CLI/MCP output is reproducible.
+    let counter = 0;
+    const random = (b: Uint8Array) => {
+      const h = H(utf8(`whirlpick-cli-ids:${counter++}:`), utf8(t));
+      for (let i = 0; i < b.length; i++) b[i] = h[i % h.length]!;
+    };
+    const { project, warnings } = parseProject(json, { now: opts.now, random });
     let wheel: Wheel | undefined;
     if (opts.wheel) {
       wheel = project.wheels.find((w) => w.id === opts.wheel) ?? project.wheels.find((w) => w.name === opts.wheel);
