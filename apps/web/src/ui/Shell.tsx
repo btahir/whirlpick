@@ -1,43 +1,12 @@
 // Page chrome: header, footer, toasts, live regions and the confetti overlay.
 import { useEffect, useRef, useState } from "react";
-import { SUPPORT_URL, REPO_URL } from "../config/site";
-import { LANDING_PAGES } from "../content/landing/index";
+import { SUPPORT_URL } from "../config/site";
+import { Brand } from "./Brand";
 import { t } from "../copy/en";
 import { activeWheel } from "../state/reducer";
 import { shallowEq, useSel } from "../state/store";
 import { Icon, Menu, useController } from "./primitives";
 import { useScheme } from "./WheelCanvas";
-
-export function Mark({ size = 30 }: { size?: number }) {
-  // The brand mark (brand/mark.svg); night variant swaps the rim and spokes via CSS variables.
-  return (
-    <svg className="mark" width={size} height={size} viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-      <circle cx="27" cy="37" r="25" fill="var(--wp-rim)" />
-      <path d="M27 37L27 17A20 20 0 0 1 47 37Z" fill="#F2A93B" />
-      <path d="M27 37L47 37A20 20 0 0 1 27 57Z" fill="#17735D" />
-      <path d="M27 37L27 57A20 20 0 0 1 7 37Z" fill="#F2B8A6" />
-      <path d="M27 37L7 37A20 20 0 0 1 27 17Z" fill="#2A55A8" />
-      <g stroke="var(--wp-sep)" strokeWidth="1.6">
-        <line x1="27" y1="37" x2="47" y2="37" />
-        <line x1="27" y1="37" x2="27" y2="57" />
-        <line x1="27" y1="37" x2="7" y2="37" />
-        <line x1="27" y1="37" x2="27" y2="17" />
-      </g>
-      <circle cx="27" cy="37" r="5.5" fill="var(--wp-hub)" stroke="var(--wp-rim)" strokeWidth="2.5" />
-      <path transform="translate(51.5 12.5) rotate(135)" d="M22 0C16.5 -4.2 9 -10.5 1.5 -10.5C-4.8 -10.5 -8.5 -6 -8.5 0C-8.5 6 -4.8 10.5 1.5 10.5C9 10.5 16.5 4.2 22 0Z" fill="#C2361F" stroke="var(--wp-rim)" strokeWidth="3" strokeLinejoin="round" />
-      <circle cx="51.5" cy="12.5" r="2.6" fill="#C9A24A" />
-    </svg>
-  );
-}
-
-export function Brand() {
-  return (
-    <a className="brand" href="/" aria-label="Whirlpick home">
-      <Mark />
-      <span className="wordmark">Whirlpick</span>
-    </a>
-  );
-}
 
 /** Header for the tool pages (SPEC §9 / mock). */
 export function ToolHeader() {
@@ -126,77 +95,6 @@ export function ToolHeader() {
         ]}
       />
     </header>
-  );
-}
-
-/** Header for content pages. */
-export function PageHeader({ current }: { current?: string }) {
-  const links: [string, string][] = [
-    ["/", "Wheel"],
-    ["/?mode=teams", "Teams"],
-    ["/verify/", "Verify"],
-    ["/about/", "About"],
-  ];
-  return (
-    <header className="hdr page-hdr">
-      <Brand />
-      <div className="spacer" />
-      <nav aria-label="Main" className="page-nav">
-        {links.map(([href, label]) => (
-          <a key={href} href={href} className="hbtn" aria-current={current === href ? "page" : undefined}>
-            {label}
-          </a>
-        ))}
-        <a className="hbtn support" href={SUPPORT_URL} aria-current={current === SUPPORT_URL ? "page" : undefined}>
-          {t.support}
-        </a>
-      </nav>
-    </header>
-  );
-}
-
-export function Footer() {
-  return (
-    <footer className="ftr">
-      <div className="ftr-in">
-        <div className="ftr-brand">
-          <Brand />
-          <p className="small">Free, open source (MIT) and ad-free. Your lists stay on this device.</p>
-        </div>
-        <nav aria-label="Wheels for every job" className="ftr-links">
-          <h2 className="eyebrow">Wheels</h2>
-          <ul>
-            {LANDING_PAGES.map((p) => (
-              <li key={p.slug}>
-                <a href={`/${p.slug}/`}>{p.navLabel}</a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <nav aria-label="Whirlpick" className="ftr-links ftr-small">
-          <h2 className="eyebrow">Whirlpick</h2>
-          <ul>
-            <li>
-              <a href="/verify/">Check a draw</a>
-            </li>
-            <li>
-              <a href="/about/">About and privacy</a>
-            </li>
-            <li>
-              <a href="/docs/agents/">For agents: CLI and MCP</a>
-            </li>
-            <li>
-              <a href={REPO_URL} rel="noopener">
-                Source on GitHub
-              </a>
-            </li>
-            <li>
-              <a href={SUPPORT_URL}>{t.support}</a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </footer>
   );
 }
 

@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { activeWheel } from "../state/reducer";
 import { shallowEq, useSel } from "../state/store";
-import { buildScene } from "../wheel/scene";
 import { wheelTheme } from "../wheel/theme";
 import { Icon, Modal, PlateHead, Segmented, Stepper, Switch, useController } from "./primitives";
 import { useScheme } from "./WheelCanvas";

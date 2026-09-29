@@ -1,15 +1,15 @@
 // Home and landing pages: the tool, then (for landing pages) the page's own content.
-import { useEffect } from "react";
-import { HOME_CONTENT } from "../content/home";
-import { LANDING_PAGES, landingBySlug } from "../content/landing/index";
-import type { LandingContent } from "../content/types";
+import { lazy, Suspense, useEffect, useState } from "react";
+import type { LandingInfo } from "../app/routes";
 import { activeWheel } from "../state/reducer";
 import { shallowEq, useSel } from "../state/store";
-import { Dialogs } from "../ui/Dialogs";
-import { Faq, inline, Sections } from "../ui/Content";
+// Plates load right after the page is interactive (not part of the initial JS).
+const loadDialogs = () => import("../ui/Dialogs");
+const Dialogs = lazy(() => loadDialogs().then((m) => ({ default: m.Dialogs })));
+import { inline } from "../ui/Content";
 import { Panel } from "../ui/Panel";
 import { useController } from "../ui/primitives";
-import { ConfettiLayer, Footer, LiveRegions, ToolHeader, Toasts } from "../ui/Shell";
+import { ConfettiLayer, LiveRegions, ToolHeader, Toasts } from "../ui/Shell";
 import { Stage } from "../ui/Stage";
 
 function isTyping(el: EventTarget | null): boolean {
@@ -75,7 +75,7 @@ export function useShortcuts() {
   }, [c]);
 }
 
-export function ToolPage({ landing }: { landing?: LandingContent }) {
+export function ToolPage({ landing }: { landing?: LandingInfo }) {
   useShortcuts();
   const v = useSel((s) => ({ hidden: s.ui.editorHidden, presenter: s.ui.presenter, surface: s.surface, spinning: s.spin.phase !== "idle", mode: activeWheel(s).settings.mode }), shallowEq);
   const layout = `app${v.hidden ? " no-panel" : ""}${v.presenter ? " presenter" : ""}${v.spinning ? " spinning" : ""}`;
@@ -99,9 +99,7 @@ export function ToolPage({ landing }: { landing?: LandingContent }) {
           {!v.hidden && !v.presenter ? <Panel /> : null}
         </div>
       </main>
-      {!v.presenter ? <PageContent landing={landing} /> : null}
-      {!v.presenter ? <Footer /> : null}
-      <Dialogs />
+      <LazyDialogs />
       <ConfettiLayer />
       <Toasts />
       <LiveRegions />
@@ -109,48 +107,19 @@ export function ToolPage({ landing }: { landing?: LandingContent }) {
   );
 }
 
-function PageContent({ landing }: { landing?: LandingContent }) {
-  if (!landing) {
-    return (
-      <div className="content home-content">
-        <div className="prose">
-          <Sections sections={HOME_CONTENT.sections} />
-          <section className="prose-section" aria-labelledby="jobs">
-            <h2 id="jobs">A wheel for every job</h2>
-            <ul className="jobs">
-              {LANDING_PAGES.map((p) => (
-                <li key={p.slug}>
-                  <a href={`/${p.slug}/`}>{p.navLabel}</a>
-                </li>
-              ))}
-            </ul>
-          </section>
-        </div>
-      </div>
-    );
-  }
-  const related = landing.related.map((r) => landingBySlug(r)).filter((x): x is LandingContent => !!x);
+function LazyDialogs() {
+  const [on, setOn] = useState(false);
+  const wanted = useSel((s) => !!s.ui.dialog || s.spin.phase !== "idle");
+  useEffect(() => {
+    const idle = (globalThis as { requestIdleCallback?: (f: () => void, o?: object) => number }).requestIdleCallback;
+    const go = () => setOn(true);
+    if (idle) idle(go, { timeout: 1200 });
+    else setTimeout(go, 300);
+  }, []);
+  if (!on && !wanted) return null;
   return (
-    <div className="content">
-      <article className="prose">
-        <Sections sections={landing.sections} />
-        <Faq items={landing.faq} />
-        <p className="privacy-line">
-          Nothing leaves your device: no account, no upload, no ads. <a href="/about/">How Whirlpick handles your lists</a>
-        </p>
-        {related.length ? (
-          <nav className="related" aria-label="Related wheels">
-            <h2 className="eyebrow">Related</h2>
-            <ul>
-              {related.map((r) => (
-                <li key={r.slug}>
-                  <a href={`/${r.slug}/`}>{r.navLabel}</a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        ) : null}
-      </article>
-    </div>
+    <Suspense fallback={null}>
+      <Dialogs />
+    </Suspense>
   );
 }

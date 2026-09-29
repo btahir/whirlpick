@@ -2,11 +2,9 @@
 // re-runs whirlpick-draw-v1 in the browser and says, check by check, whether it holds.
 import { useEffect, useRef, useState } from "react";
 import { finalRotation, landingTurn, receiptFromText, slicesFor, verifyReceipt, type Receipt, type VerifyReport } from "@whirlpick/core";
-import { VERIFY_DOC } from "../content/docs/verify";
 import { groupHash, t } from "../copy/en";
-import { Faq, inline, Sections } from "../ui/Content";
 import { Icon, useController } from "../ui/primitives";
-import { Footer, LiveRegions, PageHeader, Toasts } from "../ui/Shell";
+import { LiveRegions, Toasts } from "../ui/Shell";
 import { buildScene, POINTER_TURN } from "../wheel/scene";
 import { wheelTheme } from "../wheel/theme";
 import { renderWheel } from "../wheel/renderer";
@@ -17,7 +15,8 @@ interface Result {
   receipt: Receipt | null;
 }
 
-export function VerifyPage() {
+/** The interactive part of /verify/ (the heading, explainer and footer are static HTML). */
+export function VerifyWidget() {
   const c = useController();
   const [text, setText] = useState("");
   const [commitment, setCommitment] = useState("");
@@ -73,74 +72,63 @@ export function VerifyPage() {
 
   return (
     <>
-      <PageHeader current="/verify/" />
-      <main id="main" className="page verify-page">
-        <div className="page-in">
-          <h1 className="display">Check a draw</h1>
-          <p className="lede">{inline(VERIFY_DOC.intro)}</p>
-          <form
-            className={`verify-form${drag ? " drag" : ""}`}
-            onSubmit={(e) => {
-              e.preventDefault();
-              void run();
-            }}
-            onDragOver={(e) => {
-              e.preventDefault();
-              setDrag(true);
-            }}
-            onDragLeave={() => setDrag(false)}
-            onDrop={(e) => {
-              e.preventDefault();
-              setDrag(false);
-              const f = e.dataTransfer.files[0];
-              if (f) void onFile(f);
-            }}
-          >
-            <label className="field">
-              <span>Paste a receipt or a replay link</span>
-              <textarea className="mono receipt-input" rows={7} value={text} onChange={(e) => setText(e.target.value)} placeholder='{"format":"whirlpick-receipt", …}  or  …/#spin=1.…' data-testid="verify-input" spellCheck={false} />
-            </label>
-            <details className="expect">
-              <summary>Compare with what you saw before the draw (optional)</summary>
-              <label className="field">
-                <span>Commitment you saw</span>
-                <input className="mono" value={commitment} onChange={(e) => setCommitment(e.target.value)} placeholder="64 hex characters" data-testid="verify-commitment" />
-              </label>
-              <label className="field">
-                <span>List fingerprint you saw</span>
-                <input className="mono" value={fingerprint} onChange={(e) => setFingerprint(e.target.value)} placeholder="64 hex characters" />
-              </label>
-            </details>
-            <div className="acts">
-              <button type="submit" className="btn primary" data-testid="verify-check">
-                <Icon name="seal" /> Check
-              </button>
-              <label className="btn file-btn">
-                <Icon name="import" /> Open a receipt file
-                <input
-                  type="file"
-                  accept="application/json,.json"
-                  className="visually-hidden-input"
-                  onChange={(e) => {
-                    const f = e.target.files?.[0];
-                    if (f) void onFile(f);
-                    e.target.value = "";
-                  }}
-                />
-              </label>
-              <span className="small muted">or drop a .json file here</span>
-            </div>
-          </form>
-          <div className="verify-out" ref={out} tabIndex={-1} aria-live="polite" data-testid="verify-result">
-            {res ? <Outcome res={res} /> : null}
-          </div>
-          <div className="prose">
-            <Sections sections={VERIFY_DOC.sections} />
-            {VERIFY_DOC.faq ? <Faq items={VERIFY_DOC.faq} /> : null}
-          </div>
+      <form
+        className={`verify-form${drag ? " drag" : ""}`}
+        onSubmit={(e) => {
+          e.preventDefault();
+          void run();
+        }}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setDrag(true);
+        }}
+        onDragLeave={() => setDrag(false)}
+        onDrop={(e) => {
+          e.preventDefault();
+          setDrag(false);
+          const f = e.dataTransfer.files[0];
+          if (f) void onFile(f);
+        }}
+      >
+        <label className="field">
+          <span>Paste a receipt or a replay link</span>
+          <textarea className="mono receipt-input" rows={7} value={text} onChange={(e) => setText(e.target.value)} placeholder='{"format":"whirlpick-receipt", …}  or  …/#spin=1.…' data-testid="verify-input" spellCheck={false} />
+        </label>
+        <details className="expect">
+          <summary>Compare with what you saw before the draw (optional)</summary>
+          <label className="field">
+            <span>Commitment you saw</span>
+            <input className="mono" value={commitment} onChange={(e) => setCommitment(e.target.value)} placeholder="64 hex characters" data-testid="verify-commitment" />
+          </label>
+          <label className="field">
+            <span>List fingerprint you saw</span>
+            <input className="mono" value={fingerprint} onChange={(e) => setFingerprint(e.target.value)} placeholder="64 hex characters" />
+          </label>
+        </details>
+        <div className="acts">
+          <button type="submit" className="btn primary" data-testid="verify-check">
+            <Icon name="seal" /> Check
+          </button>
+          <label className="btn file-btn">
+            <Icon name="import" /> Open a receipt file
+            <input
+              type="file"
+              accept="application/json,.json"
+              className="visually-hidden-input"
+              data-testid="verify-file"
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f) void onFile(f);
+                e.target.value = "";
+              }}
+            />
+          </label>
+          <span className="small muted">or drop a .json file here</span>
         </div>
-      </main>
-      <Footer />
+      </form>
+      <div className="verify-out" ref={out} tabIndex={-1} aria-live="polite" data-testid="verify-result">
+        {res ? <Outcome res={res} /> : null}
+      </div>
       <Toasts />
       <LiveRegions />
     </>

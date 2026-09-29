@@ -20,7 +20,21 @@ Whirlpick is MIT licensed (see `LICENSE`). It stands on these open-source packag
 
 ### Web app (`apps/web`)
 
-<!-- Builder B: append the web runtime dependencies and fonts here (one row each, with licence). -->
+| Package | Version | Licence | Use |
+|---|---|---|---|
+| [react](https://github.com/facebook/react) | 19.3.0 | MIT | UI |
+| [react-dom](https://github.com/facebook/react) | 19.3.0 | MIT | UI rendering and hydration (brings `scheduler`, MIT) |
+| [qr](https://github.com/paulmillr/qr) | 0.7.0 | MIT OR Apache-2.0 (used under MIT) | QR code in the share dialog (a lazy chunk; encoder only) |
+| [@fontsource-variable/bricolage-grotesque](https://github.com/fontsource/font-files) | 5.3.0 | OFL-1.1 | Self-hosted font files for Bricolage Grotesque |
+| [@fontsource-variable/martian-mono](https://github.com/fontsource/font-files) | 5.3.0 | OFL-1.1 | Self-hosted font files for Martian Mono |
+
+**Fonts** (SIL Open Font License 1.1; the licence text ships in each Fontsource package):
+
+- **Bricolage Grotesque**, © 2022 The Bricolage Grotesque Project Authors (https://github.com/ateliertriay/bricolage). UI, wheel labels and the wordmark.
+- **Martian Mono**, © 2020 The Martian Mono Project Authors (https://github.com/evilmartians/mono). Hashes, seeds, times and counts.
+- `apps/web/src/fonts/*-core.woff2` are subsets of those two files (basic Latin plus a few typographic marks, every variation axis kept), made with fontTools so the first paint preloads about 100 KB instead of 155 KB. Neither font declares a Reserved Font Name.
+
+**Written by us for the web app:** the Canvas wheel renderer, the spin driver, the WebAudio synth (every sound is generated in code; there are no audio files), the confetti, the IndexedDB wrapper, the store, the service worker and the static server. The logo, favicon, app icons and icon set were drawn for Whirlpick (`docs/design/brand/` → `apps/web/public/`).
 
 ## Written by us, no dependency
 

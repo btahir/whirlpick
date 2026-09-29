@@ -88,7 +88,7 @@ export function parseQuery(search: string): QueryOptions {
   }
   if (patch.multi && !patch.mode) patch.mode = "multi";
   const reveal = q.get("reveal");
-  if (reveal === "instant" || reveal === "sequential") patch.multi = { ...(patch.multi ?? {}), reveal };
+  if (reveal === "instant" || reveal === "sequential") patch.multi = { ...patch.multi, reveal };
   const teams = num(q.get("teams"), 2, 1000);
   const size = num(q.get("size"), 1, 1000);
   if (teams !== undefined) {

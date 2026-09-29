@@ -63,9 +63,9 @@ export function applySettingsPatch(settings: Settings, p: SettingsPatch): Settin
   return {
     ...settings,
     ...p,
-    multi: { ...settings.multi, ...(p.multi ?? {}) },
-    teams: { ...settings.teams, ...(p.teams ?? {}) },
-    centre: { ...settings.centre, ...(p.centre ?? {}) },
+    multi: { ...settings.multi, ...p.multi },
+    teams: { ...settings.teams, ...p.teams },
+    centre: { ...settings.centre, ...p.centre },
   } as Settings;
 }
 

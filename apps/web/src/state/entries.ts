@@ -76,7 +76,7 @@ const sameTags = (a: string[] | undefined, b: string[]) => (a?.length ?? 0) === 
  * 3. Anything left becomes a new entry with default properties.
  */
 export function mergeItems(items: LineItem[], prev: Entry[], makeId: () => string): Entry[] {
-  const used = new Array<boolean>(prev.length).fill(false);
+  const used: boolean[] = Array.from({ length: prev.length }, () => false);
   const queues = new Map<string, number[]>();
   prev.forEach((e, i) => {
     const k = entryLine(e);

@@ -146,7 +146,7 @@ function wedge(ctx: Ctx, r: number, start: number, end: number) {
 }
 
 let pickPath: Path2D | null | undefined;
-function pickShape(ctx: Ctx) {
+function pickShape() {
   const P = (globalThis as { Path2D?: typeof Path2D }).Path2D;
   if (pickPath === undefined) {
     try {
@@ -590,7 +590,7 @@ export function drawPick(ctx: Ctx, scene: WheelScene, g: Geometry, deflectionDeg
   ctx.translate(g.cx + GEO.PIVOT * g.R, g.cy);
   ctx.rotate(Math.PI - (deflectionDeg * Math.PI) / 180);
   ctx.scale(k, k);
-  const path = pickShape(ctx);
+  const path = pickShape();
   const fillPath = (style: string) => {
     ctx.fillStyle = style;
     if (path) ctx.fill(path);

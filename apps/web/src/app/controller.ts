@@ -180,7 +180,7 @@ export function createController(store: Store, opts: { surface: Surface }): Cont
     writeTimer = null;
     if (!storage) return;
     const st = s();
-    for (const id of [...dirty]) {
+    for (const id of Array.from(dirty)) {
       dirty.delete(id);
       const w = st.wheels.find((x) => x.id === id);
       const m = st.meta[id];
@@ -326,9 +326,9 @@ export function createController(store: Store, opts: { surface: Surface }): Cont
         settings: {
           ...active.settings,
           ...p,
-          multi: { ...active.settings.multi, ...(p.multi ?? {}) },
-          teams: { ...active.settings.teams, ...(p.teams ?? {}) },
-          centre: { ...active.settings.centre, ...(p.centre ?? {}) },
+          multi: { ...active.settings.multi, ...p.multi },
+          teams: { ...active.settings.teams, ...p.teams },
+          centre: { ...active.settings.centre, ...p.centre },
         } as Settings,
       };
     }

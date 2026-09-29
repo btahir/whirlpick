@@ -1,0 +1,22 @@
+/* Core subsets of the two OFL fonts (neither declares a Reserved Font Name), preloaded on every
+   page. Declared after the Fontsource faces so they win for the characters they cover; anything
+   else falls through to the Fontsource unicode ranges, which load only when a page needs them.
+   Regenerate with fontTools, keeping every variation axis:
+     pyftsubset <fontsource latin woff2> --unicodes="<the unicode-range below>" --flavor=woff2        --layout-features='*' --output-file=src/fonts/<name>-core.woff2 */
+@font-face {
+  font-family: "Bricolage Grotesque Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  font-stretch: 75% 100%;
+  src: url(../fonts/bricolage-core.woff2) format("woff2-variations");
+  unicode-range: U+0020-007E, U+00A0, U+00B7, U+00D7, U+2013, U+2014, U+2018, U+2019, U+201C, U+201D, U+2026, U+2212, U+2192;
+}
+@font-face {
+  font-family: "Martian Mono Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 800;
+  src: url(../fonts/martian-core.woff2) format("woff2-variations");
+  unicode-range: U+0020-007E, U+00A0, U+00B7, U+00D7, U+2013, U+2014, U+2018, U+2019, U+201C, U+201D, U+2026, U+2212, U+2192;
+}

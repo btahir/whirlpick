@@ -33,7 +33,7 @@ function loadImage(src: string): Promise<HTMLImageElement> {
 
 /** Read an image file, downscale it to fit 256 × 256 and encode it within 200 KB. */
 export async function imageFromFile(file: File): Promise<{ id: string; asset: ImageAsset }> {
-  if (!/^image\//.test(file.type)) throw new Error("Choose an image file (PNG, JPEG, WebP or GIF).");
+  if (!file.type.startsWith("image/")) throw new Error("Choose an image file (PNG, JPEG, WebP or GIF).");
   const url = URL.createObjectURL(file);
   try {
     const img = await loadImage(url);

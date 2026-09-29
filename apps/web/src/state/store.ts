@@ -19,7 +19,7 @@ export function createStore(initial: AppState, reduce: (s: AppState, a: Action) 
       const next = reduce(state, a);
       if (next === state) return;
       state = next;
-      for (const fn of [...subs]) fn();
+      for (const fn of Array.from(subs)) fn();
     },
     subscribe(fn) {
       subs.add(fn);
