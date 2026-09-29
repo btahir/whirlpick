@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # `pnpm verify`: every check in order (PLAN §1.4); stops at the first failure.
-# Heavy steps (web build, Playwright, Lighthouse) go through ../research/heavy.sh via their scripts.
+# Heavy steps (web build, Playwright, Lighthouse) go through scripts/heavy.sh via their scripts.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 start=$(date +%s)
@@ -22,7 +22,7 @@ server=$!
 trap 'kill "$server" 2>/dev/null || true' EXIT
 for _ in $(seq 1 50); do curl -fsS -o /dev/null http://127.0.0.1:4324/ && break; sleep 0.2; done
 
-step test:e2e;         PW_SKIP_BUILD=1 ../research/heavy.sh pnpm --filter @whirlpick/web exec playwright test --project=chrome --workers=2
+step test:e2e;         PW_SKIP_BUILD=1 bash scripts/heavy.sh pnpm --filter @whirlpick/web exec playwright test --project=chrome --workers=2
 step lighthouse;       pnpm lighthouse
 
 kill "$server" 2>/dev/null || true
