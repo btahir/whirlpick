@@ -1,7 +1,7 @@
 // `whirlpick` CLI (PLAN §5). main() never throws: it returns the exit code and writes through `io`.
 import { existsSync } from 'node:fs';
 import { extname, resolve } from 'node:path';
-import { APP_VERSION, CHECK_TEXT, RECEIPT_SCHEMA_V1, WHIRL_SCHEMA_V1, wheelHash, WhirlError, type EntryIn, type VerifyReport } from '@whirlpick/core';
+import { APP_VERSION, CHECK_TEXT, RECEIPT_SCHEMA_V1, SITE_URL, WHIRL_SCHEMA_V1, wheelHash, WhirlError, type EntryIn, type VerifyReport } from '@whirlpick/core';
 import { bool, helpText, int, list, parseArgs, str, type FlagSpec, type Parsed } from './args.js';
 import { errorDoc, EXIT, UsageError } from './errors.js';
 import { COMMIT_NOTE, nowIso, opCommit, opLink, opSpin, opTeams, opValidate, opVerify, presetAsProject, presetList, roundsFromHistory, type SeedOpts } from './ops.js';
@@ -147,7 +147,7 @@ COMMANDS.spin = {
     spins: { kind: 'string', value: 'n', help: 'Elimination: run n spins in one call (spin index 0…n−1, winners excluded as they go).' },
     exclude: { kind: 'string', value: 'i,j,…', help: 'Entry indices already removed (elimination).' },
     link: { kind: 'bool', help: 'Add a replay link (#spin=) that plays the draw on the website.' },
-    base: { kind: 'string', value: 'url', help: 'Base URL for --link (default https://whirlpick.vercel.app).' },
+    base: { kind: 'string', value: 'url', help: `Base URL for --link (default ${SITE_URL}).` },
     ...OUT,
   },
   async run(p, io, json, quiet) {
@@ -330,7 +330,7 @@ COMMANDS.commit = {
 const LINK_FLAGS: Record<string, FlagSpec> = {
   ...SOURCE,
   replay: { kind: 'string', value: 'receipt', help: 'Make a replay link (#spin=) for this receipt file instead of a wheel link.' },
-  base: { kind: 'string', value: 'url', help: 'Site to link to (default https://whirlpick.vercel.app; e.g. http://127.0.0.1:4324).' },
+  base: { kind: 'string', value: 'url', help: `Site to link to (default ${SITE_URL}; e.g. http://127.0.0.1:4324).` },
   qr: { kind: 'bool', help: 'Also print a QR code (only for links ≤ 1800 characters).' },
   'qr-svg': { kind: 'string', value: 'path', help: 'Write the QR code as SVG to a new file.' },
   force: OUT.force!,

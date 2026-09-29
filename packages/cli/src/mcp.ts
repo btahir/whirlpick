@@ -4,7 +4,7 @@
 // the zod schemas) so agents always get a stable error code.
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { APP_VERSION, WhirlError, wheelHash, type EntryIn } from '@whirlpick/core';
+import { APP_VERSION, SITE_URL, WhirlError, wheelHash, type EntryIn } from '@whirlpick/core';
 import { z } from 'zod';
 import { errorDoc } from './errors.js';
 import { COMMIT_NOTE, nowIso, opCommit, opLink, opSpin, opTeams, opValidate, opVerify, presetList, roundsFromHistory, type SeedOpts } from './ops.js';
@@ -127,7 +127,7 @@ export async function createServer(opts: ServerOptions): Promise<McpServer> {
         exclude: z.array(z.number()).optional().describe('Entry indices already removed (elimination).'),
         title: z.string().optional(),
         includeLink: z.boolean().optional().describe('Add a #spin= replay link for the last receipt.'),
-        base: z.string().optional().describe('Site base URL for the link (default https://whirlpick.vercel.app).'),
+        base: z.string().optional().describe(`Site base URL for the link (default ${SITE_URL}).`),
         receiptPath: z.string().optional().describe('Also save the receipt (or list of receipts) as .json inside the allowed roots.'),
         overwrite: z.boolean().optional(),
       },

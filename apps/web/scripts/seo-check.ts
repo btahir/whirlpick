@@ -206,6 +206,12 @@ function walk(dir: string, out: string[] = []): string[] {
   return out;
 }
 const srcFiles = [...walk(join(WEB, "src")), ...walk(join(WEB, "scripts")), ...walk(join(WEB, "public")), join(WEB, "index.html")];
+// O7 also covers the shared packages' sources: only core/src/site.ts may name the host.
+const pkgFiles = [...walk(join(REPO, "packages/core/src")), ...walk(join(REPO, "packages/cli/src"))];
+for (const f of pkgFiles) {
+  const rel = relative(REPO, f);
+  if (rel !== "packages/core/src/site.ts" && /whirlpick\.vercel\.app|getwhirlpick|whirlpickapp/.test(read(f))) fail(`${rel} hard-codes the site host (use SITE_URL)`);
+}
 for (const f of srcFiles) {
   const rel = relative(REPO, f);
   const txt = read(f);

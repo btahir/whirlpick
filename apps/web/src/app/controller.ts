@@ -136,6 +136,8 @@ export interface Controller {
 const now = () => Date.now();
 const iso = () => new Date().toISOString();
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+/** A link that can't be opened: say "update your browser" when the browser lacks DecompressionStream (PLAN §9). */
+export const linkError = (e: unknown): string => (isWhirlError(e) && e.code === "LINK_UNSUPPORTED" ? e.message : t.toast.damagedLink);
 
 function hashedEntries(entries: Entry[]) {
   return entries.map((e) => ({ label: e.label, weight: e.weight, enabled: e.enabled, tags: e.tags }));
@@ -289,8 +291,8 @@ export function createController(store: Store, opts: { surface: Surface }): Cont
         const w = p.wheels.find((x) => x.id === p.activeWheelId) ?? p.wheels[0]!;
         active = { ...w, id: wheels.some((x) => x.id === w.id) ? newId("w") : w.id, settings: normaliseTheme(w.settings) };
         fromLink = true;
-      } catch {
-        queueMicrotask(() => toast(t.toast.damagedLink));
+      } catch (e) {
+        queueMicrotask(() => toast(linkError(e)));
       }
     } else if (h?.kind === "names") {
       try {
@@ -317,8 +319,8 @@ export function createController(store: Store, opts: { surface: Surface }): Cont
         active = { id: newId("w"), name: r.title ?? "Recorded draw", entries, settings };
         replay = { receipt: r, status: report };
         fromLink = true;
-      } catch {
-        queueMicrotask(() => toast(t.toast.damagedLink));
+      } catch (e) {
+        queueMicrotask(() => toast(linkError(e)));
       }
     }
     if (!active && intent.query.preset) active = presetWheel(intent.query.preset, intent.query.presetParams);

@@ -126,7 +126,7 @@ try {
       .map((s) => `  <url><loc>${esc(s.loc)}</loc><lastmod>${s.lastmod}</lastmod></url>`)
       .join("\n")}\n</urlset>\n`,
   );
-  await writeFile(resolve(OUT, "robots.txt"), `User-agent: *\nAllow: /\nDisallow: /embed/\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
+  await writeFile(resolve(OUT, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
   const landing = (ssr.LANDING_PAGES as { slug: string; title: string }[]).map((p) => ({ slug: p.slug, title: p.title }));
   const llms: string = llmsTxt({ siteUrl: SITE_URL, repoUrl: site.REPO_URL, landing });
   const hit = BANNED_CLAIMS.exec(llms) ?? BANNED_SLOP.exec(llms);
