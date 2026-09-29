@@ -40,6 +40,52 @@ test("P0-3: in presenter mode Space spins", async ({ page }) => {
   await expect(page.locator("dialog.winner[open]")).toBeVisible({ timeout: 12_000 });
 });
 
+test.describe("round 2 (R2-1, R2-2, R2-5)", () => {
+  test.describe("phone", () => {
+    test.use({ viewport: { width: 390, height: 844 } });
+    test("R2-1: the winner sheet reaches the bottom of the screen", async ({ page }) => {
+      await openApp(page, "/?duration=1");
+      await spinAndWait(page);
+      await page.waitForTimeout(500);
+      const r = await page.evaluate(() => ({ b: document.querySelector("dialog.winner[open]")!.getBoundingClientRect().bottom, h: innerHeight }));
+      expect(Math.abs(r.b - r.h)).toBeLessThanOrEqual(1);
+    });
+  });
+
+  test.describe("desktop 1440", () => {
+    test.use({ viewport: { width: 1440, height: 900 } });
+    test("R2-2: presenter at rest centres the wheel and focuses nothing; the reveal slides it clear of the plate", async ({ page }) => {
+      await openApp(page, "/?duration=1");
+      await page.keyboard.press("f");
+      await expect(page.locator("main.app.presenter")).toHaveCount(1);
+      await page.waitForTimeout(400);
+      const rest = await page.evaluate(() => {
+        const r = document.querySelector(".wheelwrap")!.getBoundingClientRect();
+        return { mid: (r.left + r.right) / 2, focused: document.activeElement === document.body };
+      });
+      expect(rest.focused).toBe(true);
+      expect(Math.abs(rest.mid - 720)).toBeLessThanOrEqual(40);
+      await page.keyboard.press("Space");
+      await expect(page.locator("dialog.winner[open]")).toBeVisible({ timeout: 12_000 });
+      await page.waitForTimeout(700);
+      const lit = await page.evaluate(() => ({ wheel: document.querySelector(".wheelwrap")!.getBoundingClientRect().right, plate: document.querySelector("dialog.winner[open]")!.getBoundingClientRect().left }));
+      expect(lit.plate).toBeGreaterThanOrEqual(lit.wheel);
+    });
+  });
+
+  test.describe("laptop 1180", () => {
+    test.use({ viewport: { width: 1180, height: 820 } });
+    test("R2-5: the side plate starts right of the pick", async ({ page }) => {
+      await openApp(page, "/?duration=1");
+      await spinAndWait(page);
+      await page.waitForTimeout(600);
+      const r = await page.evaluate(() => ({ wheel: document.querySelector(".wheelwrap")!.getBoundingClientRect(), plate: document.querySelector("dialog.winner[open]")!.getBoundingClientRect() }));
+      const clear = r.plate.left >= r.wheel.right + 11 || r.plate.top >= r.wheel.bottom;
+      expect(clear).toBe(true);
+    });
+  });
+});
+
 test.describe("390 px: no sideways scroll", () => {
   test.use({ viewport: { width: 390, height: 844 } });
 

@@ -191,6 +191,8 @@ type Ctor = new (opts?: AudioContextOptions) => AudioContext;
 export interface Synth {
   /** Call synchronously inside a user gesture: creates/resumes the context if unmuted. */
   unlock(): void;
+  /** Create the context ahead of time (it starts suspended), so a gesture only resumes it. */
+  prepare(): void;
   tick(intensity: number, semitones?: number): void;
   win(): void;
   pop(): void;
@@ -239,7 +241,7 @@ export function createSynth(opts: { muted: boolean; volume: number; ctor?: Ctor 
     const w = globalThis as unknown as { AudioContext?: Ctor; webkitAudioContext?: Ctor };
     return w.AudioContext ?? w.webkitAudioContext ?? null;
   };
-  const ensure = (): AudioContext | null => {
+  const ensure = (resume = true): AudioContext | null => {
     if (muted) return null;
     if (!ctx) {
       const C = ctorOf();
@@ -261,7 +263,7 @@ export function createSynth(opts: { muted: boolean; volume: number; ctor?: Ctor 
       // Build the shared noise buffer now rather than on the first tick of a spin (REVIEW P2-3).
       noiseFor(ctx);
     }
-    if (ctx.state === "suspended") void ctx.resume().catch(() => {});
+    if (resume && ctx.state === "suspended") void ctx.resume().catch(() => {});
     return ctx;
   };
   const ready = (): AudioContext | null => {
@@ -276,6 +278,9 @@ export function createSynth(opts: { muted: boolean; volume: number; ctor?: Ctor 
   return {
     unlock() {
       ensure();
+    },
+    prepare() {
+      ensure(false);
     },
     tick(intensity, semitones = 0) {
       tickLog.push(typeof performance !== "undefined" ? performance.now() : Date.now());

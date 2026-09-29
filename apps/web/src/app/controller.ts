@@ -187,6 +187,25 @@ export function createController(store: Store, opts: { surface: Surface }): Cont
     };
     document.addEventListener("pointerdown", early, true);
     document.addEventListener("keydown", early, true);
+    // REVIEW R2-4: build the (suspended) AudioContext when the page is idle after load, so even a
+    // first-gesture Spin only resumes it. Never when muted or when the wheel's sound is off.
+    const idle = (f: () => void) => {
+      const ric = (globalThis as { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number }).requestIdleCallback;
+      if (ric) ric(f, { timeout: 3000 });
+      else setTimeout(f, 1200);
+    };
+    let tries = 0;
+    const warm = () =>
+      idle(() => {
+        try {
+          if (s().ready && activeWheel(s()).settings.sound && document.querySelector("[data-testid=wheel]")) synth.prepare();
+          else if (!s().ready && ++tries < 20) setTimeout(warm, 500);
+        } catch {
+          /* state not ready */
+        }
+      });
+    if (document.readyState === "complete") warm();
+    else addEventListener("load", warm, { once: true });
   }
 
   /* -------------------------------------------------------------- persistence */
@@ -584,8 +603,16 @@ export function createController(store: Store, opts: { surface: Surface }): Cont
     await finishSpin(w, plan, pos);
   }
 
+  /** `wp-reveal` on <html> while the winner is lit: presenter slides the wheel aside (REVIEW R2-2). */
+  function revealClass(on: boolean) {
+    if (typeof document !== "undefined") document.documentElement.classList.toggle("wp-reveal", on);
+  }
+
   function revealEffects(w: Wheel, pick: Pick, pos: number, reduced: boolean, big: boolean) {
-    setTimeout(() => driver?.setVeil(pos >= 0 ? pos : null, reduced), reduced ? 0 : 120);
+    setTimeout(() => {
+      driver?.setVeil(pos >= 0 ? pos : null, reduced);
+      revealClass(true);
+    }, reduced ? 0 : 120);
     if (w.settings.sound) setTimeout(() => synth.win(), reduced ? 0 : 200);
     const stream = s().surface === "stream";
     if (w.settings.confetti && !reduced && confettiCanvas) {
@@ -694,6 +721,7 @@ export function createController(store: Store, opts: { surface: Surface }): Cont
     const plan = st.spin.plan;
     const j = st.spin.segment + 1;
     driver?.setVeil(null);
+    revealClass(false);
     d({ type: "spin/resume", segment: j });
     synth.unlock();
     void sleep(reducedMotion() ? 0 : 460).then(() => animateSegment(w, plan, j));
@@ -720,6 +748,7 @@ export function createController(store: Store, opts: { surface: Surface }): Cont
     const collapsing = w.settings.mode === "elimination" && held !== undefined && sessionOf(st).excluded.includes(held) && !st.last?.replay;
     d({ type: "ui/dialog", dialog: null });
     driver?.setVeil(null);
+    revealClass(false);
     if (collapsing && w.settings.sound) synth.pop();
   }
 
@@ -730,6 +759,7 @@ export function createController(store: Store, opts: { surface: Surface }): Cont
     if (!p) return;
     d({ type: "ui/dialog", dialog: null });
     driver?.setVeil(null);
+    revealClass(false);
     if (w.settings.mode === "elimination") {
       flushRemoval();
       return;
@@ -1311,8 +1341,13 @@ export function createController(store: Store, opts: { surface: Surface }): Cont
   function togglePresenter(on?: boolean) {
     const next = on ?? !s().ui.presenter;
     d({ type: "ui/presenter", value: next });
-    // Focus the wheel so Space and Enter spin straight away.
-    if (next) requestAnimationFrame(() => document.querySelector<HTMLElement>('[data-testid="wheel"]')?.focus({ preventScroll: true }));
+    // Space and Enter spin from a window-level handler (useShortcuts), so nothing is focused
+    // programmatically (REVIEW R2-2: no ring on the wheel). A header button that had focus is
+    // hidden in presenter mode; drop focus from it so Space doesn't press it.
+    if (next) {
+      const a = document.activeElement as HTMLElement | null;
+      if (a && a !== document.body && a.closest(".hdr, .tool-hdr")) a.blur();
+    }
     const el = document.documentElement as HTMLElement & { requestFullscreen?: () => Promise<void> };
     if (next) {
       if (document.fullscreenElement == null && el.requestFullscreen) void el.requestFullscreen().catch(() => {});

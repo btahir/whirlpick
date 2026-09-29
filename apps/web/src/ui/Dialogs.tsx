@@ -86,13 +86,13 @@ function WinnerPlate() {
   const band = main ? colours.get(main.index) ?? "var(--wp-accent)" : "var(--wp-accent)";
   const whoSize = !main ? 96 : fitHero(main.label, v.presenter);
   const verify = v.replay?.status ?? null;
-  const place = useMemo(() => (v.open ? placePlate(v.presenter) : { cls: "", top: 0 }), [v.open, v.presenter]);
+  const place = useMemo((): Placement => (v.open ? placePlate(v.presenter) : { cls: "", top: 0 }), [v.open, v.presenter]);
   return (
     <Modal
       open={v.open && !!main}
       onClose={() => c.closeWinner()}
       className={`plate winner${v.presenter ? " presenter" : ""}${place.cls ? ` ${place.cls}` : ""}`}
-      style={place.top ? ({ ["--plate-top" as string]: `${Math.round(place.top)}px` } as React.CSSProperties) : undefined} labelledBy="winner-eyebrow" initialFocus="[data-primary]" focusDelay={280} returnFocus={spinButton}>
+      style={place.top || place.vars ? ({ ...(place.top ? { ["--plate-top" as string]: `${Math.round(place.top)}px` } : {}), ...place.vars } as React.CSSProperties) : undefined} labelledBy="winner-eyebrow" initialFocus="[data-primary]" focusDelay={280} returnFocus={spinButton}>
       <div className="band" style={{ background: band }} />
       <div className="in">
         <p className="eyebrow" id="winner-eyebrow">
@@ -185,13 +185,32 @@ function WinnerPlate() {
  * wheel (no dead band); on tablets a plate centred under the wheel, or the sheet when that would
  * run off screen; on desktop the side plate from the pointer.
  */
-function placePlate(presenter: boolean): { cls: string; top: number } {
+interface Placement {
+  cls: string;
+  top: number;
+  vars?: Record<string, string>;
+}
+
+function placePlate(presenter: boolean): Placement {
   if (typeof window === "undefined") return { cls: "", top: 0 };
   const w = innerWidth;
   const wrap = document.querySelector(".wheelwrap");
-  if (!wrap || w >= 1024) return { cls: "", top: 0 };
-  const bottom = wrap.getBoundingClientRect().bottom;
-  if (w >= 760 && !presenter) {
+  if (!wrap) return { cls: "", top: 0 };
+  const box = wrap.getBoundingClientRect();
+  const bottom = box.bottom;
+  if (w >= 1024) {
+    // Presenter lays itself out (the wheel slides aside). Otherwise the side plate (500 px, 36 px
+    // from the right) must start at least 12 px right of the pick (REVIEW R2-5).
+    if (presenter) return { cls: "", top: 0 };
+    const minLeft = box.right + 12;
+    if (w - 36 - 500 >= minLeft) return { cls: "", top: 0 };
+    const width = Math.min(500, w - minLeft - 16);
+    if (width >= 380) return { cls: "place-side", top: 0, vars: { "--plate-left": `${Math.round(minLeft)}px`, "--plate-w": `${Math.floor(width)}px` } };
+    // Below the wheel's disc (centre at 1.04 R of the 2.24 R box).
+    const top = bottom + 16;
+    if (top + 300 <= innerHeight) return { cls: "place-below", top, vars: { "--plate-x": `${Math.round(box.left + (box.width * 1.04) / 2.24)}px` } };
+  }
+  if (w >= 760 && w < 1024 && !presenter) {
     const top = bottom + 16;
     if (top + 340 <= innerHeight) return { cls: "place-below", top };
   }

@@ -3143,7 +3143,7 @@ dialog.plate.winner.place-below {
   position: fixed;
   inset: auto;
   top: var(--plate-top);
-  left: 50%;
+  left: var(--plate-x, 50%);
   right: auto;
   transform: translateX(-50%);
   width: min(560px, 100vw - 64px);
@@ -3174,8 +3174,17 @@ dialog.plate.winner.place-sheet {
 dialog.plate.winner.place-sheet-top {
   top: var(--plate-top);
   bottom: 0;
+  /* REVIEW R2-1: the UA's dialog { height: fit-content } would stop the sheet short. */
+  height: auto;
   max-height: none;
   overflow: auto;
+}
+dialog.plate.winner.place-sheet-top[open] {
+  display: flex;
+  flex-direction: column;
+}
+dialog.plate.winner.place-sheet-top .foot {
+  margin-top: auto;
 }
 dialog.plate.winner.place-sheet-top[open],
 dialog.plate.winner.place-sheet[open] {
@@ -3185,6 +3194,14 @@ dialog.plate.winner.place-sheet[open] {
   from {
     translate: 0 100%;
   }
+}
+
+/* REVIEW R2-5: on narrow desktops the side plate starts right of the pick. */
+dialog.plate.winner.place-side {
+  left: var(--plate-left);
+  right: auto;
+  width: var(--plate-w);
+  max-width: var(--plate-w);
 }
 
 /* P1-7 / P1-8: header at tablet and phone widths. */
@@ -3224,9 +3241,15 @@ main.app.presenter .spin .key {
   display: none;
 }
 @media (min-width: 1024px) {
+  /* REVIEW R2-2: centred at rest; slides left (with the veil, +120 ms) only while a winner is lit,
+     so the plate never covers the wheel. The Spin row and hint stay under the wheel's disc. */
+  :root {
+    --pshift: calc(48px - (100vw - var(--pw)) / 2);
+  }
   main.app.presenter .stage {
-    align-items: flex-start;
-    padding-left: 48px;
+    align-items: center;
+    padding-left: 0;
+    padding-right: 0;
   }
   main.app.presenter .wheel-area {
     width: var(--pw);
@@ -3239,7 +3262,29 @@ main.app.presenter .spin .key {
   main.app.presenter .spinrow {
     width: calc(var(--pw) * 2.08 / 2.24);
     justify-content: center;
+    position: relative;
+    left: calc(var(--pw) * -0.04 / 2.24);
   }
+  main.app.presenter .presenter-hint {
+    left: calc(50% - var(--pw) * 0.04 / 2.24);
+  }
+  main.app.presenter .wheel-area,
+  main.app.presenter .spinrow {
+    transition: transform 240ms var(--wp-ease-out);
+  }
+  main.app.presenter .presenter-hint {
+    transition: opacity 600ms var(--wp-ease-out), transform 240ms var(--wp-ease-out);
+  }
+  :root.wp-reveal main.app.presenter .wheel-area,
+  :root.wp-reveal main.app.presenter .spinrow {
+    transform: translateX(var(--pshift));
+    transition-duration: 360ms;
+  }
+  :root.wp-reveal main.app.presenter .presenter-hint {
+    transform: translateX(calc(-50% + var(--pshift)));
+    transition-duration: 600ms, 360ms;
+  }
+  /* Reduced motion: the global rule makes the slide instant and the plate a 160 ms fade. */
   body:has(main.app.presenter) dialog.plate.winner {
     left: auto;
     right: 28px;
@@ -3306,11 +3351,6 @@ main.app.presenter .spin .key {
 .board-actions .board-ibtn {
   width: 36px;
   height: 36px;
-}
-
-/* Presenter: the wheel takes focus on entry so Space spins; the audience never sees that ring. */
-main.app.presenter .wheelbtn:focus-visible .wheel-focus {
-  outline: none;
 }
 
 /* P2-12: the 404 wheel (pre-rendered by scripts/make-og.ts), left of the heading. */
