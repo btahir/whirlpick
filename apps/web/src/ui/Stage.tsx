@@ -82,7 +82,7 @@ function SpinRow({ phone }: { phone: boolean }) {
   );
   const elimDone = v.mode === "elimination" && v.on === 0 && v.total > 0;
   const tooFew = !v.replay && (v.mode === "elimination" ? v.on < 1 : v.on < 2);
-  const label = v.spinning ? t.spinning : elimDone ? t.everyoneHadTurn : tooFew ? t.addOneMore : v.paused ? t.nextSpin : v.replay ? "Replay the draw" : t.spin;
+  const label = v.spinning ? t.spinning : elimDone ? t.everyoneHadTurn : tooFew ? (v.total === 0 ? "Add names to spin" : t.addOneMore) : v.paused ? t.nextSpin : v.replay ? "Replay the draw" : t.spin;
   return (
     <div className="spinrow">
       <button type="button" className="spin" onClick={() => c.spin()} disabled={tooFew && !v.spinning} aria-describedby={elimDone ? "elim-done" : undefined} data-testid="spin">
@@ -117,7 +117,7 @@ export function DurationChip({ value }: { value: number }) {
         <div className="dur-pop">
           <label className="field">
             <span>
-              Spin length <b className="mono-num">{value} s</b>
+              Spin length <b className="num">{value} s</b>
             </span>
             <input type="range" min={1} max={30} step={0.5} value={value} onChange={(e) => c.setSettings({ spinDuration: Number(e.target.value) })} />
           </label>

@@ -91,6 +91,7 @@ export class WheelDriver {
   setScene(scene: WheelScene, animateMs = 0): void {
     const prev = this.scene;
     this.scene = scene;
+    this.lastPointerPos = -2; // the readout names the new scene's slice
     const key = scene.geometry.map((g) => g.start.toFixed(7)).join(",");
     if (key !== this.flapKey) {
       this.flapKey = key;

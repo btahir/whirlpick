@@ -130,14 +130,16 @@ function EntriesTab() {
         {txt.el}
         {proj.el}
       </div>
-      <EntriesEditor />
-      {v.total === 0 ? (
-        <div className="empty-actions">
-          <button type="button" className="linkish" onClick={() => c.loadExample()}>
-            Try an example
-          </button>
-        </div>
-      ) : null}
+      <div className="editor-wrap">
+        <EntriesEditor />
+        {v.total === 0 ? (
+          <div className="empty-actions">
+            <button type="button" className="linkish" onClick={() => c.loadExample()}>
+              Try an example
+            </button>
+          </div>
+        ) : null}
+      </div>
       <ModesBox />
     </>
   );

@@ -73,13 +73,15 @@ export interface ModalProps {
   initialFocus?: string;
   /** Delay before focusing (the winner plate focuses at +280 ms, SPEC §7.3). */
   focusDelay?: number;
+  /** Where focus goes on close (default: the element focused when it opened). */
+  returnFocus?: () => HTMLElement | null;
 }
 
 /**
  * A modal plate on <dialog>.showModal(): focus moves in, Tab is trapped by the platform, Esc
  * closes, focus returns to the opener and the page behind is inert (ACCEPTANCE L3).
  */
-export function Modal({ open, onClose, className, labelledBy, label, children, initialFocus, focusDelay = 0 }: ModalProps) {
+export function Modal({ open, onClose, className, labelledBy, label, children, initialFocus, focusDelay = 0, returnFocus }: ModalProps) {
   const ref = useRef<HTMLDialogElement>(null);
   const opener = useRef<Element | null>(null);
   const closeRef = useRef(onClose);
@@ -102,8 +104,13 @@ export function Modal({ open, onClose, className, labelledBy, label, children, i
       else focus();
     } else if (!open && dlg.open) {
       dlg.close();
-      const o = opener.current as HTMLElement | null;
-      if (o && typeof o.focus === "function" && document.contains(o)) o.focus({ preventScroll: true });
+      const o = (returnFocus?.() ?? opener.current) as HTMLElement | null;
+      const refocus = () => {
+        if (o && typeof o.focus === "function" && document.contains(o)) o.focus({ preventScroll: true });
+      };
+      refocus();
+      // The platform may restore focus itself after close; make sure ours wins.
+      requestAnimationFrame(refocus);
     }
   }, [open]);
   useEffect(() => {
@@ -249,10 +256,10 @@ export function Switch({ checked, onChange, label, sub, id, disabled }: { checke
   return (
     <div className="switch-row">
       <label htmlFor={sid} className="switch-label">
-        <span>{label}</span>
+        <span id={`${sid}-l`}>{label}</span>
         {sub ? <small>{sub}</small> : null}
       </label>
-      <button id={sid} type="button" role="switch" aria-checked={checked} className="switch" disabled={disabled} onClick={() => onChange(!checked)}>
+      <button id={sid} type="button" role="switch" aria-checked={checked} aria-labelledby={`${sid}-l`} className="switch" disabled={disabled} onClick={() => onChange(!checked)}>
         <span className="switch-knob" />
       </button>
     </div>

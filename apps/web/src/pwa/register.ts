@@ -5,9 +5,11 @@ import type { Controller } from "../app/controller";
 
 export function registerServiceWorker(c: Controller): void {
   if (!import.meta.env.PROD || !("serviceWorker" in navigator)) return;
-  const hadController = !!navigator.serviceWorker.controller;
+  // A change of controller while one was already in charge means a new build took over.
+  let current = navigator.serviceWorker.controller;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
-    if (hadController) c.toast("An update is ready.", { label: "Reload", type: "reload" }, 30000);
+    if (current) c.toast("An update is ready.", { label: "Reload", type: "reload" }, 30000);
+    current = navigator.serviceWorker.controller;
   });
   const go = () => {
     navigator.serviceWorker.register("/sw.js", { scope: "/" }).catch(() => {});

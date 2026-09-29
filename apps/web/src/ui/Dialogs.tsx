@@ -86,7 +86,7 @@ function WinnerPlate() {
   const whoSize = !main ? 96 : fitHero(main.label, v.presenter);
   const verify = v.replay?.status ?? null;
   return (
-    <Modal open={v.open && !!main} onClose={() => c.closeWinner()} className={`plate winner${v.presenter ? " presenter" : ""}`} labelledBy="winner-eyebrow" initialFocus="[data-primary]" focusDelay={280}>
+    <Modal open={v.open && !!main} onClose={() => c.closeWinner()} className={`plate winner${v.presenter ? " presenter" : ""}`} labelledBy="winner-eyebrow" initialFocus="[data-primary]" focusDelay={280} returnFocus={spinButton}>
       <div className="band" style={{ background: band }} />
       <div className="in">
         <p className="eyebrow" id="winner-eyebrow">
@@ -172,6 +172,12 @@ function WinnerPlate() {
       ) : null}
     </Modal>
   );
+}
+
+/** After the plate closes, focus goes back to the Spin button (or the wheel when it's hidden). */
+function spinButton(): HTMLElement | null {
+  const b = document.querySelector<HTMLElement>('[data-testid="spin"]');
+  return b && b.offsetParent !== null ? b : document.querySelector<HTMLElement>('[data-testid="wheel"]');
 }
 
 function fitHero(label: string, presenter: boolean): number {
@@ -351,7 +357,20 @@ function ShareDialog() {
           </label>
           {link?.error ? <p className="error">{link.error}</p> : null}
           {link?.warning ? <p className="small muted">{link.warning}</p> : null}
-          <button type="button" className="btn primary" data-autofocus disabled={!link?.url} onClick={() => link && void c.copy(link.url, t.toast.linkCopied)} data-testid="copy-link">
+          <button
+            type="button"
+            className="btn primary"
+            data-autofocus
+            aria-disabled={!!link?.error || undefined}
+            onClick={() => {
+              if (link?.url) void c.copy(link.url, t.toast.linkCopied);
+              else if (!link)
+                void c.shareLink(kind, kind === "replay" ? lastId ?? undefined : undefined).then((l) => {
+                  if (l.url) void c.copy(l.url, t.toast.linkCopied);
+                });
+            }}
+            data-testid="copy-link"
+          >
             <Icon name="copy" /> Copy link
           </button>
           <p className="small muted">The wheel lives in the link itself. Images stay on this device.</p>
@@ -687,19 +706,19 @@ function CustomiseDialog() {
         </div>
         <label className="field">
           <span>
-            Spin length <b className="mono-num">{st.spinDuration} s</b>
+            Spin length <b className="num">{st.spinDuration} s</b>
           </span>
           <input type="range" min={1} max={30} step={0.5} value={st.spinDuration} onChange={(e) => c.setSettings({ spinDuration: Number(e.target.value) })} />
         </label>
         <label className="field">
           <span>
-            Label size <b className="mono-num">{Math.round(st.fontScale * 100)}%</b>
+            Label size <b className="num">{Math.round(st.fontScale * 100)}%</b>
           </span>
           <input type="range" min={0.75} max={1.5} step={0.05} value={st.fontScale} onChange={(e) => c.setSettings({ fontScale: Number(e.target.value) })} />
         </label>
         <label className="field">
           <span>
-            Volume <b className="mono-num">{Math.round(st.volume * 100)}%</b>
+            Volume <b className="num">{Math.round(st.volume * 100)}%</b>
           </span>
           <input type="range" min={0} max={1} step={0.05} value={st.volume} onChange={(e) => c.setSettings({ volume: Number(e.target.value) })} />
         </label>

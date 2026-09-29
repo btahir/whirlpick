@@ -34,7 +34,13 @@ export function routeWheel(route: Route): Wheel {
   return p ? wheelFromPreset(p) : { id: "w_default0", name: "My wheel", entries: [], settings: defaultSettings() };
 }
 
-export function App({ route, store, controller }: { route: Route; store: Store; controller: Controller }) {
+export function App({ route, store, controller, onMounted }: { route: Route; store: Store; controller: Controller; onMounted?: () => void }) {
+  // Anything that changes state (reading storage, links, stream mode) waits until hydration is
+  // done, so the first client render matches the prerendered HTML exactly.
+  useEffect(() => {
+    onMounted?.();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <StoreContext.Provider value={store}>
       <ControllerContext.Provider value={controller}>
