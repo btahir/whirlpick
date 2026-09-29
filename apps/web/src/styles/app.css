@@ -598,7 +598,7 @@ main.app.presenter .workspace {
 .ticket {
   position: absolute;
   left: 28px;
-  top: 24px;
+  top: var(--ticket-top, 24px);
   display: flex;
   align-items: stretch;
   background: var(--wp-surface);
@@ -865,8 +865,14 @@ main.app.presenter .workspace {
   color: var(--wp-ink-3);
   font-weight: 460;
 }
+/* REVIEW P1-11: no frame round the whole panel; a focus bar on the gutter and the caret row. */
+.editor-input:focus,
 .editor-input:focus-visible {
-  box-shadow: inset 0 0 0 2px var(--wp-focus);
+  outline: none;
+  box-shadow: inset 2px 0 0 var(--wp-focus);
+}
+.editor:focus-within .erow.caret {
+  background: var(--wp-sunk);
 }
 .editor-input::selection {
   background: color-mix(in srgb, var(--wp-focus) 28%, transparent);
@@ -1155,7 +1161,7 @@ main.app.presenter .workspace {
 }
 .history .t {
   font-family: var(--wp-mono);
-  font-size: 11px;
+  font-size: 12px;
   color: var(--wp-ink-3);
   white-space: nowrap;
 }
@@ -1253,6 +1259,7 @@ main.app.presenter .workspace {
 }
 .board-actions {
   display: flex;
+  align-items: center;
   gap: 8px;
   flex-wrap: wrap;
 }
@@ -2478,6 +2485,8 @@ dialog.plate.drawer[open] {
 }
 .outcome .checked {
   color: var(--wp-ink-3);
+  font-size: 13px;
+  margin: 0;
 }
 .checks {
   list-style: none;
@@ -2707,7 +2716,7 @@ html.chromeless body {
     padding: 0 8px 0 16px;
     gap: 6px;
   }
-  .wordmark,
+  .hdr .wordmark,
   .hide-s {
     display: none !important;
   }
@@ -3041,4 +3050,265 @@ html.chromeless body {
   .editor {
     --lh: 44px;
   }
+}
+
+
+/* ======================================================= design review fixes (REVIEW.md) */
+
+/* P1-3: the disabled Spin carries the instruction, so it must stay legible. */
+.spin:disabled {
+  opacity: 1;
+  background: var(--wp-sunk);
+  color: var(--wp-ink-2);
+  box-shadow: none;
+  border: 1.5px dashed color-mix(in srgb, var(--wp-rule-strong) 35%, transparent);
+}
+
+/* P1-12: one tomato button in view: the stage Spin steps back while the plate is open. */
+.spin {
+  transition: transform 60ms var(--wp-ease-out), box-shadow 60ms var(--wp-ease-out), opacity 160ms, filter 160ms;
+}
+body:has(dialog.winner[open]) .spin {
+  opacity: 0.35;
+  filter: saturate(0.4);
+}
+
+/* P1-11: never outline a dialog or drawer box; styled checkboxes. */
+dialog:focus,
+dialog:focus-visible {
+  outline: none;
+}
+input[type="checkbox"] {
+  accent-color: var(--wp-ok);
+  width: 18px;
+  height: 18px;
+}
+
+/* P1-2: the stream caption sits above the confetti. */
+.stream-caption {
+  z-index: calc(var(--wp-z-confetti) + 1);
+}
+
+/* P0-2 / P1-10: nothing on the content pages may widen the page. */
+.verify-out,
+.outcome,
+.outcome > *,
+.checks li,
+.checks li > span,
+.prose,
+.prose > *,
+.page-in {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.table-wrap,
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+.prose td code,
+.prose th code {
+  white-space: nowrap;
+}
+.hash {
+  font-family: var(--wp-mono);
+  font-size: 12px;
+  letter-spacing: -0.01em;
+  color: var(--wp-ink-2);
+  border-radius: 4px;
+  text-align: left;
+  white-space: nowrap;
+}
+.hash:hover {
+  color: var(--wp-ink);
+}
+.checks .hash,
+.outcome .big .hash {
+  display: inline-block;
+  margin: 0 2px;
+  padding: 1px 4px;
+  background: none;
+  border: 0;
+  cursor: copy;
+}
+.checks .hash:focus-visible,
+.outcome .big .hash:focus-visible {
+  outline: 2px solid var(--wp-focus);
+  outline-offset: 1px;
+}
+
+/* P1-6 / P1-7: winner plate placements measured from the wheel. */
+dialog.plate.winner.place-below {
+  position: fixed;
+  inset: auto;
+  top: var(--plate-top);
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  width: min(560px, 100vw - 64px);
+  max-width: min(560px, 100vw - 64px);
+  margin: 0;
+}
+dialog.plate.winner.place-below[open] {
+  animation: plate-fade var(--wp-t-slow) var(--wp-ease-out);
+}
+body:has(dialog.winner.place-below[open]) .spinrow {
+  visibility: hidden;
+}
+dialog.plate.winner.place-sheet-top,
+dialog.plate.winner.place-sheet {
+  position: fixed;
+  inset: auto 0 0 0;
+  top: auto;
+  right: 0;
+  left: 0;
+  transform: none;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  border-radius: var(--wp-r-sheet) var(--wp-r-sheet) 0 0;
+  border-width: 2px 0 0;
+  box-shadow: 0 -12px 32px -8px rgba(0, 0, 0, 0.35);
+}
+dialog.plate.winner.place-sheet-top {
+  top: var(--plate-top);
+  bottom: 0;
+  max-height: none;
+  overflow: auto;
+}
+dialog.plate.winner.place-sheet-top[open],
+dialog.plate.winner.place-sheet[open] {
+  animation: sheet-up-2 320ms var(--wp-ease-out);
+}
+@keyframes sheet-up-2 {
+  from {
+    translate: 0 100%;
+  }
+}
+
+/* P1-7 / P1-8: header at tablet and phone widths. */
+.show-s-only {
+  display: none;
+}
+.menu-wrap.show-t {
+  display: none;
+}
+@media (min-width: 760px) and (max-width: 1023px) {
+  .hide-t {
+    display: none !important;
+  }
+  .menu-wrap.show-t {
+    display: block;
+  }
+  .tool-hdr .title {
+    min-width: 8ch;
+    flex: 1 1 auto;
+    max-width: none;
+  }
+}
+@media (max-width: 759px) {
+  .show-s-only {
+    display: inline-grid;
+  }
+  .menu-wrap.show-s-inline {
+    display: block;
+  }
+}
+
+/* P0-4 / P0-5: presenter layouts. The wheel never sits under the plate. */
+:root {
+  --pw: min(62vw, 80vh, calc(100vw - 520px));
+}
+main.app.presenter .spin .key {
+  display: none;
+}
+@media (min-width: 1024px) {
+  main.app.presenter .stage {
+    align-items: flex-start;
+    padding-left: 48px;
+  }
+  main.app.presenter .wheel-area {
+    width: var(--pw);
+    justify-content: flex-start;
+  }
+  main.app.presenter .wheelwrap {
+    width: var(--pw);
+    margin: 0;
+  }
+  main.app.presenter .spinrow {
+    width: calc(var(--pw) * 2.08 / 2.24);
+    justify-content: center;
+  }
+  body:has(main.app.presenter) dialog.plate.winner {
+    left: auto;
+    right: 28px;
+    width: min(640px, calc(100vw - 48px - var(--pw) - 24px - 28px));
+    max-width: none;
+  }
+}
+@media (min-width: 760px) and (max-width: 1023px) {
+  main.app.presenter .stage {
+    justify-content: center;
+    padding: 24px 32px;
+  }
+  main.app.presenter .wheelwrap {
+    width: min(100vw - 64px, 70vh * 1.077);
+    margin: 0;
+  }
+}
+@media (max-width: 759px) {
+  main.app.presenter .stage {
+    justify-content: center;
+    padding: 16px;
+    gap: 20px;
+  }
+  main.app.presenter .presenter-title {
+    position: static;
+    align-self: flex-start;
+    font-size: 28px;
+    margin-bottom: -8px;
+  }
+  main.app.presenter .wheelwrap {
+    width: min(100vw - 32px, 58vh * 1.077);
+    margin: 0;
+  }
+}
+.presenter-hint {
+  white-space: nowrap;
+  font-size: 13px;
+}
+@media (hover: none) {
+  .presenter-hint {
+    display: none;
+  }
+}
+
+/* P2-6: the embed Spin scales with the wheel. */
+.chromeless-main.embed .spin {
+  height: clamp(48px, 7.6cqmin, 72px);
+  font-size: clamp(18px, 4.4cqmin, 30px);
+  min-width: clamp(150px, 26cqmin, 240px);
+}
+.chromeless-main.embed .stage {
+  justify-content: center;
+}
+
+/* P2-7: stream on portrait: centre the wheel in the top two-thirds. */
+@media (orientation: portrait) {
+  .chromeless-main.stream .stage {
+    justify-content: center;
+    padding-bottom: 33vh;
+  }
+}
+
+/* P2-11: teams header icon buttons. */
+.board-actions .board-ibtn {
+  width: 36px;
+  height: 36px;
+}
+
+/* Presenter: the wheel takes focus on entry so Space spins; the audience never sees that ring. */
+main.app.presenter .wheelbtn:focus-visible .wheel-focus {
+  outline: none;
 }

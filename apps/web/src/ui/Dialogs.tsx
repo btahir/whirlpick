@@ -86,8 +86,13 @@ function WinnerPlate() {
   const band = main ? colours.get(main.index) ?? "var(--wp-accent)" : "var(--wp-accent)";
   const whoSize = !main ? 96 : fitHero(main.label, v.presenter);
   const verify = v.replay?.status ?? null;
+  const place = useMemo(() => (v.open ? placePlate(v.presenter) : { cls: "", top: 0 }), [v.open, v.presenter]);
   return (
-    <Modal open={v.open && !!main} onClose={() => c.closeWinner()} className={`plate winner${v.presenter ? " presenter" : ""}`} labelledBy="winner-eyebrow" initialFocus="[data-primary]" focusDelay={280} returnFocus={spinButton}>
+    <Modal
+      open={v.open && !!main}
+      onClose={() => c.closeWinner()}
+      className={`plate winner${v.presenter ? " presenter" : ""}${place.cls ? ` ${place.cls}` : ""}`}
+      style={place.top ? ({ ["--plate-top" as string]: `${Math.round(place.top)}px` } as React.CSSProperties) : undefined} labelledBy="winner-eyebrow" initialFocus="[data-primary]" focusDelay={280} returnFocus={spinButton}>
       <div className="band" style={{ background: band }} />
       <div className="in">
         <p className="eyebrow" id="winner-eyebrow">
@@ -173,6 +178,26 @@ function WinnerPlate() {
       ) : null}
     </Modal>
   );
+}
+
+/**
+ * Where the winner plate goes (REVIEW P1-6, P1-7): on phones a sheet that starts just under the
+ * wheel (no dead band); on tablets a plate centred under the wheel, or the sheet when that would
+ * run off screen; on desktop the side plate from the pointer.
+ */
+function placePlate(presenter: boolean): { cls: string; top: number } {
+  if (typeof window === "undefined") return { cls: "", top: 0 };
+  const w = innerWidth;
+  const wrap = document.querySelector(".wheelwrap");
+  if (!wrap || w >= 1024) return { cls: "", top: 0 };
+  const bottom = wrap.getBoundingClientRect().bottom;
+  if (w >= 760 && !presenter) {
+    const top = bottom + 16;
+    if (top + 340 <= innerHeight) return { cls: "place-below", top };
+  }
+  const top = Math.max(0, bottom + 12);
+  if (innerHeight - top >= 280) return { cls: "place-sheet-top", top };
+  return { cls: "place-sheet", top: 0 };
 }
 
 /** After the plate closes, focus goes back to the Spin button (or the wheel when it's hidden). */
@@ -479,7 +504,7 @@ function SavedDrawer() {
                 <button type="button" className="wopen" onClick={() => (c.openWheel(w.id), c.closeDialog())} aria-current={w.id === v.active ? "true" : undefined}>
                   <span className="n">{w.name}</span>
                   <span className="m">
-                    {t.entriesCount(w.entries.length)} · {m?.saved ? relDay(m.updatedAt) : "not saved"}
+                    {t.entriesCount(w.entries.length)} · {m?.saved ? relDay(m.updatedAt) : "unsaved"}
                     {hist ? ` · ${hist} spin${hist === 1 ? "" : "s"}` : ""}
                     {w.settings.fairDraw ? " · fair draw" : ""}
                   </span>
@@ -834,7 +859,7 @@ function DetailsDialog() {
                     className="cell"
                     defaultValue={(e.tags ?? []).join(", ")}
                     aria-label={`Tags of ${e.label}`}
-                    placeholder="e.g. 3"
+                    placeholder={page === 0 && i === 0 ? "e.g. 3" : undefined}
                     onBlur={(ev) => {
                       const tags = [...new Set(ev.target.value.split(/[,|]/).map((x) => x.trim()).filter(Boolean))].slice(0, 8);
                       c.patchEntry(e.id, { tags: tags.length ? tags : undefined });

@@ -1,6 +1,6 @@
 // Dev helper: screenshots of pages at desktop/phone in light/dark (installed Chrome, headless).
 //   node scripts/dev/shoot.mjs <outDir> <base> <path>[,<path>…] [actions]
-// Run it through research/heavy.sh.
+// Run it through scripts/heavy.sh (repo root).
 import { chromium } from "@playwright/test";
 import { mkdirSync } from "node:fs";
 

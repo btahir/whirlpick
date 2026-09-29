@@ -37,6 +37,13 @@ export function useShortcuts() {
         return;
       }
       if (isTyping(e.target) || dialogOpen) return;
+      // Presenter and stream mode: Space / Enter spin from anywhere (REVIEW P0-3), unless a
+      // button has focus (it handles the key itself).
+      if ((e.key === " " || e.key === "Enter") && (st.ui.presenter || st.surface !== "app") && (e.target as HTMLElement)?.tagName !== "BUTTON") {
+        e.preventDefault();
+        c.spin();
+        return;
+      }
       if (mod && (e.key === "z" || e.key === "Z")) {
         e.preventDefault();
         if (e.shiftKey) c.redo();

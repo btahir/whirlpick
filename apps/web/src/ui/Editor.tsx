@@ -112,6 +112,15 @@ export function EntriesEditor() {
   const ex = new Set(excluded);
   const onCount = entries.filter((e, i) => e.enabled && !ex.has(i)).length;
 
+  // REVIEW P1-11: the line holding the caret gets a sunk row highlight (focus bar is CSS).
+  const [caret, setCaret] = useState(-1);
+  const trackCaret = (el: HTMLTextAreaElement) => {
+    const pos = el.selectionStart;
+    let line = 0;
+    for (let i = el.value.indexOf("\n"); i !== -1 && i < pos; i = el.value.indexOf("\n", i + 1)) line++;
+    setCaret((c0) => (c0 === line ? c0 : line));
+  };
+
   const onMouseMove = (e: React.MouseEvent) => {
     const el = ta.current;
     if (!el) return;
@@ -149,7 +158,7 @@ export function EntriesEditor() {
           const off = !!e && (!e.enabled || ex.has(r.index));
           const chip = e ? (e.color ?? chipColour.get(r.index) ?? (PALETTES["enamel-day"]![0]!.fill)) : null;
           return (
-            <div key={r.line} className={`erow${off ? " off" : ""}${r.line === hover ? " hover" : ""}${e && r.index === lastIndex && mode !== "teams" ? " last" : ""}`} style={{ top: `calc(8px + ${r.line} * var(--lh))` }}>
+            <div key={r.line} className={`erow${off ? " off" : ""}${r.line === hover ? " hover" : ""}${r.line === caret ? " caret" : ""}${e && r.index === lastIndex && mode !== "teams" ? " last" : ""}`} style={{ top: `calc(8px + ${r.line} * var(--lh))` }}>
               <span className="g">
                 {e ? String(r.index + 1).padStart(2, "0") : ""}
                 {e ? <span className="chip" style={{ background: chip ?? undefined }} /> : <span className="chip empty" />}
@@ -189,7 +198,12 @@ export function EntriesEditor() {
         aria-label="Entries, one per line. Add #tag after a name to tag it."
         aria-describedby="entries-count"
         readOnly={spinning}
-        onChange={(e) => onInput(e.target.value)}
+        onChange={(e) => {
+          onInput(e.target.value);
+          trackCaret(e.target);
+        }}
+        onSelect={(e) => trackCaret(e.currentTarget)}
+        onBlur={() => setCaret(-1)}
         onScroll={onScroll}
         onPaste={onPaste}
         onKeyDown={onKeyDown}

@@ -167,15 +167,16 @@ export function TeamsBoard({ fullscreen = false }: { fullscreen?: boolean }) {
             <button type="button" className="btn small" onClick={() => void c.copy(c.teamsText(), "Teams copied.")}>
               <Icon name="copy" size={18} /> Copy as text
             </button>
-            <button type="button" className="btn small" onClick={() => void c.copy(c.teamsCsv(), "CSV copied.")} data-testid="copy-csv">
-              <Icon name="copy" size={18} /> CSV
+            {/* REVIEW P2-11: one pill, then quiet 36 px icon buttons with tooltips. */}
+            <button type="button" className="ibtn board-ibtn" onClick={() => void c.copy(c.teamsCsv(), "CSV copied.")} aria-label="Copy as CSV" title="Copy as CSV" data-testid="copy-csv">
+              <Icon name="export" size={18} />
             </button>
-            <button type="button" className="btn small" onClick={() => c.openDialog("teamsFull")}>
-              <Icon name="full" size={18} /> Fullscreen
+            <button type="button" className="ibtn board-ibtn" onClick={() => c.openDialog("teamsFull")} aria-label="Fullscreen" title="Fullscreen">
+              <Icon name="full" size={18} />
             </button>
             {view.historyId ? (
-              <button type="button" className="btn small" onClick={() => c.openDialog("receipt", view.historyId)}>
-                <Icon name="receipt" size={18} /> Receipt
+              <button type="button" className="ibtn board-ibtn" onClick={() => c.openDialog("receipt", view.historyId)} aria-label="Receipt" title="Receipt">
+                <Icon name="receipt" size={18} />
               </button>
             ) : null}
           </div>

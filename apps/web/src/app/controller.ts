@@ -60,6 +60,8 @@ export interface Controller {
   /** Content pages: read the saved scheme and mute only. */
   bootPrefs(): Promise<void>;
   attachDriver(d: WheelDriver | null): void;
+  /** The wheel driver (tests and automation). */
+  readonly driver: WheelDriver | null;
   attachConfetti(c: HTMLCanvasElement | null): void;
   attachPickTip(fn: (() => { x: number; y: number } | null) | null): void;
   reducedMotion(): boolean;
@@ -168,6 +170,24 @@ export function createController(store: Store, opts: { surface: Surface }): Cont
   const embed = opts.surface === "embed";
   const s = () => store.getState();
   const d = store.dispatch;
+
+  // REVIEW P2-3: create the AudioContext on the first gesture anywhere on the page, not inside the
+  // Spin click, so its setup cost never lands on the first spin frame. Never when muted or when
+  // the wheel's sound is off (unlock() is a no-op while muted).
+  if (typeof document !== "undefined") {
+    const early = (e: Event) => {
+      if (!e.isTrusted) return;
+      document.removeEventListener("pointerdown", early, true);
+      document.removeEventListener("keydown", early, true);
+      try {
+        if (s().ready && activeWheel(s()).settings.sound) synth.unlock();
+      } catch {
+        /* state not ready */
+      }
+    };
+    document.addEventListener("pointerdown", early, true);
+    document.addEventListener("keydown", early, true);
+  }
 
   /* -------------------------------------------------------------- persistence */
 
@@ -574,7 +594,8 @@ export function createController(store: Store, opts: { surface: Surface }): Cont
         const scene = driver?.currentScene;
         const fills = scene?.theme.palette.map((p) => p.fill) ?? ["#C2361F", "#F2A93B", "#2A55A8", "#17735D"];
         const phone = innerWidth < 760;
-        const count = s().ui.presenter || stream || big ? 160 : phone ? 52 : 96;
+        const large = s().ui.presenter || stream || big;
+        const count = large ? 180 : phone ? 70 : 120;
         burst(confettiCanvas!, {
           x: tip.x,
           y: tip.y,
@@ -583,6 +604,7 @@ export function createController(store: Store, opts: { surface: Surface }): Cont
           seed: (pick.landingU32 ^ 0x9e3779b9) >>> 0,
           count,
           phone,
+          size: large ? [14, 20] : phone ? [8, 12] : [11, 17],
         });
       }, 240);
     }
@@ -632,7 +654,8 @@ export function createController(store: Store, opts: { surface: Surface }): Cont
       removalTimer = setTimeout(() => {
         removalTimer = null;
         d({ type: "elim/exclude", wheelId: w.id, index: idx });
-        if (w.settings.sound) synth.pop();
+        // With the plate open the wheel holds still; the pop plays when it collapses.
+        if (w.settings.sound && s().ui.dialog?.kind !== "winner") synth.pop();
         announce(t.removedAnnounce(winners[0]!.label));
         // With the plate open, its own "Undo" line covers this; otherwise say it in a toast.
         if (s().ui.dialog?.kind !== "winner") toast(t.toast.removed(winners[0]!.label), { label: "Undo", type: "undo" });
@@ -692,8 +715,12 @@ export function createController(store: Store, opts: { surface: Surface }): Cont
       finishSequence();
       return;
     }
+    const w = activeWheel(st);
+    const held = st.last?.picks[0]?.index;
+    const collapsing = w.settings.mode === "elimination" && held !== undefined && sessionOf(st).excluded.includes(held) && !st.last?.replay;
     d({ type: "ui/dialog", dialog: null });
     driver?.setVeil(null);
+    if (collapsing && w.settings.sound) synth.pop();
   }
 
   function removeWinner() {
@@ -1284,6 +1311,8 @@ export function createController(store: Store, opts: { surface: Surface }): Cont
   function togglePresenter(on?: boolean) {
     const next = on ?? !s().ui.presenter;
     d({ type: "ui/presenter", value: next });
+    // Focus the wheel so Space and Enter spin straight away.
+    if (next) requestAnimationFrame(() => document.querySelector<HTMLElement>('[data-testid="wheel"]')?.focus({ preventScroll: true }));
     const el = document.documentElement as HTMLElement & { requestFullscreen?: () => Promise<void> };
     if (next) {
       if (document.fullscreenElement == null && el.requestFullscreen) void el.requestFullscreen().catch(() => {});
@@ -1367,6 +1396,9 @@ export function createController(store: Store, opts: { surface: Surface }): Cont
     boot,
     bootPrefs,
     attachDriver: (x) => (driver = x),
+    get driver() {
+      return driver;
+    },
     attachConfetti: (c) => (confettiCanvas = c),
     attachPickTip: (fn) => (pickTip = fn),
     reducedMotion,

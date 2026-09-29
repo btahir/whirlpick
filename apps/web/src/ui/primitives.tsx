@@ -75,13 +75,21 @@ export interface ModalProps {
   focusDelay?: number;
   /** Where focus goes on close (default: the element focused when it opened). */
   returnFocus?: () => HTMLElement | null;
+  style?: React.CSSProperties;
+}
+
+const CONTROLS = "input:not([type=hidden]):not([disabled]), select, textarea, button:not([disabled]), a[href]";
+/** The first control in the plate's body; the header's Close button only if there is nothing else. */
+function firstControl(dlg: HTMLElement): Element | null {
+  const all = [...dlg.querySelectorAll(CONTROLS)];
+  return all.find((el) => !el.closest(".plate-head")) ?? all[0] ?? null;
 }
 
 /**
  * A modal plate on <dialog>.showModal(): focus moves in, Tab is trapped by the platform, Esc
  * closes, focus returns to the opener and the page behind is inert (ACCEPTANCE L3).
  */
-export function Modal({ open, onClose, className, labelledBy, label, children, initialFocus, focusDelay = 0, returnFocus }: ModalProps) {
+export function Modal({ open, onClose, className, labelledBy, label, children, initialFocus, focusDelay = 0, returnFocus, style }: ModalProps) {
   const ref = useRef<HTMLDialogElement>(null);
   const opener = useRef<Element | null>(null);
   const closeRef = useRef(onClose);
@@ -97,7 +105,10 @@ export function Modal({ open, onClose, className, labelledBy, label, children, i
         dlg.setAttribute("open", "");
       }
       const focus = () => {
-        const target = (initialFocus ? dlg.querySelector(initialFocus) : dlg.querySelector("[data-autofocus]")) as HTMLElement | null;
+        // Focus a control, never the dialog box itself (REVIEW P1-11).
+        const target = ((initialFocus ? dlg.querySelector(initialFocus) : null) ??
+          dlg.querySelector("[data-autofocus]") ??
+          firstControl(dlg)) as HTMLElement | null;
         (target ?? dlg).focus({ preventScroll: true });
       };
       if (focusDelay) setTimeout(focus, focusDelay);
@@ -105,12 +116,25 @@ export function Modal({ open, onClose, className, labelledBy, label, children, i
     } else if (!open && dlg.open) {
       dlg.close();
       const o = (returnFocus?.() ?? opener.current) as HTMLElement | null;
+      // If a re-render replaced the opener, find its successor by test id.
+      const tid = o?.getAttribute?.("data-testid");
+      const target = () => (o && document.contains(o) ? o : tid ? (document.querySelector(`[data-testid="${CSS.escape(tid)}"]`) as HTMLElement | null) : null);
       const refocus = () => {
-        if (o && typeof o.focus === "function" && document.contains(o)) o.focus({ preventScroll: true });
+        const el = target();
+        if (el && typeof el.focus === "function" && document.activeElement !== el) el.focus({ preventScroll: true });
       };
       refocus();
-      // The platform may restore focus itself after close; make sure ours wins.
-      requestAnimationFrame(refocus);
+      // The platform restores focus itself after close, and under load that (or a re-render of
+      // the opener) can land after our first attempt (verifier L3 flake). Keep restoring for a
+      // few frames after the close settles, but only while focus is lost (on <body>, nowhere, or
+      // still inside the closed dialog), never over a deliberate move elsewhere.
+      const until = performance.now() + 400;
+      const settle = () => {
+        const a = document.activeElement;
+        if (a !== target() && (!a || a === document.body || a === document.documentElement || dlg.contains(a))) refocus();
+        if (performance.now() < until) requestAnimationFrame(settle);
+      };
+      requestAnimationFrame(settle);
     }
   }, [open]);
   useEffect(() => {
@@ -134,7 +158,7 @@ export function Modal({ open, onClose, className, labelledBy, label, children, i
     };
   }, []);
   return (
-    <dialog ref={ref} className={className} aria-labelledby={labelledBy} aria-label={label} tabIndex={-1}>
+    <dialog ref={ref} className={className} aria-labelledby={labelledBy} aria-label={label} tabIndex={-1} style={style}>
       {open ? children : null}
     </dialog>
   );

@@ -92,9 +92,10 @@ test.describe("synth (K1)", () => {
       expect(r.peak, n).toBeLessThanOrEqual(0.9);
       expect(r.rms, n).toBeGreaterThan(0.001);
     }
-    expect(out.tick!.duration).toBeLessThanOrEqual(0.03 + 0.02);
-    expect(out.win!.duration).toBeGreaterThanOrEqual(0.7);
-    expect(out.win!.duration).toBeLessThanOrEqual(1.1);
+    // ACCEPTANCE K1 (amended to SPEC §7): tick ≤ 60 ms (40 ms wood decay), win 1.4–1.9 s (1.6 s bell).
+    expect(out.tick!.duration).toBeLessThanOrEqual(0.06);
+    expect(out.win!.duration).toBeGreaterThanOrEqual(1.4);
+    expect(out.win!.duration).toBeLessThanOrEqual(1.9);
   });
 });
 

@@ -88,12 +88,13 @@ export function playVoice(ctx: BaseAudioContext, dest: AudioNode, name: VoiceNam
     w.frequency.value = 420;
     w.detune.value = cents;
     const g3 = ctx.createGain();
-    env(g3.gain, t, 0.12 * k, 0.001, 0.027);
+    // SPEC §7: a 40 ms wood decay at 0.15 so the last slow clacks have body (REVIEW P2-2).
+    env(g3.gain, t, 0.15 * k, 0.001, 0.04);
     w.connect(g3).connect(dest);
     w.start(t);
-    w.stop(t + 0.03);
+    w.stop(t + 0.045);
     add(w);
-    return 0.03;
+    return 0.045;
   }
   if (name === "start") {
     // A short filtered-noise swell (used when the whoosh can't run continuously).
@@ -159,17 +160,21 @@ export function playVoice(ctx: BaseAudioContext, dest: AudioNode, name: VoiceNam
   bus.connect(delay);
   delay.connect(fb).connect(delay);
   delay.connect(wet).connect(dest);
-  const FUND = 0.82;
+  // SPEC §7: the fundamental rings for 1.6 s, the partials for 0.6 s and 0.3 s, plus a second
+  // fundamental detuned +4 cents at half level for shimmer (REVIEW P2-1). Total stays under 2 s.
+  const FUND = 1.6;
   notes.forEach((f, i) => {
     const at = t + i * 0.06;
-    for (const [mult, level, decay] of [
-      [1, 0.35, FUND],
-      [2.76, 0.3 * 0.35, 0.5],
-      [5.4, 0.12 * 0.35, 0.28],
+    for (const [mult, level, decay, cents] of [
+      [1, 0.35, FUND, 0],
+      [1, 0.5 * 0.35, FUND, 4],
+      [2.76, 0.3 * 0.35, 0.6, 0],
+      [5.4, 0.12 * 0.35, 0.3, 0],
     ] as const) {
       const o = ctx.createOscillator();
       o.type = "sine";
       o.frequency.value = f * mult;
+      if (cents) o.detune.value = cents;
       const g = ctx.createGain();
       env(g.gain, at, level, 0.004, decay);
       o.connect(g).connect(bus);
@@ -253,6 +258,8 @@ export function createSynth(opts: { muted: boolean; volume: number; ctor?: Ctor 
       master = ctx.createGain();
       master.gain.value = 0.8 * volume;
       master.connect(comp).connect(ctx.destination);
+      // Build the shared noise buffer now rather than on the first tick of a spin (REVIEW P2-3).
+      noiseFor(ctx);
     }
     if (ctx.state === "suspended") void ctx.resume().catch(() => {});
     return ctx;
@@ -365,7 +372,7 @@ export function createSynth(opts: { muted: boolean; volume: number; ctor?: Ctor 
 /** Render one voice offline (ACCEPTANCE K1). Returns channel 0 and the scheduled length. */
 export async function renderVoiceOffline(name: VoiceName, sampleRate = 48000): Promise<{ samples: Float32Array; duration: number }> {
   const O = (globalThis as unknown as { OfflineAudioContext: typeof OfflineAudioContext }).OfflineAudioContext;
-  const ctx = new O(1, Math.ceil((name === "win" ? 1.6 : 0.4) * sampleRate), sampleRate);
+  const ctx = new O(1, Math.ceil((name === "win" ? 2.4 : 0.4) * sampleRate), sampleRate);
   const master = ctx.createGain();
   master.gain.value = 0.8;
   const comp = ctx.createDynamicsCompressor();

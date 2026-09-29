@@ -1,7 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
 // e2e runs against the production build served statically on 4324 (PLAN §1.4). Build first
-// (`pnpm build:web`); run through research/heavy.sh with --workers=2 or fewer.
+// (`pnpm build:web`); run through scripts/heavy.sh (repo root) with --workers=2 or fewer.
 const PORT = 4324;
 export default defineConfig({
   testDir: "tests/e2e",

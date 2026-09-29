@@ -258,7 +258,7 @@ function ResultsTab() {
                 <span className="chip" style={{ background: first !== undefined ? colourOf.get(first) ?? "var(--wp-rule)" : "var(--wp-rule)" }} />
                 <span className="nm">{names}</span>
                 <span className="t">
-                  {new Date(h.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })} · {r.seed ? `seed ${shortHex(r.seed)}` : "unrevealed"}
+                  {new Date(h.createdAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })} · {r.seed ? `seed ${shortHex(r.seed)}` : "unrevealed"}
                 </span>
               </button>
             </li>

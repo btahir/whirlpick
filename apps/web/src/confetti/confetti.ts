@@ -2,8 +2,9 @@
 // Every particle's state is a closed-form function of (t, seed), so frames are deterministic and
 // seekable (screenshot tests can sample any instant). ≤ 160 particles, 2.4 s.
 
-export const MAX_PARTICLES = 160;
-export const LIFETIME = 2.4;
+// REVIEW P1-2: 120 pieces on desktop, 70 on phones, 180 in presenter and stream mode.
+export const MAX_PARTICLES = 180;
+export const LIFETIME = 2.6;
 const FADE = 0.4;
 const GRAVITY = 1800; // px/s²
 const DRAG = 0.9; // 1/s
@@ -40,8 +41,10 @@ export interface BurstOptions {
   /** The winner's slice colour, weighted 30 %. */
   winnerColor?: string;
   seed: number;
-  /** 96 desktop, 52 phone, 160 presenter/stream. */
+  /** 120 desktop, 70 phone, 180 presenter/stream. */
   count: number;
+  /** Rectangle length range in px: [11, 17] desktop, [8, 12] phone, [14, 20] presenter/stream. */
+  size?: [number, number];
   phone?: boolean;
 }
 
@@ -50,12 +53,14 @@ export function makeParticles(o: BurstOptions): Particle[] {
   const n = Math.max(0, Math.min(MAX_PARTICLES, o.count));
   const out: Particle[] = [];
   for (let i = 0; i < n; i++) {
-    // 150° cone centred straight up, biased towards the wheel (to the left of the pick).
-    const cone = (rand() - 0.5) * 150 - 14 * rand();
+    // A 110° cone centred 20° left of vertical, so the burst rises over the wheel and falls
+    // across it rather than across the panel.
+    const cone = (rand() - 0.5) * 110 - 20;
     const ang = ((-90 + cone) * Math.PI) / 180;
-    const speed = 600 + rand() * 800;
+    const speed = 750 + rand() * 750;
     const dot = rand() >= 0.72;
-    const size = dot ? 2.5 + rand() * 2 : o.phone ? 5 + rand() * 5 : 7 + rand() * 5;
+    const [lo, hi] = o.size ?? (o.phone ? [8, 12] : [11, 17]);
+    const size = dot ? 3 + rand() * 2 : lo + rand() * (hi - lo);
     const color = o.winnerColor && rand() < 0.3 ? o.winnerColor : o.colors[Math.floor(rand() * o.colors.length) % Math.max(1, o.colors.length)] ?? "#C2361F";
     out.push({
       vx: Math.cos(ang) * speed,

@@ -1,6 +1,6 @@
 // The stage: fair-draw ticket, the wheel, the Spin row, the teams board, banners and the stream
 // caption. The wheel is the only loud thing (SPEC §1).
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { wheelHash } from "@whirlpick/core";
 import { activeWheel, sessionOf } from "../state/reducer";
 import { shallowEq, useSel } from "../state/store";
@@ -32,8 +32,10 @@ export function Stage() {
     shallowEq,
   );
   const showBoard = v.teams && v.mode === "teams";
+  const stageRef = useRef<HTMLElement>(null);
+  useTicketClearsBanner(stageRef);
   return (
-    <section className={`stage${showBoard ? " has-board" : ""}`} aria-label="Wheel">
+    <section ref={stageRef} className={`stage${showBoard ? " has-board" : ""}`} aria-label="Wheel">
       {v.ready && v.storage === "memory" && v.surface === "app" ? <p className="banner warn-banner">{t.notSaving}</p> : null}
       {v.replay ? <ReplayBanner /> : v.linkWheel && v.ready ? <LinkBanner /> : null}
       {v.presenter && v.title ? <h2 className="presenter-title">{v.title}</h2> : null}
@@ -242,6 +244,45 @@ function ReplayBanner() {
       </div>
     </div>
   );
+}
+
+/**
+ * On desktop the link/replay banner (top right) and the fair-draw ticket (top left) are both
+ * absolutely placed; on narrower desktops they collide. When they would, drop the ticket below
+ * the banner so both the banner and the ticket's hash stay visible.
+ */
+function useTicketClearsBanner(ref: React.RefObject<HTMLElement | null>) {
+  useEffect(() => {
+    const stage = ref.current;
+    if (!stage || typeof ResizeObserver === "undefined") return;
+    const fit = () => {
+      const banner = stage.querySelector<HTMLElement>(":scope > .banner:not(.warn-banner)");
+      const ticket = stage.querySelector<HTMLElement>(":scope > .ticket");
+      let top = "";
+      if (banner && ticket && getComputedStyle(banner).position === "absolute" && getComputedStyle(ticket).position === "absolute") {
+        const b = banner.getBoundingClientRect();
+        const tk = ticket.getBoundingClientRect();
+        if (tk.right + 12 > b.left) top = `${Math.round(banner.offsetTop + banner.offsetHeight + 12)}px`;
+      }
+      if (stage.style.getPropertyValue("--ticket-top") !== top) {
+        if (top) stage.style.setProperty("--ticket-top", top);
+        else stage.style.removeProperty("--ticket-top");
+      }
+    };
+    const ro = new ResizeObserver(fit);
+    ro.observe(stage);
+    const mo = new MutationObserver(() => {
+      fit();
+      for (const el of stage.querySelectorAll(":scope > .banner, :scope > .ticket")) ro.observe(el);
+    });
+    mo.observe(stage, { childList: true });
+    for (const el of stage.querySelectorAll(":scope > .banner, :scope > .ticket")) ro.observe(el);
+    fit();
+    return () => {
+      ro.disconnect();
+      mo.disconnect();
+    };
+  }, [ref]);
 }
 
 function LinkBanner() {

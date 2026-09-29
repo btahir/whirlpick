@@ -3,9 +3,9 @@ import { LIFETIME, makeParticles, MAX_PARTICLES, particleAt } from "../../src/co
 
 describe("confetti (SPEC §7.5, ACCEPTANCE K4)", () => {
   const o = { x: 800, y: 400, colors: ["#C2361F", "#17735D"], winnerColor: "#2A55A8", seed: 42, count: 999 };
-  it("never makes more than 160 particles", () => {
+  it("never makes more than 180 particles", () => {
     expect(makeParticles(o)).toHaveLength(MAX_PARTICLES);
-    expect(makeParticles({ ...o, count: 52 })).toHaveLength(52);
+    expect(makeParticles({ ...o, count: 70 })).toHaveLength(70);
   });
   it("is a pure function of (t, seed)", () => {
     const a = makeParticles(o).map((p) => particleAt(p, 0.8, o.x, o.y));

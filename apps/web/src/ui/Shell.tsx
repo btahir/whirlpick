@@ -5,7 +5,7 @@ import { Brand } from "./Brand";
 import { t } from "../copy/en";
 import { activeWheel } from "../state/reducer";
 import { shallowEq, useSel } from "../state/store";
-import { Icon, Menu, useController } from "./primitives";
+import { Icon, Menu, useController, useMedia } from "./primitives";
 import { useScheme } from "./WheelCanvas";
 
 /** Header for the tool pages (SPEC §9 / mock). */
@@ -14,6 +14,7 @@ export function ToolHeader() {
   const scheme = useScheme();
   const v = useSel((s) => ({ name: activeWheel(s).name, muted: s.prefs.muted, presenter: s.ui.presenter, spinning: s.spin.phase !== "idle", editorHidden: s.ui.editorHidden }), shallowEq);
   const [editing, setEditing] = useState(false);
+  const phone = useMedia("(max-width: 759px)");
   const toggleScheme = () => c.setScheme(scheme === "dark" ? "light" : "dark");
   return (
     <header className="hdr tool-hdr">
@@ -49,18 +50,21 @@ export function ToolHeader() {
         <Icon name="saved" />
         {t.saved}
       </button>
-      <button type="button" className="hbtn hide-s" onClick={() => c.openDialog("share")} data-testid="share">
+      <button type="button" className="hbtn hide-s hide-t" onClick={() => c.openDialog("share")} data-testid="share">
         <Icon name="share" />
         {t.share}
       </button>
-      <div className="sepv hide-s" />
+      <button type="button" className="ibtn show-s-only" onClick={() => c.openDialog("share")} aria-label={t.share} data-testid="share-phone">
+        <Icon name="share" />
+      </button>
+      <div className="sepv hide-s hide-t" />
       <button type="button" className="ibtn" onClick={() => c.toggleMute()} aria-label={v.muted ? "Sound off. Turn sound on" : "Sound on. Turn sound off"} aria-pressed={!v.muted} data-testid="mute">
         <Icon name={v.muted ? "sound-off" : "sound"} />
       </button>
-      <button type="button" className="ibtn hide-s" onClick={toggleScheme} aria-label={scheme === "dark" ? "Dark theme. Switch to light" : "Light theme. Switch to dark"}>
+      <button type="button" className="ibtn hide-s hide-t" onClick={toggleScheme} aria-label={scheme === "dark" ? "Dark theme. Switch to light" : "Light theme. Switch to dark"}>
         <Icon name={scheme === "dark" ? "sun" : "moon"} />
       </button>
-      <button type="button" className="ibtn hide-s" onClick={() => c.togglePresenter()} aria-label={v.presenter ? "Leave presenter mode" : "Presenter mode"} aria-pressed={v.presenter}>
+      <button type="button" className="ibtn hide-s hide-t" onClick={() => c.togglePresenter()} aria-label={v.presenter ? "Leave presenter mode" : "Presenter mode"} aria-pressed={v.presenter}>
         <Icon name={v.presenter ? "full-exit" : "full"} />
       </button>
       <a className="hbtn support hide-s" href={SUPPORT_URL}>
@@ -68,13 +72,15 @@ export function ToolHeader() {
       </a>
       <Menu
         label="Menu"
-        className="show-s-inline"
+        className="show-s-inline show-t"
         items={[
           { label: t.saved, icon: "saved", onSelect: () => c.openDialog("wheels") },
-          { label: t.share, icon: "share", onSelect: () => c.openDialog("share") },
+          // Phones have a Share button in the header (REVIEW P1-8); tablets keep it here.
+          ...(phone ? [] : [{ label: t.share, icon: "share" as const, onSelect: () => c.openDialog("share") }]),
           { label: scheme === "dark" ? "Light theme" : "Dark theme", icon: scheme === "dark" ? "sun" : "moon", onSelect: toggleScheme },
           { label: "Presenter mode", icon: "full", onSelect: () => c.togglePresenter() },
           { label: "Customise", icon: "palette", onSelect: () => c.openDialog("customise") },
+          ...(phone ? [] : [{ label: "Keyboard shortcuts", hint: "?", onSelect: () => c.openDialog("shortcuts") }]),
           "sep",
           { label: "Check a draw", icon: "seal", href: "/verify/", onSelect: () => {} },
           { label: "About and privacy", href: "/about/", onSelect: () => {} },
@@ -83,7 +89,7 @@ export function ToolHeader() {
       />
       <Menu
         label="More"
-        className="hide-s"
+        className="hide-s hide-t"
         items={[
           { label: v.editorHidden ? "Show the editor" : "Hide the editor", icon: "drawer", hint: "H", onSelect: () => c.toggleEditor() },
           { label: "Customise", icon: "palette", onSelect: () => c.openDialog("customise") },
