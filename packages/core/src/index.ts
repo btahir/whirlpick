@@ -1,56 +1,91 @@
-// STUB (contract only). Real implementations land module by module; signatures follow PLAN §12.
-import { WhirlError } from './errors.js';
-import type { DrawSession, Entry, EntryIn, HashedEntry, Mode, Pick, Preset, Receipt, Slice, TeamsResult, ValidationResult, VerifyReport, Warning, WhirlProject } from './types.js';
-
+// @whirlpick/core public API (PLAN §12). Pure TypeScript: no DOM, no Node APIs.
 export * from './site.js';
 export * from './errors.js';
 export type * from './types.js';
-
-const ni = (name: string): never => { throw new WhirlError('NOT_IMPLEMENTED', `${name} is not implemented yet`); };
-
-export function normaliseEntries(_input: EntryIn[]): { entries: Entry[]; warnings: Warning[] } { return ni('normaliseEntries'); }
-export function milliWeight(_w: number): number { return ni('milliWeight'); }
-export function wheelHash(_entries: HashedEntry[]): string { return ni('wheelHash'); }
-export function generateSeed(_random?: (b: Uint8Array) => void): string { return ni('generateSeed'); }
-export function seedFromPhrase(_phrase: string): string { return ni('seedFromPhrase'); }
-export function commitmentFor(_seedHex: string): string { return ni('commitmentFor'); }
-export class DrawStream {
-  readonly bytesConsumed = 0;
-  constructor(_seedHex: string, _wheelHashHex: string, _spinIndex: number, _publicInput?: string | null) { ni('DrawStream'); }
-  u32(): number { return ni('u32'); }
-  u64(): bigint { return ni('u64'); }
-  randBelow(_n: bigint): bigint { return ni('randBelow'); }
-}
-export interface DrawPicksInput { entries: HashedEntry[]; seed: string; publicInput?: string | null; spinIndex: number; count: number | 'all'; excluded?: number[] }
-export function drawPicks(_o: DrawPicksInput): { picks: Pick[]; wheelHash: string } { return ni('drawPicks'); }
-export interface SplitTeamsInput { entries: HashedEntry[]; seed: string; publicInput?: string | null; spinIndex: number; teamCount?: number; teamSize?: number; balance?: boolean; keepApart?: number[][]; keepTogether?: number[][]; previousRounds?: number[][][] }
-export function splitTeams(_o: SplitTeamsInput): TeamsResult { return ni('splitTeams'); }
-export interface BuildReceiptInput {
-  entries: HashedEntry[]; seed: string; seedPhrase?: string | null; publicInput?: string | null; spinIndex?: number; mode: Mode;
-  count?: number | 'all'; excluded?: number[];
-  teamCount?: number | null; teamSize?: number | null; balance?: boolean; keepApart?: number[][]; keepTogether?: number[][]; previousRounds?: number[][][];
-  title?: string | null; committedWheelHash?: string | null; committedAt?: string | null; createdAt?: string; app?: string; reveal?: boolean;
-}
-export function buildReceipt(_o: BuildReceiptInput): Receipt { return ni('buildReceipt'); }
-export function verifyReceipt(_input: unknown, _expect?: { commitment?: string; wheelHash?: string }): VerifyReport { return ni('verifyReceipt'); }
-export function slicesFor(_entries: HashedEntry[], _excluded?: number[]): Slice[] { return ni('slicesFor'); }
-export function landingTurn(_slices: Slice[], _pos: number, _landingU32: number): number { return ni('landingTurn'); }
-export function extraTurns(_durationSec: number, _reducedMotion: boolean): number { return ni('extraTurns'); }
-export function finalRotation(_r0: number, _landing: number, _extra: number, _pointerTurn?: number): number { return ni('finalRotation'); }
-export function sliceUnderPointer(_r: number, _slices: Slice[], _pointerTurn?: number): number { return ni('sliceUnderPointer'); }
-export function rotationAt(_tSec: number, _spin: { from: number; to: number; duration: number; profile?: { a: number; p: number } }): number { return ni('rotationAt'); }
-export function flapDeflection(_r: number, _slices: Slice[], _maxDeg: number, _pointerTurn?: number): number { return ni('flapDeflection'); }
-export function crossings(_rPrev: number, _rNow: number, _slices: Slice[], _pointerTurn?: number): number { return ni('crossings'); }
-export function validateProject(_json: unknown): ValidationResult { return ni('validateProject'); }
-export function parseEntriesText(_text: string, _format?: 'txt' | 'csv' | 'tsv'): { entries: Entry[]; warnings: Warning[] } { return ni('parseEntriesText'); }
-export function encodeShare(_project: WhirlProject): Promise<string> { return ni('encodeShare'); }
-export function decodeShare(_code: string): Promise<WhirlProject> { return ni('decodeShare'); }
-export function encodeReceiptCode(_r: Receipt): Promise<string> { return ni('encodeReceiptCode'); }
-export function decodeReceiptCode(_code: string): Promise<unknown> { return ni('decodeReceiptCode'); }
-export function shareUrl(_kind: 'w' | 'spin' | 'r', _code: string, _base?: string, _path?: string): string { return ni('shareUrl'); }
-export const PRESETS: Preset[] = [];
-export function presetById(_id: string, _params?: Record<string, string>): Preset | undefined { return ni('presetById'); }
-export const WHIRL_SCHEMA_V1: object = {};
-export const RECEIPT_SCHEMA_V1: object = {};
-export function contrastRatio(_hexA: string, _hexB: string): number { return ni('contrastRatio'); }
-export type { DrawSession };
+export { base64urlDecode, base64urlEncode, fromHex, isHex64, toHex, utf8 } from './bytes.js';
+export {
+  codePointLength,
+  isValidWeight,
+  MAX_ENTRIES,
+  MAX_LABEL,
+  MAX_PUBLIC_INPUT,
+  MAX_TAG,
+  MAX_TAGS,
+  MAX_WEIGHT,
+  MAX_WHEELS,
+  milliWeight,
+  MIN_WEIGHT,
+  normaliseEntries,
+  normaliseLabel,
+  normalisePublicInput,
+  normaliseTags,
+} from './labels.js';
+export { newId } from './ids.js';
+export { wheelBytes, wheelHash } from './canonical.js';
+export { commitmentFor, generateSeed, normaliseSeed, seedFromPhrase, streamKey } from './commit.js';
+export { bytesSource, DrawStream, randBelowWidth, type ByteSource } from './stream.js';
+export { drawPicks, eligibleEntries, normaliseExcluded, pickOne, type DrawPicksInput, type EligibleEntry } from './draw.js';
+export { balanceReport, groupOrder, planTeams, repeatPairList, splitTeams, TEAM_ITERATIONS, type SplitTeamsInput } from './teams.js';
+export { buildReceipt, computeDraw, receiptEntries, receiptShapeProblem, receiptWinners, revealReceipt, type BuildReceiptInput } from './receipt.js';
+export { CHECK_TEXT, verifyReceipt, type VerifyExpect } from './verify.js';
+export { RECEIPT_SCHEMA_V1 } from './receipt-schema.js';
+export { angleUnderPointer, extraTurns, finalRotation, landingFraction, landingTurn, mod1, sliceUnderPointer, slicesFor } from './geometry.js';
+export {
+  crossings,
+  crossingsAt,
+  DEFAULT_MAX_DEFLECTION,
+  DEFAULT_PROFILE,
+  DEFAULT_SPIN_DURATION,
+  DESIGN_POINTER_TURN,
+  DESIGN_SCREEN_OFFSET,
+  easeInOutCubic,
+  easing,
+  easingVelocity,
+  FLAP_WINDOW_TURNS,
+  flapDeflection,
+  FlapSim,
+  LONG_PROFILE,
+  MAX_SPIN_DURATION,
+  MIN_SPIN_DURATION,
+  pegTurns,
+  planRotationAt,
+  planSpin,
+  profileFor,
+  REDUCED_DURATION,
+  REDUCED_PROFILE,
+  rotationAt,
+  skipMotion,
+  velocityAt,
+  WIND_UP_SECONDS,
+  type FlapOptions,
+  type MotionProfile,
+  type SpinMotion,
+  type SpinPlan,
+} from './motion.js';
+export { createProject, createWheel, DEFAULT_SETTINGS, defaultSettings, parseProject, SEMANTIC_CODES, validateProject, WHIRL_SCHEMA_V1, type ValidateOptions } from './project.js';
+export { dedupeEntries, detectDelimiter, detectFormat, parseCsvRecords, parseEntriesText, shuffleEntries, sortEntries, type ParseOptions, type TextFormat } from './parse.js';
+export {
+  decodeJsonCode,
+  decodeReceiptCode,
+  decodeShare,
+  encodeJsonCode,
+  encodeReceiptCode,
+  encodeShare,
+  extractCode,
+  linkInfo,
+  LONG_LINK_WARNING,
+  MAX_DECODED,
+  MAX_LINK_CODE,
+  MAX_QR_URL,
+  namesUrl,
+  parseNamesFragment,
+  receiptFromText,
+  shareDocFor,
+  shareUrl,
+  type CodecOptions,
+  type LinkInfo,
+  type LinkKind,
+} from './share.js';
+export { COUNTRIES, MAX_NUMBER_VALUES, presetById, presetProject, PRESETS, SYNTHETIC_NAMES, TRUTH_OR_DARE_PROMPTS } from './presets.js';
+export { bestTextColor, contrastRatio, relativeLuminance } from './contrast.js';
+export { advanceSession, createSession } from './session.js';
