@@ -48,6 +48,7 @@ function WinnerPlate() {
         theme: w.settings.theme,
         palette: w.settings.palette,
         spinNo: (s.history[s.activeId] ?? (EMPTY as never[])).length,
+        removed: w.settings.mode === "elimination" && !!s.last && !s.last.replay && sessionOf(s).excluded.includes(s.last.picks[0]?.index ?? -1),
         ask: s.surface === "app" && !s.replay && (s.sessionSpins === 3 || (s.supportShownThisSession && s.sessionSpins === 3)),
         askShown: s.supportShownThisSession,
         replay: s.replay,
@@ -118,6 +119,14 @@ function WinnerPlate() {
           </ul>
         ) : null}
         <TruthOrDare label={main?.label} show={v.prompts} />
+        {v.removed && main ? (
+          <p className="removed-line" role="status">
+            {main.label} is off the wheel.{" "}
+            <button type="button" className="linkish" onClick={() => c.undo()} data-testid="undo-removal">
+              Undo
+            </button>
+          </p>
+        ) : null}
         <div className="acts">
           {v.paused ? (
             <button type="button" className="btn primary" data-primary data-autofocus onClick={() => c.nextSpin()}>

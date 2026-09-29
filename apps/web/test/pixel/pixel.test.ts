@@ -107,7 +107,7 @@ function compare(name: string, png: Buffer) {
   const a = PNG.sync.read(readFileSync(file));
   const b = PNG.sync.read(png);
   expect([b.width, b.height], `${name} size`).toEqual([a.width, a.height]);
-  const diff = pixelmatch(a.data, b.data, null, a.width, a.height, { threshold: 0.1 });
+  const diff = pixelmatch(a.data, b.data, undefined, a.width, a.height, { threshold: 0.1 });
   return diff / (a.width * a.height);
 }
 

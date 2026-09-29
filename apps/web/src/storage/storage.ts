@@ -156,13 +156,13 @@ export class LocalStorage implements Storage {
     this.ls.removeItem(`${LS}wheels:${id}`);
     this.ls.removeItem(`${LS}history:${id}`);
   }
-  async getImages() {
+  async getImages(_ids: string[]): Promise<ImageRecord[]> {
     return [];
   }
-  async putImage() {
+  async putImage(_img: ImageRecord): Promise<void> {
     /* skipped: localStorage is too small for images (the UI says so) */
   }
-  async deleteImage() {}
+  async deleteImage(_id: string): Promise<void> {}
   async listHistory(wheelId: string) {
     return (this.read<HistoryRecord[]>(`history:${wheelId}`) ?? []).slice().sort(byNewest);
   }

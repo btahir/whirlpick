@@ -5,6 +5,7 @@
     "jsx": "react-jsx",
     "types": ["node", "vite/client"],
     "noEmit": true,
+    "allowImportingTsExtensions": true,
     "declaration": false,
     "declarationMap": false
   },

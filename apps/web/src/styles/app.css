@@ -1594,6 +1594,11 @@ dialog.plate.winner[open] {
   font-size: 14px;
   font-weight: 600;
 }
+.winner .removed-line {
+  font-size: 14px;
+  color: var(--wp-ink-2);
+  margin: -6px 0 16px;
+}
 .winner .prompt {
   font-size: 18px;
   font-weight: 560;

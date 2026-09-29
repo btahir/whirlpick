@@ -170,7 +170,7 @@ for (const [name, cmd] of Object.entries(COMMANDS as Record<string, { flags: Rec
   for (const f of Object.keys(cmd.flags)) need.push(`--${f}`);
 }
 need.push("--json", "--quiet", "--help", "--version", "--no-color", ...MCP_TOOLS);
-for (const n of [...new Set(need)]) {
+for (const n of Array.from(new Set(need))) {
   if (!agentsMd.includes(n)) fail(`AGENTS.md does not mention ${n}`);
   if (!agentsPage.includes(n)) fail(`/docs/agents/ does not mention ${n}`);
 }
