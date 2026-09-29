@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { finalRotation, landingTurn, receiptFromText, slicesFor, verifyReceipt, type Receipt, type VerifyReport } from "@whirlpick/core";
 import { groupHash, t } from "../copy/en";
+import { failureSentence, passedLine, splitHashes } from "../copy/verify";
+import { linkError } from "../app/controller";
 import { Icon, useController } from "../ui/primitives";
 import { LiveRegions, Toasts } from "../ui/Shell";
 import { buildScene, POINTER_TURN } from "../wheel/scene";
@@ -13,6 +15,10 @@ import { useScheme } from "../ui/WheelCanvas";
 interface Result {
   report: VerifyReport;
   receipt: Receipt | null;
+  /** The parsed input (for failure copy that names a field). */
+  raw: unknown;
+  /** Set when the code couldn't be decoded in this browser (LINK_UNSUPPORTED). */
+  linkProblem?: string;
 }
 
 /** The interactive part of /verify/ (the heading, explainer and footer are static HTML). */
@@ -33,7 +39,15 @@ export function VerifyWidget() {
     let raw: unknown;
     try {
       raw = await receiptFromText(src);
-    } catch {
+    } catch (e) {
+      // A compressed code this browser can't inflate isn't a bad receipt (PLAN §9): say so.
+      const msg = linkError(e);
+      if (msg !== t.toast.damagedLink) {
+        setRes({ report: { ok: false, status: "invalid", checks: [], warnings: [], recomputed: {} }, receipt: null, raw: null, linkProblem: msg });
+        c.store.dispatch({ type: "ui/announce", text: msg });
+        requestAnimationFrame(() => out.current?.focus());
+        return;
+      }
       raw = src;
     }
     const expect: { commitment?: string; wheelHash?: string } = {};
@@ -43,13 +57,14 @@ export function VerifyWidget() {
     if (fp) expect.wheelHash = fp;
     const report = verifyReceipt(typeof raw === "string" ? raw : raw, expect);
     let receipt: Receipt | null = null;
+    let parsed: unknown = null;
     try {
-      const obj = typeof raw === "string" ? JSON.parse(raw) : raw;
-      if (obj && typeof obj === "object" && Array.isArray((obj as Receipt).entries)) receipt = obj as Receipt;
+      parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
+      if (parsed && typeof parsed === "object" && Array.isArray((parsed as Receipt).entries)) receipt = parsed as Receipt;
     } catch {
       /* not JSON */
     }
-    setRes({ report, receipt });
+    setRes({ report, receipt, raw: parsed });
     c.store.dispatch({ type: "ui/announce", text: report.status === "valid" ? `Winner: checks out` : report.status === "unrevealed" ? t.notRevealed : t.doesntMatch });
     requestAnimationFrame(() => out.current?.focus());
   };
@@ -139,6 +154,18 @@ export function VerifyWidget() {
 
 function Outcome({ res }: { res: Result }) {
   const { report, receipt } = res;
+  if (res.linkProblem) {
+    return (
+      <div className="outcome wait">
+        <span className="stamp wait" data-testid="stamp">
+          Update your browser
+        </span>
+        <p className="big" data-testid="failed-check">
+          {res.linkProblem} This browser can't unpack the code, so nothing was checked. A current Chrome, Edge, Firefox or Safari can, or paste the receipt's JSON instead.
+        </p>
+      </div>
+    );
+  }
   const failed = report.checks.find((x) => !x.ok);
   const winners = receipt?.result?.picks?.map((p) => p.label) ?? [];
   const teams = receipt?.result?.teams;
@@ -174,7 +201,9 @@ function Outcome({ res }: { res: Result }) {
             <Icon name="alert" size={18} /> The list changed after the commitment was shown. The draw is reproducible, but ask the host why the list changed.
           </p>
         ) : null}
-        <p className="mono small checked">{report.checks.filter((x) => x.ok).map((x) => x.id).join(" · ")}</p>
+        <p className="checked" data-testid="checks-passed">
+          {passedLine(report.checks)}
+        </p>
         {receipt && !teams ? <MiniWheel receipt={receipt} /> : null}
         <CheckList report={report} />
       </div>
@@ -187,7 +216,7 @@ function Outcome({ res }: { res: Result }) {
         {t.doesntMatch}
       </span>
       <p className="big" data-testid="failed-check">
-        {failed?.detail ?? "This isn't a receipt."}
+        <Detail text={failureSentence(failed, res.raw)} />
       </p>
       {exp ? <p className="mono small">{exp}</p> : null}
       <CheckList report={report} />
@@ -201,7 +230,9 @@ function CheckList({ report }: { report: VerifyReport }) {
       {report.checks.map((x) => (
         <li key={x.id} className={x.ok ? "ok" : "bad"}>
           <Icon name={x.ok ? "check" : "x"} size={18} />
-          <span>{x.detail}</span>
+          <span>
+            <Detail text={x.detail ?? ""} />
+          </span>
         </li>
       ))}
       {report.warnings.map((w) => (
@@ -211,6 +242,24 @@ function CheckList({ report }: { report: VerifyReport }) {
         </li>
       ))}
     </ul>
+  );
+}
+
+/** A check line with every 64-hex hash as a mono, grouped, tap-to-copy chip (REVIEW P0-2). */
+function Detail({ text }: { text: string }) {
+  const c = useController();
+  return (
+    <>
+      {splitHashes(text).map((p, i) =>
+        p.kind === "text" ? (
+          <span key={i}>{p.text}</span>
+        ) : (
+          <button key={i} type="button" className="hash" title={p.hex} aria-label={`Copy ${p.hex}`} onClick={() => void c.copy(p.hex)}>
+            {groupHash(p.hex, 2)}
+          </button>
+        ),
+      )}
+    </>
   );
 }
 

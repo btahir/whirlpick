@@ -210,7 +210,7 @@ export const AGENTS_DOC: DocPage = {
               ["3", "Invalid input: file missing, unreadable or too big, parse or schema error, path rejected, label or weight invalid, entry limit."],
               ["4", "Verification failed: the receipt is invalid."],
               ["5", "Receipt not revealed: the seed is missing."],
-              ["6", "Infeasible draw: count larger than the eligible entries, no eligible entries, team rules unsatisfiable, or team count invalid."],
+              ["6", "Infeasible draw: count larger than the eligible entries, no eligible entries, team rules unsatisfiable (`CONSTRAINTS_UNSATISFIED`), a team-rule search too large to finish (`CONSTRAINTS_SEARCH_LIMIT`), or team count invalid."],
             ],
           },
         },
