@@ -117,7 +117,7 @@ Errors (`--json`): `{"ok": false, "error": {"code": "COUNT_TOO_LARGE", "message"
 | 3 | invalid input (file missing, unreadable or too big, parse or schema error, path rejected, invalid label or weight, entry limit, ambiguous label) |
 | 4 | verification failed (receipt invalid) |
 | 5 | receipt not revealed (seed missing) |
-| 6 | infeasible draw (count > eligible, no eligible entries, team count invalid, team rules can't be met) |
+| 6 | infeasible draw (count > eligible, no eligible entries, team count invalid, team rules can't be met: `CONSTRAINTS_UNSATISFIED`, or `CONSTRAINTS_SEARCH_LIMIT` when a huge rule set is too big to search exhaustively) |
 
 ### Path safety
 

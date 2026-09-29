@@ -3,8 +3,8 @@
 // verifier sweep of 3 000 small random cases (M 6–16, N 2–4, ≤ 6 apart sets, ≤ 2 together pairs) found
 // every feasible case solved. With heavier rule sets (M 16–40, N 2–8, up to 12 apart sets) about 1 %
 // of feasible cases (11 of 1 211) still end in CONSTRAINTS_UNSATISFIED: the budgeted DFS fallback
-// (200 000 nodes, units in rank order) gives up. Known limitation, recorded with `it.fails` so the
-// suite stays green; when the repair is improved this test starts failing: flip it to `it`.
+// (200 000 nodes, units in rank order) gave up. Fixed by builder A (exact most-constrained-first
+// search with forward checking); flipped from `it.fails` to `it`.
 import { describe, expect, it } from 'vitest';
 import { splitTeams, type HashedEntry } from '../../src/index.js';
 
@@ -47,7 +47,7 @@ describe('verifier: teams feasibility beyond D4 bounds', () => {
   it('the fixture is feasible (exact search finds an assignment honouring every rule)', () => {
     expect(witness()).not.toBeNull();
   });
-  it.fails('KNOWN LIMITATION: splitTeams solves this feasible 37-member / 6-team / 9-apart / 4-together case', () => {
+  it('splitTeams solves this feasible 37-member / 6-team / 9-apart / 4-together case', () => {
     const r = splitTeams({ entries, seed: 'cd'.repeat(32), spinIndex: 397, teamCount: N, keepApart: apart, keepTogether: together, previousRounds: [] });
     expect(r.teams).toHaveLength(N);
   });

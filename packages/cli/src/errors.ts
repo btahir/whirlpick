@@ -26,6 +26,7 @@ export const INFEASIBLE_CODES = new Set([
   'APART_TOO_MANY',
   'CONSTRAINT_CONFLICT',
   'CONSTRAINTS_UNSATISFIED',
+  'CONSTRAINTS_SEARCH_LIMIT',
 ]);
 
 export function exitCodeFor(e: unknown): number {

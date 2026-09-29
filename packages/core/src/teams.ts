@@ -17,6 +17,11 @@ import type { HashedEntry, TeamsBalance, TeamsResult, Warning } from './types.js
 
 export const TEAM_ITERATIONS = 5000;
 export const REPAIR_PASSES = 20;
+/**
+ * Work budget (unit × team checks) for the exact fallback search, about 0.1–0.3 s. Exhausting it
+ * gives CONSTRAINTS_SEARCH_LIMIT, never a false "infeasible".
+ */
+export const EXACT_WORK_LIMIT = 60_000_000;
 const NUMERIC_TAG = /^-?\d+(\.\d+)?$/;
 
 export interface SplitTeamsInput {
@@ -292,42 +297,86 @@ export function splitTeams(o: SplitTeamsInput): TeamsResult {
   // depth-first search over the constrained units (keep-together blocks and keep-apart members),
   // keeping team sizes, trying each unit's current team first, then filling the unconstrained
   // members back in, staying in their own team where there is room. No randomness is read.
-  const solveExact = () => {
+  const solveExact = (): 'ok' | 'infeasible' | 'limit' => {
     const constrained = new Set<number>([...apartOf.keys(), ...blockOf.keys()]);
     const units: number[][] = [];
+    const unitOf = new Map<number, number>();
     const seenBlock = new Set<number>();
     for (const x of P) {
       if (!constrained.has(x)) continue;
       const bi = blockOf.get(x);
       if (bi !== undefined) {
-        if (!seenBlock.has(bi)) {
-          seenBlock.add(bi);
-          units.push([...blocks[bi]!].sort(byRank));
-        }
+        if (seenBlock.has(bi)) continue;
+        seenBlock.add(bi);
+        units.push([...blocks[bi]!].sort(byRank));
       } else units.push([x]);
+      units[units.length - 1]!.forEach((m) => unitOf.set(m, units.length - 1));
     }
-    units.sort((u, v) => v.length - u.length || rank.get(u[0]!)! - rank.get(v[0]!)!);
+    const U = units.length;
+    // Units that may not share a team (some keep-apart set holds a member of each).
+    const nbrs: number[][] = units.map(() => []);
+    for (const A of keepApart) {
+      const us = [...new Set(A.map((x) => unitOf.get(x)!))];
+      for (const a of us) for (const b of us) if (a !== b && !nbrs[a]!.includes(b)) nbrs[a]!.push(b);
+    }
     const cap = size.slice();
-    const where = new Map<number, number>();
-    let nodes = 0;
-    const clash = (u: number[], t: number) => u.some((x) => (apartOf.get(x) ?? []).some((A) => A.some((z) => z !== x && where.get(z) === t)));
-    const dfs = (k: number): boolean => {
-      if (k === units.length) return true;
-      if (++nodes > 200_000) return false;
-      const u = units[k]!;
-      const home = team.get(u[0]!)!;
-      const order = [home, ...[...Array(N).keys()].filter((t) => t !== home)];
-      for (const t of order) {
-        if (cap[t]! < u.length || clash(u, t)) continue;
-        cap[t]! -= u.length;
-        for (const x of u) where.set(x, t);
-        if (dfs(k + 1)) return true;
-        for (const x of u) where.delete(x);
-        cap[t]! += u.length;
+    const assign = new Int32Array(U).fill(-1);
+    const forb = new Int32Array(U * N); // assigned neighbours of unit u in team t
+    const used = new Int32Array(N); // constrained units placed in team t (symmetry breaking)
+    const ok = (u: number, t: number) => forb[u * N + t] === 0 && cap[t]! >= units[u]!.length;
+    let work = 0;
+    // Exact backtracking, most-constrained unit first (fewest feasible teams, then larger, then more
+    // neighbours, then shuffle rank), forward checking, and empty-team symmetry breaking. Deterministic.
+    const dfs = (placed: number): 'ok' | 'infeasible' | 'limit' => {
+      if (placed === U) return 'ok';
+      work += U * N;
+      if (work > EXACT_WORK_LIMIT) return 'limit';
+      let best = -1;
+      let bestOpts = Infinity;
+      for (let u = 0; u < U; u++) {
+        if (assign[u] !== -1) continue;
+        let opts = 0;
+        for (let t = 0; t < N; t++) if (ok(u, t)) opts++;
+        if (opts === 0) return 'infeasible';
+        const b = units[best] ?? [];
+        if (opts < bestOpts || (opts === bestOpts && (units[u]!.length > b.length || (units[u]!.length === b.length && nbrs[u]!.length > nbrs[best]!.length)))) {
+          best = u;
+          bestOpts = opts;
+        }
       }
-      return false;
+      const u = best;
+      const home = team.get(units[u]![0]!)!;
+      const order = [home, ...[...Array(N).keys()].filter((t) => t !== home)];
+      const triedEmpty = new Set<number>();
+      let sawLimit = false;
+      for (const t of order) {
+        if (!ok(u, t)) continue;
+        if (used[t] === 0) {
+          // Teams with no constrained units yet and the same capacity are interchangeable.
+          if (triedEmpty.has(cap[t]!)) continue;
+          triedEmpty.add(cap[t]!);
+        }
+        assign[u] = t;
+        cap[t]! -= units[u]!.length;
+        used[t]!++;
+        for (const v of nbrs[u]!) forb[v * N + t]!++;
+        const r = dfs(placed + 1);
+        if (r === 'ok') return r;
+        for (const v of nbrs[u]!) forb[v * N + t]!--;
+        used[t]!--;
+        cap[t]! += units[u]!.length;
+        assign[u] = -1;
+        if (r === 'limit') {
+          sawLimit = true;
+          break;
+        }
+      }
+      return sawLimit ? 'limit' : 'infeasible';
     };
-    if (!dfs(0)) return;
+    const res = dfs(0);
+    if (res !== 'ok') return res;
+    const where = new Map<number, number>();
+    units.forEach((u, i) => u.forEach((x) => where.set(x, assign[i]!)));
     const free = P.filter((x) => !constrained.has(x));
     const pending: number[] = [];
     for (const x of free) {
@@ -343,6 +392,7 @@ export function splitTeams(o: SplitTeamsInput): TeamsResult {
       where.set(x, t);
     }
     for (const [x, t] of where) team.set(x, t);
+    return 'ok';
   };
   for (let pass = 0; pass < REPAIR_PASSES; pass++) {
     if (blockViolations().length === 0 && apartViolations().length === 0) break;
@@ -406,7 +456,11 @@ export function splitTeams(o: SplitTeamsInput): TeamsResult {
     }
     if (!swapped) break;
   }
-  if (blockViolations().length || apartViolations().length) solveExact();
+  let exact: 'ok' | 'infeasible' | 'limit' | null = null;
+  if (blockViolations().length || apartViolations().length) exact = solveExact();
+  if (exact === 'limit') {
+    throw new WhirlError('CONSTRAINTS_SEARCH_LIMIT', `These keep-apart / keep-together rules are too many to check exhaustively (the exhaustive search hit its limit). Try more teams or fewer rules.`, { workLimit: EXACT_WORK_LIMIT });
+  }
   const leftBlocks = blockViolations();
   const leftApart = apartViolations();
   if (leftBlocks.length || leftApart.length) {

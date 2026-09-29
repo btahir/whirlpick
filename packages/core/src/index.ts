@@ -26,7 +26,7 @@ export { wheelBytes, wheelHash } from './canonical.js';
 export { commitmentFor, generateSeed, normaliseSeed, seedFromPhrase, streamKey } from './commit.js';
 export { bytesSource, DrawStream, randBelowWidth, type ByteSource } from './stream.js';
 export { drawPicks, eligibleEntries, normaliseExcluded, pickOne, type DrawPicksInput, type EligibleEntry } from './draw.js';
-export { balanceReport, groupOrder, planTeams, repeatPairList, splitTeams, TEAM_ITERATIONS, type SplitTeamsInput } from './teams.js';
+export { balanceReport, EXACT_WORK_LIMIT, groupOrder, planTeams, repeatPairList, splitTeams, TEAM_ITERATIONS, type SplitTeamsInput } from './teams.js';
 export { buildReceipt, computeDraw, receiptEntries, receiptShapeProblem, receiptWinners, revealReceipt, type BuildReceiptInput } from './receipt.js';
 export { CHECK_TEXT, verifyReceipt, type VerifyExpect } from './verify.js';
 export { RECEIPT_SCHEMA_V1 } from './receipt-schema.js';
