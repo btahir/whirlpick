@@ -86,6 +86,29 @@ test.describe("round 2 (R2-1, R2-2, R2-5)", () => {
   });
 });
 
+test.describe("round 3", () => {
+  test.use({ viewport: { width: 1024, height: 768 } });
+  test("segmented labels stay on one line at 1024 px", async ({ page }) => {
+    await openApp(page, "/?duration=1");
+    const h = await page.locator(".seg button", { hasText: "Remove winner" }).evaluate((b) => ({ h: b.getBoundingClientRect().height, lh: parseFloat(getComputedStyle(b).lineHeight) || 20, sw: b.scrollWidth, cw: b.clientWidth }));
+    expect(h.h).toBeLessThanOrEqual(46);
+    expect(h.sw).toBeLessThanOrEqual(h.cw + 1);
+  });
+  test("presenter: after Esc closes the plate, Spin shows no ring", async ({ page }) => {
+    await openApp(page, "/?duration=1");
+    await page.keyboard.press("f");
+    await page.keyboard.press("Space");
+    await expect(page.locator("dialog.winner[open]")).toBeVisible({ timeout: 12_000 });
+    await page.waitForTimeout(400);
+    await page.keyboard.press("Escape");
+    await expect(page.locator("dialog.winner[open]")).toHaveCount(0);
+    await page.waitForTimeout(500);
+    const ring = await page.evaluate(() => ({ spin: !!document.querySelector('[data-testid="spin"]:focus-visible'), a: document.activeElement?.outerHTML.slice(0, 80) }));
+    expect(ring.spin, ring.a).toBe(false);
+    await expect(page.locator("main.app.presenter")).toHaveCount(1);
+  });
+});
+
 test.describe("390 px: no sideways scroll", () => {
   test.use({ viewport: { width: 390, height: 844 } });
 

@@ -3387,3 +3387,15 @@ main.app.presenter .spin .key {
     height: 120px;
   }
 }
+
+/* Round 3: segmented labels stay on one line in the narrow desktop panel ("Remove winner"). */
+.seg button {
+  white-space: nowrap;
+}
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .seg button {
+    padding: 0 5px;
+    font-stretch: 88%;
+    letter-spacing: -0.01em;
+  }
+}

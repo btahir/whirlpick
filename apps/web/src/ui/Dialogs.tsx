@@ -221,6 +221,9 @@ function placePlate(presenter: boolean): Placement {
 
 /** After the plate closes, focus goes back to the Spin button (or the wheel when it's hidden). */
 function spinButton(): HTMLElement | null {
+  // Presenter: go back to wherever focus was (usually nowhere: Space is window-level), so the
+  // audience never sees a ring appear on Spin after Esc.
+  if (document.querySelector("main.app.presenter")) return null;
   const b = document.querySelector<HTMLElement>('[data-testid="spin"]');
   return b && b.offsetParent !== null ? b : document.querySelector<HTMLElement>('[data-testid="wheel"]');
 }
