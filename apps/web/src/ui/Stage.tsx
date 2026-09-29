@@ -6,7 +6,7 @@ import { activeWheel, sessionOf } from "../state/reducer";
 import { shallowEq, useSel } from "../state/store";
 import { groupHash, t, fmt } from "../copy/en";
 import { EntryList } from "./Editor";
-import { Icon, Keycap, Popover, useController, useMedia } from "./primitives";
+import { Icon, Keycap, Popover, useController } from "./primitives";
 import { WheelCanvas } from "./WheelCanvas";
 import { TeamsBoard } from "./Teams";
 
@@ -22,6 +22,7 @@ export function Stage() {
         presenter: s.ui.presenter,
         title: w.settings.title,
         caption: s.ui.streamCaption,
+        captionColour: null as string | null,
         replay: !!s.replay,
         linkWheel: !s.meta[s.activeId]?.saved && s.meta[s.activeId]?.source === "link" && s.surface === "app",
         storage: s.storage,
@@ -30,7 +31,6 @@ export function Stage() {
     },
     shallowEq,
   );
-  const phone = useMedia("(max-width: 759px)");
   const showBoard = v.teams && v.mode === "teams";
   return (
     <section className={`stage${showBoard ? " has-board" : ""}`} aria-label="Wheel">
@@ -45,11 +45,11 @@ export function Stage() {
           <EntryList />
         </ul>
       </div>
-      {v.surface !== "embed" && !showBoard && v.mode !== "teams" ? <SpinRow phone={phone} /> : null}
+      {v.surface === "app" && !showBoard && v.mode !== "teams" ? <SpinRow /> : null}
       {v.mode === "teams" && !showBoard && v.surface === "app" ? <p className="teams-hint">Choose the teams in the Teams tab, then press Split.</p> : null}
       {v.surface === "embed" ? <EmbedSpin /> : null}
       {v.caption && v.surface !== "app" ? (
-        <div className="stream-caption" role="status">
+        <div className="stream-caption" role="status" style={{ ["--band" as string]: v.captionColour ?? "var(--wp-accent)" }}>
           <span className="eyebrow">{t.wheelPicked}</span>
           <span className="who">{v.caption}</span>
         </div>
@@ -59,7 +59,7 @@ export function Stage() {
   );
 }
 
-function SpinRow({ phone }: { phone: boolean }) {
+function SpinRow() {
   const c = useController();
   const v = useSel(
     (s) => {
@@ -199,7 +199,8 @@ export function Ticket() {
           )}
         </div>
         <button type="button" className="v mono" title="Copy the full value" onClick={() => void c.copy(shown, flip && v.revealed ? "Seed copied." : t.toast.commitmentCopied)} data-testid="commitment" data-full={shown}>
-          {groupHash(shown)}
+          <span className="h-long">{groupHash(shown)}</span>
+          <span className="h-short">{groupHash(shown, 2)}</span>
         </button>
         {changed ? <div className="tnote">The list changed after this commitment. Receipts will say so.</div> : null}
         {v.pending ? <div className="tnote">{fmt(v.pending)} spin{v.pending === 1 ? "" : "s"} waiting for the seed.</div> : null}

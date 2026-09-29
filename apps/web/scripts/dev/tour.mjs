@@ -8,7 +8,6 @@ const only = onlyArg ? new Set(onlyArg.split(",")) : null;
 mkdirSync(out, { recursive: true });
 const ready = (p) => p.waitForFunction(() => window.__whirlpick?.store.getState().ready === true);
 const c = (p, fn, arg) => p.evaluate(fn, arg);
-const W = "window.__whirlpick.controller";
 
 const STATES = {
   home: async (p) => { await p.goto(base + "/"); await ready(p); },

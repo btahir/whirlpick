@@ -27,7 +27,7 @@ test("share link opens elsewhere without images; the QR decodes to the link (I7)
   const url = await page.getByTestId("share-url").inputValue();
   expect(url).toMatch(/\/#w=1j?\./);
   // QR: render the dialog's SVG large (a phone camera sees it at retina resolution) and decode.
-  const svg = await page.getByTestId("qr").locator("svg").evaluate((el) => el.outerHTML);
+  const svg = await page.getByTestId("qr").locator("svg").first().evaluate((el) => el.outerHTML);
   const big = await page.context().browser()!.newContext({ deviceScaleFactor: 1 });
   const qp = await big.newPage();
   await qp.setContent(`<body style="margin:0;background:#fff"><div style="width:640px;height:640px">${svg.replace("<svg ", '<svg width="640" height="640" ')}</div></body>`);

@@ -310,6 +310,7 @@ function ShareDialog() {
   const [kind, setKind] = useState<"wheel" | "replay">("wheel");
   const [link, setLink] = useState<{ url: string; qr: boolean; warning: string | null; error: string | null; length: number } | null>(null);
   const [qr, setQr] = useState<boolean[][] | null>(null);
+  const [bigQr, setBigQr] = useState(false);
   useEffect(() => {
     if (!open) {
       setLink(null);
@@ -346,8 +347,14 @@ function ShareDialog() {
         />
       ) : null}
       <div className="share-body">
-        <div className="qr" data-testid="qr">
-          {svg ? <div dangerouslySetInnerHTML={{ __html: svg }} /> : <div className="qr-empty">{link && !link.qr ? "Too long for a QR code. The link still works." : ""}</div>}
+        <div className={`qr${bigQr ? " big" : ""}`} data-testid="qr">
+          {svg ? (
+            <button type="button" className="qr-btn" onClick={() => setBigQr((b) => !b)} aria-label={bigQr ? "Show the QR code smaller" : "Show the QR code larger"}>
+              <span dangerouslySetInnerHTML={{ __html: svg }} />
+            </button>
+          ) : (
+            <div className="qr-empty">{link && !link.qr ? "Too long for a QR code. The link still works." : ""}</div>
+          )}
         </div>
         <div className="share-side">
           <label className="field">
@@ -763,7 +770,12 @@ const PAGE = 100;
 
 function DetailsDialog() {
   const c = useController();
-  const v = useSel((s) => ({ open: s.ui.dialog?.kind === "details", entries: activeWheel(s).entries, storage: s.storage }), shallowEq);
+  const scheme = useScheme();
+  const v = useSel((s) => ({ open: s.ui.dialog?.kind === "details", entries: activeWheel(s).entries, storage: s.storage, theme: activeWheel(s).settings.theme, palette: activeWheel(s).settings.palette }), shallowEq);
+  const auto = useMemo(() => {
+    const scene = buildScene({ entries: v.entries.map((e) => ({ ...e, color: undefined, enabled: true })), settings: { palette: v.palette, mysteryMode: false, fontScale: 1, centre: { text: null, imageRef: null } }, theme: wheelTheme(v.theme, scheme), radiusPx: 300 });
+    return new Map(scene.slices.map((x) => [x.index, x.fill]));
+  }, [v.entries, v.palette, v.theme, scheme]);
   const [page, setPage] = useState(0);
   const pages = Math.max(1, Math.ceil(v.entries.length / PAGE));
   const rows = v.entries.slice(page * PAGE, page * PAGE + PAGE);
@@ -808,12 +820,14 @@ function DetailsDialog() {
                   />
                 </td>
                 <td>
-                  <input type="color" value={e.color ?? "#C2361F"} aria-label={`Colour of ${e.label}`} onChange={(ev) => c.patchEntry(e.id, { color: ev.target.value.toUpperCase() })} />
+                  <input type="color" value={(e.color ?? auto.get(page * PAGE + i) ?? "#C2361F").toLowerCase()} aria-label={`Colour of ${e.label}${e.color ? "" : " (automatic)"}`} onChange={(ev) => c.patchEntry(e.id, { color: ev.target.value.toUpperCase() })} />
                   {e.color ? (
                     <button type="button" className="linkish small" onClick={() => c.patchEntry(e.id, { color: undefined })}>
                       Auto
                     </button>
-                  ) : null}
+                  ) : (
+                    <span className="small muted"> auto</span>
+                  )}
                 </td>
                 <td>
                   <input

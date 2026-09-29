@@ -632,7 +632,8 @@ export function createController(store: Store, opts: { surface: Surface }): Cont
         d({ type: "elim/exclude", wheelId: w.id, index: idx });
         if (w.settings.sound) synth.pop();
         announce(t.removedAnnounce(winners[0]!.label));
-        toast(t.toast.removed(winners[0]!.label), { label: "Undo", type: "undo" });
+        // With the plate open, its own "Undo" line covers this; otherwise say it in a toast.
+        if (s().ui.dialog?.kind !== "winner") toast(t.toast.removed(winners[0]!.label), { label: "Undo", type: "undo" });
       }, 1200);
     }
   }
