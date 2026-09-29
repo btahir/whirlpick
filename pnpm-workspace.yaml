@@ -1,0 +1,13 @@
+packages:
+  - packages/*
+  - apps/*
+
+# Build scripts allowed to run on install (pnpm 11 asks explicitly).
+allowBuilds:
+  esbuild: true          # tsx
+
+# Never needed; libvips is LGPL. Also on the licence BANNED list (scripts/check-licenses.mjs).
+ignoredOptionalDependencies:
+  - sharp
+
+saveExact: true

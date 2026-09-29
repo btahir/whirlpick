@@ -1,0 +1,42 @@
+{
+  "name": "whirlpick-monorepo",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "packageManager": "pnpm@11.1.1",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @whirlpick/web dev",
+    "build": "pnpm build:packages && pnpm build:web",
+    "build:packages": "pnpm -r --filter \"./packages/*\" run build",
+    "build:web": "../research/heavy.sh pnpm --filter @whirlpick/web build",
+    "serve": "node apps/web/scripts/serve-static.mjs apps/web/dist 4324",
+    "test": "pnpm build:packages && vitest run",
+    "test:e2e": "pnpm build:web && ../research/heavy.sh pnpm --filter @whirlpick/web exec playwright test --project=chrome --workers=2",
+    "test:e2e:all": "pnpm build:web && ../research/heavy.sh pnpm --filter @whirlpick/web exec playwright test --project=chrome --project=firefox --project=webkit --workers=1",
+    "test:ref": "python3 scripts/ref/draw_v1.py --check packages/core/test/vectors.json",
+    "lighthouse": "../research/heavy.sh bash scripts/lighthouse.sh",
+    "typecheck": "pnpm -r run typecheck",
+    "lint": "oxlint -c .oxlintrc.json --deny-warnings packages apps/web/src apps/web/scripts scripts",
+    "check:pure": "node scripts/check-pure.mjs",
+    "check:budget": "tsx apps/web/scripts/check-budget.ts",
+    "seo:check": "tsx apps/web/scripts/seo-check.ts apps/web/dist",
+    "licenses:check": "node scripts/check-licenses.mjs",
+    "gen:vectors": "tsx packages/core/test/gen-vectors.ts",
+    "whirlpick": "node packages/cli/bin/whirlpick.js",
+    "whirlpick-mcp": "node packages/cli/bin/whirlpick-mcp.js",
+    "verify": "bash scripts/verify.sh"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.0",
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
+    "fast-check": "4.10.2",
+    "oxlint": "1.85.0",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2",
+    "vitest": "5.0.2"
+  }
+}

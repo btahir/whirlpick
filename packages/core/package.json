@@ -1,0 +1,29 @@
+{
+  "name": "@whirlpick/core",
+  "version": "0.1.0",
+  "description": "Whirlpick's headless core: whirlpick-draw-v1 RNG, weighted draws, teams, spin geometry, receipts, verify, .whirl.json schema, share codec. Pure TypeScript, no DOM or Node APIs.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "src"],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --root ../.. --project core"
+  },
+  "dependencies": {
+    "@noble/hashes": "2.4.0"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}
