@@ -352,18 +352,32 @@ export function Stepper({ value, min, max, onChange, label, suffix }: { value: n
   );
 }
 
-/** A non-modal popover anchored under its trigger; Esc or an outside click closes it. */
+/**
+ * A non-modal popover anchored to its trigger; Esc or an outside click closes it.
+ * It opens below the trigger, or above it when the space below the trigger is too
+ * short to show it whole (the spin-length chip sits at the bottom of the stage).
+ */
 export function Popover({ trigger, children, label, className }: { trigger: (p: { open: boolean; toggle: () => void; ref: React.RefObject<HTMLButtonElement | null> }) => ReactNode; children: (close: () => void) => ReactNode; label: string; className?: string }) {
   const [open, setOpen] = useState(false);
+  const [above, setAbove] = useState(false);
   const ref = useRef<HTMLButtonElement | null>(null);
   const box = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    if (!open) return setAbove(false);
+    const t = ref.current?.getBoundingClientRect();
+    const h = box.current?.offsetHeight ?? 0;
+    if (!t) return;
+    const gap = 8 + 12;
+    setAbove(t.bottom + h + gap > window.innerHeight && t.top - h - gap >= 0);
+  }, [open]);
   const close = useCallback(() => {
     setOpen(false);
     ref.current?.focus();
   }, []);
   useEffect(() => {
     if (!open) return;
-    box.current?.querySelector<HTMLElement>("input, button, select, textarea")?.focus();
+    // preventScroll: focusing must never scroll the page to reach the popover.
+    box.current?.querySelector<HTMLElement>("input, button, select, textarea")?.focus({ preventScroll: true });
     const onDown = (e: PointerEvent) => {
       if (!box.current?.contains(e.target as Node) && !ref.current?.contains(e.target as Node)) setOpen(false);
     };
@@ -378,7 +392,7 @@ export function Popover({ trigger, children, label, className }: { trigger: (p: 
           ref={box}
           role="dialog"
           aria-label={label}
-          className={`popover${className ? ` ${className}` : ""}`}
+          className={`popover${above ? " popover-above" : ""}${className ? ` ${className}` : ""}`}
           onKeyDown={(e) => {
             if (e.key === "Escape") {
               e.stopPropagation();

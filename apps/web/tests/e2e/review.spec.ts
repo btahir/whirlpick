@@ -130,3 +130,19 @@ test.describe("390 px: no sideways scroll", () => {
     }
   });
 });
+
+test.describe("owner feedback: spin-length popover stays on screen", () => {
+  for (const height of [720, 800, 1200]) {
+    test(`1440×${height}: the popover is fully visible without scrolling`, async ({ page }) => {
+      await page.setViewportSize({ width: 1440, height });
+      await openApp(page, "/?duration=6");
+      await page.locator("button.dur").click();
+      const pop = page.locator(".popover");
+      await expect(pop).toBeVisible();
+      const r = (await pop.boundingBox())!;
+      expect(r.y).toBeGreaterThanOrEqual(0);
+      expect(r.y + r.height).toBeLessThanOrEqual(height);
+      expect(await page.evaluate(() => scrollY)).toBe(0);
+    });
+  }
+});

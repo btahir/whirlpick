@@ -2078,6 +2078,10 @@ dialog.plate.drawer[open] {
   left: 0;
   padding: 14px;
 }
+.popover.popover-above {
+  top: auto;
+  bottom: calc(100% + 8px);
+}
 .entry-pop {
   position: absolute;
   top: 60px;
